@@ -123,6 +123,8 @@ def _4d_to_nifti(grouped_dicoms, output_file):
     logger.info('Creating affine')
     # Create the nifti header info
     affine = common.create_affine(grouped_dicoms[0])
+    if ((affine[:3, :3].sum(axis=0) == 0).sum() + (affine[:3, :3].sum(axis=1) == 0).sum()) > 0:
+        raise Exception("Invalid affine")
 
     logger.info('Creating nifti')
     # Convert to nifti
