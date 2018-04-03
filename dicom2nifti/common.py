@@ -384,6 +384,9 @@ def create_affine(sorted_dicoms):
         # Single slice
         step = [0, 0, -1]
     else:
+        if numpy.all(image_pos == last_image_pos):
+            raise ConversionValidationError('NO_CHANGE_IMAGE_POSITION_PATIENT')
+
         step = (image_pos - last_image_pos) / (1 - len(sorted_dicoms))
 
     # check if this is actually a volume and not all slices on the same location
