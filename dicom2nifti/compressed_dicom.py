@@ -13,12 +13,18 @@ logger = logging.getLogger(__name__)
 
 def read_file(dicom_file, defer_size=None, stop_before_pixels=False, force=False):
     if _is_compressed(dicom_file, force):
-        with tempfile.NamedTemporaryFile() as fp:
-            _decompress_dicom(dicom_file, output_file=fp.name)
-            return pydicom.read_file(fp,
-                                     defer_size=None, # We can't defer
+        # https://github.com/icometrix/dicom2nifti/issues/46
+        try:
+            with tempfile.NamedTemporaryFile(delete=False) as fp:
+                fp.close()
+                _decompress_dicom(dicom_file, output_file=fp.name)
+
+            return pydicom.read_file(fp.name,
+                                     defer_size=None,  # We can't defer
                                      stop_before_pixels=stop_before_pixels,
                                      force=force)
+        finally:
+            os.remove(fp.name)
 
     dicom_header = pydicom.read_file(dicom_file,
                                      defer_size=defer_size,
