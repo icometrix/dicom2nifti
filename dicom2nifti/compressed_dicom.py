@@ -61,6 +61,23 @@ def _get_gdcmconv():
     return gdcmconv_executable
 
 
+def _get_dcmdjpeg():
+    """
+    Get the full path to gdcmconv.
+    If not found raise error
+    """
+    dcmdjpeg_executable = settings.dcmdjpeg_path
+    if dcmdjpeg_executable is None:
+        dcmdjpeg_executable = _which('dcmdjpeg')
+    if dcmdjpeg_executable is None:
+        dcmdjpeg_executable = _which('dcmdjpeg.exe')
+
+    if dcmdjpeg_executable is None:
+        raise ConversionError('DCMDJPEG_NOT_FOUND')
+
+    return dcmdjpeg_executable
+
+
 def compress_directory(dicom_directory):
     """
     This function can be used to convert a folder of jpeg compressed images to an uncompressed ones
@@ -128,9 +145,12 @@ def _decompress_dicom(dicom_file, output_file):
 
     :param input_file: single dicom file to decompress
     """
-    gdcmconv_executable = _get_gdcmconv()
-
-    subprocess.check_output([gdcmconv_executable, '-w', dicom_file, output_file])
+    try:
+        dcmdjpeg_executable = _get_dcmdjpeg()
+        subprocess.check_output([dcmdjpeg_executable, dicom_file, output_file])
+    except ConversionError:
+        gdcmconv_executable = _get_gdcmconv()
+        subprocess.check_output([gdcmconv_executable, '-w', dicom_file, output_file])
 
 
 def _which(program):
