@@ -92,6 +92,16 @@ def is_ge(dicom_input):
     return True
 
 
+def is_hyperfine(dicom_input):
+    # Check if the dicom (most likely a multiframe one) is produced
+    # by Hyperfine Swoop.
+    header = dicom_input[0]
+    if 'Hyperfine' in header.Manufacturer:
+        raise NotImplementedError(
+            'Do not support Hyperfine DCMs, use dicom2nixx instead.')
+    return False
+
+
 def is_philips(dicom_input):
     """
     Use this function to detect if a dicom series is a philips dataset
@@ -162,6 +172,9 @@ def is_valid_imaging_dicom(dicom_header):
     """
     # if it is philips and multiframe dicom then we assume it is ok
     try:
+        if is_hyperfine([dicom_header]):
+            return False
+
         if is_philips([dicom_header]):
             if is_multiframe_dicom([dicom_header]):
                 return True

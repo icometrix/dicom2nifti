@@ -33,7 +33,7 @@ def dicom_to_nifti(dicom_input, output_file=None):
     :param dicom_input: directory with dicom files for 1 scan
     """
 
-    assert common.is_philips(dicom_input)
+    assert common.is_philips(dicom_input) or common.is_hyperfine(dicom_input)
 
     # remove duplicate slices based on position and data
     dicom_input = convert_generic.remove_duplicate_slices(dicom_input)
@@ -49,6 +49,8 @@ def dicom_to_nifti(dicom_input, output_file=None):
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
 
     if common.is_multiframe_dicom(dicom_input):
+        if common.is_hyperfine(dicom_input):
+            raise NotImplementedError()
         _assert_explicit_vr(dicom_input)
         logger.info('Found multiframe dicom')
         if _is_multiframe_4d(dicom_input):
@@ -220,7 +222,7 @@ def _is_float(value):
         return False
 
 
-def _multiframe_to_nifti(dicom_input, output_file):
+def _multiframe_to_nifti(dicom_input, output_file, hyperfine=False):
     """
     This function will convert philips 4D or anatomical multiframe series to a nifti
     """
@@ -245,8 +247,9 @@ def _multiframe_to_nifti(dicom_input, output_file):
     nii_image = nibabel.Nifti1Image(full_block, affine)
     timing_parameters = multiframe_dicom.SharedFunctionalGroupsSequence[0].MRTimingAndRelatedParametersSequence[0]
     first_frame = multiframe_dicom[Tag(0x5200, 0x9230)][0]
-    common.set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
-                     float(first_frame[0x2005, 0x140f][0].EchoTime))
+    if not hyperfine:
+        common.set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
+                         float(first_frame[0x2005, 0x140f][0].EchoTime))
 
     # Save to disk
     if output_file is not None:

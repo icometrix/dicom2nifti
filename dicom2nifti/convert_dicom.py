@@ -40,6 +40,7 @@ class Vendor(object):
     GE = 2
     PHILIPS = 3
     HITACHI = 4
+    HYPERFINE = 5
 
 
 # pylint: enable=w0232, r0903, C0103
@@ -113,9 +114,10 @@ def dicom_array_to_nifti(dicom_list, output_file, reorient_nifti=True):
         raise ConversionValidationError('NON_IMAGING_DICOM_FILES')
 
     vendor = _get_vendor(dicom_list)
-
     if vendor == Vendor.GENERIC:
         results = convert_generic.dicom_to_nifti(dicom_list, output_file)
+    elif vendor == Vendor.HYPERFINE:
+        results = convert_philips.dicom_to_nifti(dicom_list, output_file)
     elif vendor == Vendor.SIEMENS:
         results = convert_siemens.dicom_to_nifti(dicom_list, output_file)
     elif vendor == Vendor.GE:
@@ -151,7 +153,8 @@ def are_imaging_dicoms(dicom_input):
     if common.is_philips(dicom_input):
         if common.is_multiframe_dicom(dicom_input):
             return True
-
+    if common.is_hyperfine(dicom_input):
+        return True
     # for all others if there is image position patient we assume it is ok
     header = dicom_input[0]
     return Tag(0x0020, 0x0037) in header
@@ -163,6 +166,9 @@ def _get_vendor(dicom_input):
     Possibilities are fMRI, DTI, Anatomical (if no clear type is found anatomical is used)
     """
     # check if it is siemens
+    if common.is_hyperfine(dicom_input):
+        logger.info('Found manufacturer: HYPERFINE')
+        return Vendor.HYPERFINE
     if common.is_siemens(dicom_input):
         logger.info('Found manufacturer: SIEMENS')
         return Vendor.SIEMENS
