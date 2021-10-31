@@ -31,6 +31,7 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
     :param reorient: reorient the dicoms according to LAS orientation
     :param output_folder: folder to write the nifti files to
     :param dicom_directory: directory with dicom files
+    :returns: list of created nifti files
     """
     # sort dicom files by series uid
     dicom_series = {}
@@ -59,6 +60,7 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                 traceback.print_exc()
 
     # start converting one by one
+    nifti_files = []
     for series_id, dicom_input in dicom_series.items():
         base_filename = ""
         # noinspection PyBroadException
@@ -86,9 +88,11 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                 nifti_file = os.path.join(output_folder, base_filename + '.nii')
             convert_dicom.dicom_array_to_nifti(dicom_input, nifti_file, reorient)
             gc.collect()
+            nifti_files.append(nifti_file)
         except:  # Explicitly capturing app exceptions here to be able to continue processing
             logger.info("Unable to convert: %s" % base_filename)
             traceback.print_exc()
+    return nifti_files
 
 
 def _is_valid_imaging_dicom(dicom_header):
