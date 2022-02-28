@@ -9,7 +9,7 @@ Created on Thu Aug  1 16:10:56 2013
 import nibabel
 import numpy
 
-from dicom2nifti.image_volume import load, SliceType, ImageVolume
+from .image_volume import load, SliceType, ImageVolume
 
 
 def reorient_image(input_image, output_image):

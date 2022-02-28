@@ -12,13 +12,11 @@ import re
 import traceback
 import unicodedata
 
-from pydicom.tag import Tag
-
 import logging
 
-import dicom2nifti.common as common
-import dicom2nifti.convert_dicom as convert_dicom
-import dicom2nifti.settings
+from .common import is_valid_imaging_dicom
+from .convert_dicom import dicom_array_to_nifti
+from .settings import Dicom2NiftiSettings as settings
 
 logger = logging.getLogger(__name__)
 
@@ -46,8 +44,8 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                     dicom_headers = compressed_dicom.read_file(file_path,
                                                                defer_size="1 KB",
                                                                stop_before_pixels=False,
-                                                               force=dicom2nifti.settings.pydicom_read_force)
-                    if not _is_valid_imaging_dicom(dicom_headers):
+                                                               force=settings.pydicom_read_force)
+                    if not is_valid_imaging_dicom(dicom_headers):
                         logger.info("Skipping: %s" % file_path)
                         continue
                     logger.info("Organizing: %s" % file_path)
@@ -84,42 +82,11 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                 nifti_file = os.path.join(output_folder, base_filename + '.nii.gz')
             else:
                 nifti_file = os.path.join(output_folder, base_filename + '.nii')
-            convert_dicom.dicom_array_to_nifti(dicom_input, nifti_file, reorient)
+            dicom_array_to_nifti(dicom_input, nifti_file, reorient)
             gc.collect()
         except:  # Explicitly capturing app exceptions here to be able to continue processing
             logger.info("Unable to convert: %s" % base_filename)
             traceback.print_exc()
-
-
-def _is_valid_imaging_dicom(dicom_header):
-    """
-    Function will do some basic checks to see if this is a valid imaging dicom
-    """
-    # if it is philips and multiframe dicom then we assume it is ok
-    try:
-        if common.is_philips([dicom_header]) or common.is_siemens([dicom_header]):
-            if common.is_multiframe_dicom([dicom_header]):
-                return True
-
-        if "SeriesInstanceUID" not in dicom_header:
-            return False
-
-        if "InstanceNumber" not in dicom_header:
-            return False
-
-        if "ImageOrientationPatient" not in dicom_header or len(dicom_header.ImageOrientationPatient) < 6:
-            return False
-
-        if "ImagePositionPatient" not in dicom_header or len(dicom_header.ImagePositionPatient) < 3:
-            return False
-
-        # for all others if there is image position patient we assume it is ok
-        if Tag(0x0020, 0x0037) not in dicom_header:
-            return False
-
-        return True
-    except (KeyError, AttributeError):
-        return False
 
 
 def _remove_accents(unicode_filename):

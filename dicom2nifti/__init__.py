@@ -4,21 +4,9 @@ dicom2nifti
 
 @author: abrys
 """
-from dicom2nifti.settings import disable_validate_slice_increment, \
-    disable_validate_orientation, \
-    disable_validate_orthogonal, \
-    disable_validate_slicecount, \
-    disable_validate_multiframe_implicit, \
-    disable_resampling, \
-    enable_validate_orientation, \
-    enable_validate_orthogonal, \
-    enable_validate_slicecount, \
-    enable_validate_slice_increment, \
-    enable_validate_multiframe_implicit, \
-    enable_resampling
-from dicom2nifti.convert_dicom import dicom_series_to_nifti
-from dicom2nifti.convert_dir import convert_directory
+from .settings import Dicom2NiftiSettings as settings
+from .convert_dicom import dicom_series_to_nifti
+from .convert_dir import convert_directory
 
-import dicom2nifti.patch_pydicom_encodings as patch_pydicom_encodings
-patch_pydicom_encodings.apply()
-
+from .patch_pydicom_encodings import apply as apply_pydicom_encodings_patch
+apply_pydicom_encodings_patch()

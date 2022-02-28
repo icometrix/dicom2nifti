@@ -59,7 +59,7 @@ def assert_compare_bval(bval_file_1, bval_file_2):
     bval_2 = numpy.loadtxt(bval_file_2)
     equal = numpy.allclose(bval_1, bval_2)
     if not equal:
-        raise Exception('bvals not equal\n%s\n%s' %(numpy.array2string(bval_1), numpy.array2string(bval_2)))
+        raise Exception('bvals not equal\n%s\n%s' % (numpy.array2string(bval_1), numpy.array2string(bval_2)))
 
 
 def assert_compare_bvec(bvec_file_1, bvec_file_2):
@@ -67,4 +67,4 @@ def assert_compare_bvec(bvec_file_1, bvec_file_2):
     bvec_2 = numpy.loadtxt(bvec_file_2)
     equal = numpy.allclose(bvec_1, bvec_2)
     if not equal:
-        raise Exception('bvecs not equal\n%s\n%s' %(numpy.array2string(bvec_1), numpy.array2string(bvec_2)))
+        raise Exception('bvecs not equal\n%s\n%s' % (numpy.array2string(bvec_1), numpy.array2string(bvec_2)))

@@ -14,15 +14,19 @@ import numpy
 import pydicom.config as pydicom_config
 from pydicom.tag import Tag
 
-import dicom2nifti.common as common
-import dicom2nifti.settings as settings
-import dicom2nifti.convert_generic as convert_generic
-from dicom2nifti.exceptions import ConversionError, ConversionValidationError
+from .common import get_vendor, Vendor, is_multiframe_dicom, get_ss_value, get_fl_value, get_fd_value, \
+    get_fd_array_value, set_tr_te, create_affine, apply_scaling, get_volume_pixeldata, \
+    sort_dicoms, get_is_value, get_numpy_type, do_scaling, write_bval_file, write_bvec_file, get_nifti_data
+from .settings import Dicom2NiftiSettings as settings
+from .convert_generic import generic_dicom_to_nifti, remove_duplicate_slices, \
+    remove_localizers_by_imagetype, remove_localizers_by_orientation
+from .exceptions import ConversionError, ConversionValidationError
 
 pydicom_config.enforce_valid_values = False
 logger = logging.getLogger(__name__)
 
-def dicom_to_nifti(dicom_input, output_file=None):
+
+def philips_dicom_to_nifti(dicom_input, output_file=None):
     """
     This is the main dicom to nifti conversion fuction for philips images.
     As input philips images are required. It will then determine the type of images and do the correct conversion
@@ -33,22 +37,22 @@ def dicom_to_nifti(dicom_input, output_file=None):
     :param dicom_input: directory with dicom files for 1 scan
     """
 
-    assert common.is_philips(dicom_input)
+    assert get_vendor(dicom_input) == Vendor.PHILIPS
 
     # remove duplicate slices based on position and data
-    dicom_input = convert_generic.remove_duplicate_slices(dicom_input)
+    dicom_input = remove_duplicate_slices(dicom_input)
 
     # remove localizers based on image type
-    dicom_input = convert_generic.remove_localizers_by_imagetype(dicom_input)
+    dicom_input = remove_localizers_by_imagetype(dicom_input)
 
     # remove_localizers based on image orientation (only valid if slicecount is validated)
-    dicom_input = convert_generic.remove_localizers_by_orientation(dicom_input)
+    dicom_input = remove_localizers_by_orientation(dicom_input)
 
     # if no dicoms remain raise exception
     if not dicom_input:
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
 
-    if common.is_multiframe_dicom(dicom_input):
+    if is_multiframe_dicom(dicom_input):
         _assert_explicit_vr(dicom_input)
         logger.info('Found multiframe dicom')
         if _is_multiframe_4d(dicom_input):
@@ -66,7 +70,7 @@ def dicom_to_nifti(dicom_input, output_file=None):
             return _singleframe_to_nifti(grouped_dicoms, output_file)
 
     logger.info('Assuming anatomical data')
-    return convert_generic.dicom_to_nifti(dicom_input, output_file)
+    return generic_dicom_to_nifti(dicom_input, output_file)
 
 
 def _assert_explicit_vr(dicom_input):
@@ -107,13 +111,13 @@ def _is_multiframe_4d(dicom_input):
     Use this function to detect if a dicom series is a philips multiframe 4D dataset
     """
     # check if it is multi frame dicom
-    if not common.is_multiframe_dicom(dicom_input):
+    if not is_multiframe_dicom(dicom_input):
         return False
 
     header = dicom_input[0]
 
     # check if there are multiple stacks
-    number_of_stack_slices = common.get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
+    number_of_stack_slices = get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
     number_of_stacks = int(int(header.NumberOfFrames) / number_of_stack_slices)
     if number_of_stacks <= 1:
         return False
@@ -128,13 +132,13 @@ def _is_multiframe_anatomical(dicom_input):
     (containing one series)
     """
     # check if it is multi frame dicom
-    if not common.is_multiframe_dicom(dicom_input):
+    if not is_multiframe_dicom(dicom_input):
         return False
 
     header = dicom_input[0]
 
     # check if there are multiple stacks
-    number_of_stack_slices = common.get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
+    number_of_stack_slices = get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
     number_of_stacks = int(int(header.NumberOfFrames) / number_of_stack_slices)
 
     if number_of_stacks > 1:
@@ -185,11 +189,11 @@ def _is_bval_type_a(grouped_dicoms):
     bvec_y_tag = Tag(0x2005, 0x10b1)
     bvec_z_tag = Tag(0x2005, 0x10b2)
     for group in grouped_dicoms:
-        if bvec_x_tag in group[0] and _is_float(common.get_fl_value(group[0][bvec_x_tag])) and \
-                bvec_y_tag in group[0] and _is_float(common.get_fl_value(group[0][bvec_y_tag])) and \
-                bvec_z_tag in group[0] and _is_float(common.get_fl_value(group[0][bvec_z_tag])) and \
-                bval_tag in group[0] and _is_float(common.get_fl_value(group[0][bval_tag])) and \
-                common.get_fl_value(group[0][bval_tag]) != 0:
+        if bvec_x_tag in group[0] and _is_float(get_fl_value(group[0][bvec_x_tag])) and \
+                bvec_y_tag in group[0] and _is_float(get_fl_value(group[0][bvec_y_tag])) and \
+                bvec_z_tag in group[0] and _is_float(get_fl_value(group[0][bvec_z_tag])) and \
+                bval_tag in group[0] and _is_float(get_fl_value(group[0][bval_tag])) and \
+                get_fl_value(group[0][bval_tag]) != 0:
             return True
     return False
 
@@ -202,8 +206,8 @@ def _is_bval_type_b(grouped_dicoms):
     bvec_tag = Tag(0x0018, 0x9089)
     for group in grouped_dicoms:
         if bvec_tag in group[0] and bval_tag in group[0]:
-            bvec = common.get_fd_array_value(group[0][bvec_tag], 3)
-            bval = common.get_fd_value(group[0][bval_tag])
+            bvec = get_fd_array_value(group[0][bvec_tag], 3)
+            bval = get_fd_value(group[0][bval_tag])
             if _is_float(bvec[0]) and _is_float(bvec[1]) and _is_float(bvec[2]) and _is_float(bval) and bval != 0:
                 return True
     return False
@@ -245,8 +249,8 @@ def _multiframe_to_nifti(dicom_input, output_file):
     nii_image = nibabel.Nifti1Image(full_block, affine)
     timing_parameters = multiframe_dicom.SharedFunctionalGroupsSequence[0].MRTimingAndRelatedParametersSequence[0]
     first_frame = multiframe_dicom[Tag(0x5200, 0x9230)][0]
-    common.set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
-                     float(first_frame[0x2005, 0x140f][0].EchoTime))
+    set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
+              float(first_frame[0x2005, 0x140f][0].EchoTime))
 
     # Save to disk
     if output_file is not None:
@@ -290,14 +294,14 @@ def _singleframe_to_nifti(grouped_dicoms, output_file):
 
     logger.info('Creating affine')
     # Create the nifti header info
-    affine, slice_increment = common.create_affine(grouped_dicoms[0])
+    affine, slice_increment = create_affine(grouped_dicoms[0])
 
     logger.info('Creating nifti')
     # Convert to nifti
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
+    set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
 
     if output_file is not None:
         # Save to disk
@@ -356,7 +360,7 @@ def _singleframe_to_block(grouped_dicoms):
         raise ConversionError("MISSING_DICOM_FILES")
 
     # Apply the rescaling if needed
-    common.apply_scaling(full_block, grouped_dicoms[0][0])
+    apply_scaling(full_block, grouped_dicoms[0][0])
 
     return full_block
 
@@ -365,7 +369,7 @@ def _stack_to_block(timepoint_dicoms):
     """
     Convert a mosaic slice to a block of data by reading the headers, splitting the mosaic and appending
     """
-    return common.get_volume_pixeldata(timepoint_dicoms)
+    return get_volume_pixeldata(timepoint_dicoms)
 
 
 def _get_grouped_dicoms(dicom_input):
@@ -378,7 +382,7 @@ def _get_grouped_dicoms(dicom_input):
     if [d for d in dicom_input if 'InstanceNumber' in d]:
         dicoms = sorted(dicom_input, key=lambda x: x.InstanceNumber)
     else:
-        dicoms = common.sort_dicoms(dicom_input)
+        dicoms = sort_dicoms(dicom_input)
     # now group per stack
     grouped_dicoms = [[]]  # list with first element a list
     timepoint_index = 0
@@ -390,7 +394,7 @@ def _get_grouped_dicoms(dicom_input):
         dicom_ = dicoms[index]
         stack_position = 0
         if stack_position_tag in dicom_:
-            stack_position = common.get_is_value(dicom_[stack_position_tag])
+            stack_position = get_is_value(dicom_[stack_position_tag])
         if previous_stack_position == stack_position:
             # if the stack number is the same we move to the next timepoint
             timepoint_index += 1
@@ -424,7 +428,7 @@ def _create_affine_multiframe(multiframe_dicom):
     image_pos = numpy.array(first_frame.PlanePositionSequence[0].ImagePositionPatient).astype(float)
     last_image_pos = numpy.array(last_frame.PlanePositionSequence[0].ImagePositionPatient).astype(float)
 
-    number_of_stack_slices = int(common.get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
+    number_of_stack_slices = int(get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
     delta_s = abs(numpy.linalg.norm(last_image_pos - image_pos)) / (number_of_stack_slices - 1)
 
     return numpy.array(
@@ -439,7 +443,7 @@ def _multiframe_to_block(multiframe_dicom):
     Generate a full datablock containing all stacks
     """
     # Calculate the amount of stacks and slices in the stack
-    number_of_stack_slices = int(common.get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
+    number_of_stack_slices = int(get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
     number_of_stacks = int(int(multiframe_dicom.NumberOfFrames) / number_of_stack_slices)
 
     # We create a numpy array
@@ -448,7 +452,7 @@ def _multiframe_to_block(multiframe_dicom):
     size_z = number_of_stack_slices
     size_t = number_of_stacks
     # get the format
-    format_string = common.get_numpy_type(multiframe_dicom)
+    format_string = get_numpy_type(multiframe_dicom)
 
     # get header info needed for ordering
     frame_info = multiframe_dicom[0x5200, 0x9230]
@@ -469,8 +473,7 @@ def _multiframe_to_block(multiframe_dicom):
         # apply scaling
         rescale_intercept = frame_info[slice_index].PixelValueTransformationSequence[0].RescaleIntercept
         rescale_slope = frame_info[slice_index].PixelValueTransformationSequence[0].RescaleSlope
-        block_data = common.do_scaling(block_data,
-                                       rescale_slope, rescale_intercept)
+        block_data = do_scaling(block_data, rescale_slope, rescale_intercept)
         # switch to float if needed
         if block_data.dtype != data_4d.dtype:
             data_4d = data_4d.astype(block_data.dtype)
@@ -530,7 +533,7 @@ def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_fil
     """
 
     # create the empty arrays
-    number_of_stack_slices = common.get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
+    number_of_stack_slices = get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
     number_of_stacks = int(int(multiframe_dicom.NumberOfFrames) / number_of_stack_slices)
 
     bvals = numpy.zeros([number_of_stacks], dtype=numpy.int32)
@@ -540,17 +543,17 @@ def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_fil
     for stack_index in range(0, number_of_stacks):
         stack = multiframe_dicom[Tag(0x5200, 0x9230)][stack_index]
         if str(stack[Tag(0x0018, 0x9117)][0][Tag(0x0018, 0x9075)].value) == 'DIRECTIONAL':
-            bvals[stack_index] = common.get_fd_value(stack[Tag(0x0018, 0x9117)][0][Tag(0x0018, 0x9087)])
-            bvecs[stack_index, :] = common.get_fd_array_value(stack[Tag(0x0018, 0x9117)][0]
-                                                              [Tag(0x0018, 0x9076)][0][Tag(0x0018, 0x9089)], 3)
+            bvals[stack_index] = get_fd_value(stack[Tag(0x0018, 0x9117)][0][Tag(0x0018, 0x9087)])
+            bvecs[stack_index, :] = get_fd_array_value(stack[Tag(0x0018, 0x9117)][0]
+                                                       [Tag(0x0018, 0x9076)][0][Tag(0x0018, 0x9089)], 3)
 
     # truncate nifti if needed
     nifti, bvals, bvecs = _fix_diffusion_images(bvals, bvecs, nifti, nifti_file)
 
     # save the found bvecs to the file
     if numpy.count_nonzero(bvals) > 0 or numpy.count_nonzero(bvecs) > 0:
-        common.write_bval_file(bvals, bval_file)
-        common.write_bvec_file(bvecs, bvec_file)
+        write_bval_file(bvals, bval_file)
+        write_bvec_file(bvecs, bvec_file)
     else:
         bval_file = None
         bvec_file = None
@@ -574,7 +577,7 @@ def _fix_diffusion_images(bvals, bvecs, nifti, nifti_file):
     bvecs = bvecs[:-1]
 
     # remove last elements from the nifti
-    new_nifti = nibabel.Nifti1Image(common.get_nifti_data(nifti)[:, :, :, :-1].squeeze(), nifti.affine)
+    new_nifti = nibabel.Nifti1Image(get_nifti_data(nifti)[:, :, :, :-1].squeeze(), nifti.affine)
     new_nifti.header.set_slope_inter(1, 0)
     new_nifti.header.set_xyzt_units(2)  # set units for xyz (leave t as unknown)
     new_nifti.to_filename(nifti_file)
@@ -598,24 +601,24 @@ def _create_singleframe_bvals_bvecs(grouped_dicoms, bval_file, bvec_file, nifti,
         bvec_y_tag = Tag(0x2005, 0x10b1)
         bvec_z_tag = Tag(0x2005, 0x10b2)
         for stack_index in range(0, len(grouped_dicoms)):
-            bvals[stack_index] = common.get_fl_value(grouped_dicoms[stack_index][0][bval_tag])
-            bvecs[stack_index, :] = [common.get_fl_value(grouped_dicoms[stack_index][0][bvec_x_tag]),
-                                     common.get_fl_value(grouped_dicoms[stack_index][0][bvec_y_tag]),
-                                     common.get_fl_value(grouped_dicoms[stack_index][0][bvec_z_tag])]
+            bvals[stack_index] = get_fl_value(grouped_dicoms[stack_index][0][bval_tag])
+            bvecs[stack_index, :] = [get_fl_value(grouped_dicoms[stack_index][0][bvec_x_tag]),
+                                     get_fl_value(grouped_dicoms[stack_index][0][bvec_y_tag]),
+                                     get_fl_value(grouped_dicoms[stack_index][0][bvec_z_tag])]
     elif _is_bval_type_b(grouped_dicoms):
         bval_tag = Tag(0x0018, 0x9087)
         bvec_tag = Tag(0x0018, 0x9089)
         for stack_index in range(0, len(grouped_dicoms)):
-            bvals[stack_index] = common.get_fd_value(grouped_dicoms[stack_index][0][bval_tag])
-            bvecs[stack_index, :] = common.get_fd_array_value(grouped_dicoms[stack_index][0][bvec_tag], 3)
+            bvals[stack_index] = get_fd_value(grouped_dicoms[stack_index][0][bval_tag])
+            bvecs[stack_index, :] = get_fd_array_value(grouped_dicoms[stack_index][0][bvec_tag], 3)
 
     # truncate nifti if needed
     nifti, bvals, bvecs = _fix_diffusion_images(bvals, bvecs, nifti, nifti_file)
 
     # save the found bvecs to the file
     if numpy.count_nonzero(bvals) > 0 or numpy.count_nonzero(bvecs) > 0:
-        common.write_bval_file(bvals, bval_file)
-        common.write_bvec_file(bvecs, bvec_file)
+        write_bval_file(bvals, bval_file)
+        write_bvec_file(bvecs, bvec_file)
     else:
         bval_file = None
         bvec_file = None

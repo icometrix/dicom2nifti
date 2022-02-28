@@ -3,8 +3,8 @@ import os
 import subprocess
 import tempfile
 
-import dicom2nifti.settings as settings
-from dicom2nifti.exceptions import ConversionError
+from .exceptions import ConversionError
+from .settings import Dicom2NiftiSettings as settings
 
 import pydicom
 
@@ -126,13 +126,14 @@ def _decompress_dicom(dicom_file, output_file):
     """
     This function can be used to convert a jpeg compressed image to an uncompressed one for further conversion
 
-    :param input_file: single dicom file to decompress
+    :param dicom_file: single dicom file to decompress
     """
     gdcmconv_executable = _get_gdcmconv()
 
     subprocess.check_output([gdcmconv_executable, '-w', dicom_file, output_file])
 
 
+# TODO: Replace with shutil.which
 def _which(program):
     import os
 

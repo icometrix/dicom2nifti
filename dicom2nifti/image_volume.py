@@ -10,7 +10,7 @@ Created on Fri Jun  7 07:40:20 2013
 import nibabel
 import numpy
 
-from dicom2nifti.common import get_nifti_data
+from .common import get_nifti_data
 
 
 class Slice(object):

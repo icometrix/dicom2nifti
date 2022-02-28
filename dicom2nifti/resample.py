@@ -9,8 +9,8 @@ import nibabel.affines
 import numpy
 import scipy.ndimage
 
-from dicom2nifti.common import get_nifti_data
-from dicom2nifti import settings
+from .common import get_nifti_data
+from .settings import Dicom2NiftiSettings as settings
 
 
 def resample_single_nifti(input_image, output_nifti):
@@ -94,9 +94,9 @@ def resample_nifti_images(nifti_images, voxel_size=None):
     max_projected = numpy.amax(projections, axis=0)
     new_size_mm = max_projected - min_projected
 
-    origin = min_projected[0] * x_axis_world + \
-             min_projected[1] * y_axis_world + \
-             min_projected[2] * z_axis_world
+    origin = (min_projected[0] * x_axis_world +
+              min_projected[1] * y_axis_world +
+              min_projected[2] * z_axis_world)
 
     new_voxelsize = voxel_size
     new_shape = numpy.ceil(new_size_mm / new_voxelsize).astype(numpy.int16) + 1
@@ -132,7 +132,7 @@ def _create_affine(x_axis, y_axis, z_axis, image_pos, voxel_sizes):
     Function to generate the affine matrix for a dicom series
     This method was based on (http://nipy.org/nibabel/dicom/dicom_orientation.html)
 
-    :param sorted_dicoms: list with sorted dicom files
+    :param x_axis:
     """
 
     # Create affine matrix (http://nipy.sourceforge.net/nibabel/dicom/dicom_orientation.html#dicom-slice-affine)

@@ -12,43 +12,40 @@ import unittest
 
 import nibabel
 
-import tests.test_data as test_data
-
-import dicom2nifti.common as common
-import dicom2nifti.convert_hitachi as convert_hitachi
+from dicom2nifti.common import get_vendor, Vendor
+from dicom2nifti.convert_hitachi import hitachi_dicom_to_nifti
 from dicom2nifti.common import read_dicom_directory
-from tests.test_tools import assert_compare_nifti, assert_compare_bval, assert_compare_bvec, ground_thruth_filenames
+
+from .test_data import *
+from .test_tools import assert_compare_nifti, ground_thruth_filenames
 
 
 class TestConversionHitachi(unittest.TestCase):
     def test_anatomical(self):
         tmp_output_dir = tempfile.mkdtemp()
         try:
-            results = convert_hitachi.dicom_to_nifti(read_dicom_directory(test_data.HITACHI_ANATOMICAL),
-                                                     None)
+            results = hitachi_dicom_to_nifti(read_dicom_directory(HITACHI_ANATOMICAL), None)
             self.assertTrue(results.get('NII_FILE') is None)
-            self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
+            self.assertIsInstance(results['NII'], nibabel.nifti1.Nifti1Image)
 
-            results = convert_hitachi.dicom_to_nifti(read_dicom_directory(test_data.HITACHI_ANATOMICAL),
-                                                     os.path.join(tmp_output_dir, 'test.nii.gz'))
-            assert_compare_nifti(results['NII_FILE'],
-                                        ground_thruth_filenames(test_data.HITACHI_ANATOMICAL)[0])
-            self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
+            results = hitachi_dicom_to_nifti(read_dicom_directory(HITACHI_ANATOMICAL),
+                                             os.path.join(tmp_output_dir, 'test.nii.gz'))
+            assert_compare_nifti(results['NII_FILE'], ground_thruth_filenames(HITACHI_ANATOMICAL)[0])
+            self.assertIsInstance(results['NII'], nibabel.nifti1.Nifti1Image)
 
-            results = convert_hitachi.dicom_to_nifti(read_dicom_directory(test_data.HITACHI_ANATOMICAL_IMPLICIT),
-                                                     os.path.join(tmp_output_dir, 'test.nii.gz'))
-            assert_compare_nifti(results['NII_FILE'],
-                                        ground_thruth_filenames(test_data.HITACHI_ANATOMICAL_IMPLICIT)[0])
-            self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
+            results = hitachi_dicom_to_nifti(read_dicom_directory(HITACHI_ANATOMICAL_IMPLICIT),
+                                             os.path.join(tmp_output_dir, 'test.nii.gz'))
+            assert_compare_nifti(results['NII_FILE'], ground_thruth_filenames(HITACHI_ANATOMICAL_IMPLICIT)[0])
+            self.assertIsInstance(results['NII'], nibabel.nifti1.Nifti1Image)
         finally:
             shutil.rmtree(tmp_output_dir)
 
     def test_is_hitachi(self):
-        assert not common.is_hitachi(read_dicom_directory(test_data.SIEMENS_ANATOMICAL))
-        assert not common.is_hitachi(read_dicom_directory(test_data.GE_ANATOMICAL))
-        assert not common.is_hitachi(read_dicom_directory(test_data.PHILIPS_ANATOMICAL))
-        assert not common.is_hitachi(read_dicom_directory(test_data.GENERIC_ANATOMICAL))
-        assert common.is_hitachi(read_dicom_directory(test_data.HITACHI_ANATOMICAL))
+        self.assertNotEqual(get_vendor(read_dicom_directory(SIEMENS_ANATOMICAL)), Vendor.HITACHI)
+        self.assertNotEqual(get_vendor(read_dicom_directory(GE_ANATOMICAL)), Vendor.HITACHI)
+        self.assertNotEqual(get_vendor(read_dicom_directory(PHILIPS_ANATOMICAL)), Vendor.HITACHI)
+        self.assertNotEqual(get_vendor(read_dicom_directory(GENERIC_ANATOMICAL)), Vendor.HITACHI)
+        self.assertEqual(get_vendor(read_dicom_directory(HITACHI_ANATOMICAL)), Vendor.HITACHI)
 
 
 if __name__ == '__main__':

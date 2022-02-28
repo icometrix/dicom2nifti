@@ -24,7 +24,12 @@ setup(
     url='https://github.com/icometrix/dicom2nifti',
     download_url='https://github.com/icometrix/dicom2nifti/tarball/%s' % version,
     keywords=['dicom', 'nifti', 'medical imaging'],
-    scripts=['scripts/dicom2nifti'],
+    entry_points={
+      'console_scripts': [
+          'dicom2nifti=dicom2nifti.exec:dicom2nifti',
+           'dicomdiff=dicom2nifti.exec:dicomdiff',
+      ]
+    },
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 5 - Production/Stable',

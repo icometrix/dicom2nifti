@@ -14,9 +14,11 @@ import numpy
 
 from pydicom.tag import Tag
 
-import dicom2nifti.common as common
-import dicom2nifti.convert_generic as convert_generic
-from dicom2nifti.exceptions import ConversionValidationError, ConversionError
+from .common import get_vendor, Vendor, is_multiframe_dicom, set_tr_te, validate_orientation, create_affine, \
+    get_volume_pixeldata, apply_scaling, get_is_value, get_fd_array_value, write_bvec_file, write_bval_file
+from .convert_generic import generic_dicom_to_nifti, remove_duplicate_slices, \
+    remove_localizers_by_imagetype, remove_localizers_by_orientation
+from .exceptions import ConversionValidationError, ConversionError
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +38,7 @@ class MosaicType(object):
 # pylint: enable=w0232, r0903
 
 
-def dicom_to_nifti(dicom_input, output_file=None):
+def siemens_dicom_to_nifti(dicom_input, output_file=None):
     """
     This is the main dicom to nifti conversion function for ge images.
     As input ge images are required. It will then determine the type of images and do the correct conversion
@@ -45,16 +47,16 @@ def dicom_to_nifti(dicom_input, output_file=None):
     :param dicom_input: directory with dicom files for 1 scan
     """
 
-    assert common.is_siemens(dicom_input)
+    assert get_vendor(dicom_input) == Vendor.SIEMENS
 
     # remove duplicate slices based on position and data
-    dicom_input = convert_generic.remove_duplicate_slices(dicom_input)
+    dicom_input = remove_duplicate_slices(dicom_input)
 
     # remove localizers based on image type
-    dicom_input = convert_generic.remove_localizers_by_imagetype(dicom_input)
+    dicom_input = remove_localizers_by_imagetype(dicom_input)
 
     # remove_localizers based on image orientation (only valid if slicecount is validated)
-    dicom_input = convert_generic.remove_localizers_by_orientation(dicom_input)
+    dicom_input = remove_localizers_by_orientation(dicom_input)
 
     # if no dicoms remain raise exception
     if not dicom_input:
@@ -64,9 +66,9 @@ def dicom_to_nifti(dicom_input, output_file=None):
         logger.info('Found sequence type: MOSAIC 4D')
         return _mosaic_4d_to_nifti(dicom_input, output_file)
 
-    if common.is_multiframe_dicom(dicom_input):
+    if is_multiframe_dicom(dicom_input):
         logger.info('Found sequence type: MULTIFRAME')
-        return convert_generic.multiframe_to_nifti(dicom_input, output_file)
+        return generic_dicom_to_nifti(dicom_input, output_file)
 
     grouped_dicoms = _classic_get_grouped_dicoms(dicom_input)
     if _is_classic_4d(grouped_dicoms):
@@ -74,7 +76,7 @@ def dicom_to_nifti(dicom_input, output_file=None):
         return _classic_4d_to_nifti(grouped_dicoms, output_file)
 
     logger.info('Assuming anatomical data')
-    return convert_generic.dicom_to_nifti(dicom_input, output_file)
+    return generic_dicom_to_nifti(dicom_input, output_file)
 
 
 def _is_mosaic(dicom_input):
@@ -150,7 +152,7 @@ def _mosaic_4d_to_nifti(dicom_input, output_file):
     # Get the sorted mosaics
     logger.info('Sorting dicom slices')
     sorted_mosaics = _get_sorted_mosaics(dicom_input)
-    common.validate_orientation(sorted_mosaics)
+    validate_orientation(sorted_mosaics)
 
     # Create mosaic block
     logger.info('Creating data block')
@@ -164,7 +166,7 @@ def _mosaic_4d_to_nifti(dicom_input, output_file):
     if full_block.ndim > 3:
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(sorted_mosaics[0].RepetitionTime), float(sorted_mosaics[0].EchoTime))
+    set_tr_te(nii_image, float(sorted_mosaics[0].RepetitionTime), float(sorted_mosaics[0].EchoTime))
     logger.info('Saving nifti to disk')
     # Save to disk
     if output_file is not None:
@@ -205,7 +207,7 @@ def _classic_4d_to_nifti(grouped_dicoms, output_file):
     """
     # Get the sorted mosaics
     all_dicoms = [i for sl in grouped_dicoms for i in sl]  # combine into 1 list for validating
-    common.validate_orientation(all_dicoms)
+    validate_orientation(all_dicoms)
 
     # Create mosaic block
     logger.info('Creating data block')
@@ -213,14 +215,14 @@ def _classic_4d_to_nifti(grouped_dicoms, output_file):
 
     logger.info('Creating affine')
     # Create the nifti header info
-    affine, slice_increment = common.create_affine(grouped_dicoms[0])
+    affine, slice_increment = create_affine(grouped_dicoms[0])
 
     logger.info('Creating nifti')
     # Convert to nifti
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
+    set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
     logger.info('Saving nifti to disk')
     # Save to disk
     if output_file is not None:
@@ -277,9 +279,10 @@ def _classic_get_grouped_dicoms(dicom_input):
         # if the stack number decreases we moved to the next stack
         if previous_position is not None:
             current_direction = numpy.array(dicom_.ImagePositionPatient) - previous_position
-            current_direction = current_direction / numpy.linalg.norm(current_direction)
-        if current_direction is not None and \
-                previous_direction is not None and \
+            dir_norm = numpy.linalg.norm(current_direction)
+            if dir_norm > 0:
+                current_direction = current_direction / numpy.linalg.norm(current_direction)
+        if current_direction is not None and previous_direction is not None and \
                 not numpy.allclose(current_direction, previous_direction, rtol=0.05, atol=0.05):
             previous_position = numpy.array(dicom_.ImagePositionPatient)
             previous_direction = None
@@ -353,7 +356,7 @@ def _classic_timepoint_to_block(timepoint_dicoms):
     Convert slices to a block of data by reading the headers and appending
     """
     # similar way of getting the block to anatomical however here we are creating the dicom series our selves
-    return common.get_volume_pixeldata(timepoint_dicoms)
+    return get_volume_pixeldata(timepoint_dicoms)
 
 
 def _mosaic_get_full_block(sorted_mosaics):
@@ -375,7 +378,7 @@ def _mosaic_get_full_block(sorted_mosaics):
         full_block[:, :, :, index] = data_blocks[index]
 
     # Apply the rescaling if needed
-    common.apply_scaling(full_block, sorted_mosaics[0])
+    apply_scaling(full_block, sorted_mosaics[0])
 
     return full_block
 
@@ -486,10 +489,10 @@ def _mosaic_to_block(mosaic):
         for x_index in range(0, number_x):
             if mosaic_type == MosaicType.ASCENDING:
                 data_3d[z_index, :, :] = data_2d[size[1] * y_index:size[1] * (y_index + 1),
-                                         size[0] * x_index:size[0] * (x_index + 1)]
+                                                 size[0] * x_index:size[0] * (x_index + 1)]
             else:
                 data_3d[size[2] - (z_index + 1), :, :] = data_2d[size[1] * y_index:size[1] * (y_index + 1),
-                                                         size[0] * x_index:size[0] * (x_index + 1)]
+                                                                 size[0] * x_index:size[0] * (x_index + 1)]
             z_index += 1
             if z_index >= size[2]:
                 break
@@ -537,9 +540,9 @@ def _create_bvals(sorted_dicoms, bval_file):
         else:
             dicom_headers = sorted_dicoms[index]
 
-        bvals.append(common.get_is_value(dicom_headers[Tag(0x0019, 0x100c)]))
+        bvals.append(get_is_value(dicom_headers[Tag(0x0019, 0x100c)]))
     # save the found bvecs to the file
-    common.write_bval_file(bvals, bval_file)
+    write_bval_file(bvals, bval_file)
     return numpy.array(bvals)
 
 
@@ -574,12 +577,12 @@ def _create_bvecs(sorted_dicoms, bvec_file):
             dicom_headers = sorted_dicoms[index]
 
         # get the bval als this is needed in some checks
-        bval = common.get_is_value(dicom_headers[Tag(0x0019, 0x100c)])
+        bval = get_is_value(dicom_headers[Tag(0x0019, 0x100c)])
         # get the bvec if it exists in the headers
         bvec = numpy.array([0, 0, 0])
         if Tag(0x0019, 0x100e) in dicom_headers:
             # in case of implicit VR the private field cannot be split into an array, we do this here
-            bvec = numpy.array(common.get_fd_array_value(dicom_headers[Tag(0x0019, 0x100e)], 3))
+            bvec = numpy.array(get_fd_array_value(dicom_headers[Tag(0x0019, 0x100e)], 3))
         # if bval is 0 or the vector is 0 no projection is needed and the vector is 0,0,0
         new_bvec = numpy.array([0, 0, 0])
 
@@ -591,5 +594,5 @@ def _create_bvecs(sorted_dicoms, bvec_file):
             new_bvec /= numpy.linalg.norm(new_bvec)
         bvecs[index, :] = new_bvec
         # save the found bvecs to the file
-        common.write_bvec_file(bvecs, bvec_file)
+        write_bvec_file(bvecs, bvec_file)
     return numpy.array(bvecs)

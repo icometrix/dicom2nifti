@@ -16,13 +16,15 @@ import numpy
 
 from pydicom.tag import Tag
 
-import dicom2nifti.common as common
-import dicom2nifti.convert_generic as convert_generic
+from .common import get_vendor, Vendor, create_affine, set_tr_te, get_volume_pixeldata, \
+    write_bvec_file, write_bval_file
+from .convert_generic import generic_dicom_to_nifti, remove_duplicate_slices, \
+    remove_localizers_by_imagetype, remove_localizers_by_orientation
 
 logger = logging.getLogger(__name__)
 
 
-def dicom_to_nifti(dicom_input, output_file=None):
+def ge_dicom_to_nifti(dicom_input, output_file=None):
     """
     This is the main dicom to nifti conversion fuction for ge images.
     As input ge images are required. It will then determine the type of images and do the correct conversion
@@ -32,16 +34,16 @@ def dicom_to_nifti(dicom_input, output_file=None):
     :param output_file: the filepath to the output nifti file
     :param dicom_input: list with dicom objects
     """
-    assert common.is_ge(dicom_input)
+    assert get_vendor(dicom_input) == Vendor.GE
 
     # remove duplicate slices based on position and data
-    dicom_input = convert_generic.remove_duplicate_slices(dicom_input)
+    dicom_input = remove_duplicate_slices(dicom_input)
 
     # remove localizers based on image type
-    dicom_input = convert_generic.remove_localizers_by_imagetype(dicom_input)
+    dicom_input = remove_localizers_by_imagetype(dicom_input)
 
     # remove_localizers based on image orientation (only valid if slicecount is validated)
-    dicom_input = convert_generic.remove_localizers_by_orientation(dicom_input)
+    dicom_input = remove_localizers_by_orientation(dicom_input)
 
     logger.info('Reading and sorting dicom files')
     grouped_dicoms = _get_grouped_dicoms(dicom_input)
@@ -51,7 +53,7 @@ def dicom_to_nifti(dicom_input, output_file=None):
         return _4d_to_nifti(grouped_dicoms, output_file)
 
     logger.info('Assuming anatomical data')
-    return convert_generic.dicom_to_nifti(dicom_input, output_file)
+    return generic_dicom_to_nifti(dicom_input, output_file)
 
 
 def _is_4d(grouped_dicoms):
@@ -60,14 +62,8 @@ def _is_4d(grouped_dicoms):
     NOTE: Only the first slice will be checked so you can only provide an already sorted dicom directory
     (containing one series)
     """
-    # read dicom header
-    header = grouped_dicoms[0][0]
-
     # check if contains multiple stacks
-    if len(grouped_dicoms) > 1:
-        return True
-
-    return False
+    return len(grouped_dicoms) > 1
 
 
 def _is_diffusion_imaging(grouped_dicoms):
@@ -101,13 +97,13 @@ def _4d_to_nifti(grouped_dicoms, output_file):
 
     logger.info('Creating affine')
     # Create the nifti header info
-    affine, slice_increment = common.create_affine(grouped_dicoms[0])
+    affine, slice_increment = create_affine(grouped_dicoms[0])
 
     logger.info('Creating nifti')
     # Convert to nifti
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime),
-                     float(grouped_dicoms[0][0].EchoTime))
+    set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime),
+              float(grouped_dicoms[0][0].EchoTime))
     logger.info('Saving nifti to disk %s' % output_file)
     # Save to disk
     if output_file is not None:
@@ -174,7 +170,7 @@ def _timepoint_to_block(timepoint_dicoms):
     Convert slices to a block of data by reading the headers and appending
     """
     # similar way of getting the block to anatomical however here we are creating the dicom series our selves
-    return common.get_volume_pixeldata(timepoint_dicoms)
+    return get_volume_pixeldata(timepoint_dicoms)
 
 
 def _get_grouped_dicoms(dicom_input):
@@ -241,7 +237,7 @@ def _get_bvals_bvecs(grouped_dicoms):
             original_bval = float(dicom_[Tag(0x0043, 0x1039)].value.decode("utf-8").split('\\')[0])
         else:
             original_bval = dicom_[Tag(0x0043, 0x1039)][0]
-        original_bvec = numpy.array([0, 0, 0], dtype=numpy.float)
+        original_bvec = numpy.array([0, 0, 0], dtype=numpy.float64)
         original_bvec[0] = -float(dicom_[Tag(0x0019, 0x10bb)].value)  # invert based upon mricron output
         original_bvec[1] = float(dicom_[Tag(0x0019, 0x10bc)].value)
         original_bvec[2] = float(dicom_[Tag(0x0019, 0x10bd)].value)
@@ -272,7 +268,7 @@ def _create_bvals_bvecs(grouped_dicoms, bval_file, bvec_file):
     bvals, bvecs = _get_bvals_bvecs(grouped_dicoms)
 
     # save the found bvecs to the file
-    common.write_bval_file(bvals, bval_file)
-    common.write_bvec_file(bvecs, bvec_file)
+    write_bval_file(bvals, bval_file)
+    write_bvec_file(bvecs, bvec_file)
 
     return bvals, bvecs
