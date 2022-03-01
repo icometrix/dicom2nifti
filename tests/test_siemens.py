@@ -14,7 +14,7 @@ import numpy
 
 from dicom2nifti.common import get_vendor, Vendor, read_dicom_directory
 from dicom2nifti.compressed_dicom import read_file
-from dicom2nifti.convert_siemens import siemens_dicom_to_nifti, _is_mosaic, _is_4d, \
+from dicom2nifti.convert_siemens import siemens_dicom_to_nifti, _is_mosaic, \
     _is_diffusion_imaging, _is_classic_4d, _classic_get_grouped_dicoms, _get_asconv_headers
 
 
@@ -141,13 +141,6 @@ class TestConversionSiemens(unittest.TestCase):
         self.assertFalse(_is_mosaic(_classic_get_grouped_dicoms(read_dicom_directory(SIEMENS_CLASSIC_DTI))))
         self.assertFalse(_is_mosaic(_classic_get_grouped_dicoms(read_dicom_directory(SIEMENS_CLASSIC_FMRI))))
         self.assertFalse(_is_mosaic(_classic_get_grouped_dicoms(read_dicom_directory(SIEMENS_ANATOMICAL))))
-
-    def test_is_4d(self):
-        self.assertTrue(_is_4d(read_dicom_directory(SIEMENS_DTI)))
-        self.assertTrue(_is_4d(read_dicom_directory(SIEMENS_FMRI)))
-        self.assertFalse(_is_4d(read_dicom_directory(SIEMENS_CLASSIC_DTI)))
-        self.assertFalse(_is_4d(read_dicom_directory(SIEMENS_CLASSIC_FMRI)))
-        self.assertFalse(_is_4d(read_dicom_directory(SIEMENS_ANATOMICAL)))
 
     def test_is_diffusion_imaging(self):
         self.assertTrue(_is_diffusion_imaging(read_dicom_directory(SIEMENS_DTI)[0]))

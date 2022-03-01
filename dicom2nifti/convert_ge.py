@@ -4,7 +4,6 @@ dicom2nifti
 
 @author: abrys
 """
-from dicom2nifti.exceptions import ConversionError
 
 import itertools
 import os
@@ -16,10 +15,9 @@ import numpy
 
 from pydicom.tag import Tag
 
-from .common import get_vendor, Vendor, create_affine, set_tr_te, get_volume_pixeldata, \
-    write_bvec_file, write_bval_file
-from .convert_generic import generic_dicom_to_nifti, remove_duplicate_slices, \
-    remove_localizers_by_imagetype, remove_localizers_by_orientation
+from .common import create_affine, set_tr_te, write_bvec_file, write_bval_file, initial_dicom_checks
+from .convert_generic import generic_dicom_to_nifti
+from .convert_siemens import _get_full_block, _classic_get_grouped_dicoms
 
 logger = logging.getLogger(__name__)
 
@@ -34,20 +32,9 @@ def ge_dicom_to_nifti(dicom_input, output_file=None):
     :param output_file: the filepath to the output nifti file
     :param dicom_input: list with dicom objects
     """
-    assert get_vendor(dicom_input) == Vendor.GE
+    dicom_input = initial_dicom_checks(dicom_input)
 
-    # remove duplicate slices based on position and data
-    dicom_input = remove_duplicate_slices(dicom_input)
-
-    # remove localizers based on image type
-    dicom_input = remove_localizers_by_imagetype(dicom_input)
-
-    # remove_localizers based on image orientation (only valid if slicecount is validated)
-    dicom_input = remove_localizers_by_orientation(dicom_input)
-
-    logger.info('Reading and sorting dicom files')
     grouped_dicoms = _get_grouped_dicoms(dicom_input)
-
     if _is_4d(grouped_dicoms):
         logger.info('Found sequence type: 4D')
         return _4d_to_nifti(grouped_dicoms, output_file)
@@ -93,6 +80,7 @@ def _4d_to_nifti(grouped_dicoms, output_file):
 
     # Create mosaic block
     logger.info('Creating data block')
+    # Use the same function as Siemens
     full_block = _get_full_block(grouped_dicoms)
 
     logger.info('Creating affine')
@@ -116,102 +104,34 @@ def _4d_to_nifti(grouped_dicoms, output_file):
         bvec_file = None
         # Create the bval en bevec files
         if output_file is not None:
+            logger.info('Creating bval and bvec files')
             base_path = os.path.dirname(output_file)
             base_name = os.path.splitext(os.path.splitext(os.path.basename(output_file))[0])[0]
-
-            logger.info('Creating bval en bvec files')
             bval_file = '%s/%s.bval' % (base_path, base_name)
             bvec_file = '%s/%s.bvec' % (base_path, base_name)
         bval, bvec = _create_bvals_bvecs(grouped_dicoms, bval_file, bvec_file)
-        return {'NII_FILE': output_file,
-                'BVAL_FILE': bval_file,
-                'BVEC_FILE': bvec_file,
-                'NII': nii_image,
-                'BVAL': bval,
-                'BVEC': bvec,
-                'MAX_SLICE_INCREMENT': slice_increment
-                }
+        return {
+            'NII_FILE': output_file,
+            'BVAL_FILE': bval_file,
+            'BVEC_FILE': bvec_file,
+            'NII': nii_image,
+            'BVAL': bval,
+            'BVEC': bvec,
+            'MAX_SLICE_INCREMENT': slice_increment
+        }
 
-    return {'NII_FILE': output_file,
-            'NII': nii_image}
-
-
-def _get_full_block(grouped_dicoms):
-    """
-    Generate a full datablock containing all timepoints
-    """
-    # For each slice / mosaic create a data volume block
-    data_blocks = []
-    for index in range(0, len(grouped_dicoms)):
-        logger.info('Creating block %s of %s' % (index + 1, len(grouped_dicoms)))
-        data_blocks.append(_timepoint_to_block(grouped_dicoms[index]))
-
-    # Add the data_blocks together to one 4d block
-    size_x = numpy.shape(data_blocks[0])[0]
-    size_y = numpy.shape(data_blocks[0])[1]
-    size_z = numpy.shape(data_blocks[0])[2]
-    size_t = len(data_blocks)
-    full_block = numpy.zeros((size_x, size_y, size_z, size_t), dtype=data_blocks[0].dtype)
-    for index in range(0, size_t):
-        if full_block[:, :, :, index].shape != data_blocks[index].shape:
-            logger.warning('Missing slices (slice count mismatch between timepoint %s and %s)' % (index - 1, index))
-            logger.warning('---------------------------------------------------------')
-            logger.warning(full_block[:, :, :, index].shape)
-            logger.warning(data_blocks[index].shape)
-            logger.warning('---------------------------------------------------------')
-            raise ConversionError("MISSING_DICOM_FILES")
-        full_block[:, :, :, index] = data_blocks[index]
-
-    return full_block
-
-
-def _timepoint_to_block(timepoint_dicoms):
-    """
-    Convert slices to a block of data by reading the headers and appending
-    """
-    # similar way of getting the block to anatomical however here we are creating the dicom series our selves
-    return get_volume_pixeldata(timepoint_dicoms)
+    return {
+        'NII_FILE': output_file,
+        'NII': nii_image
+    }
 
 
 def _get_grouped_dicoms(dicom_input):
     """
     Search all dicoms in the dicom directory, sort and validate them
-
-    fast_read = True will only read the headers not the data
     """
-
-    # Order all dicom files by InstanceNumber
-    dicoms = sorted(dicom_input, key=lambda x: x.InstanceNumber)
-
-    # now group per stack
-    grouped_dicoms = [[]]  # list with first element a list
-    stack_index = 0
-
-    # loop over all sorted dicoms and sort them by stack
-    # for this we use the position and direction of the slices so we can detect a new stack easily
-    previous_position = None
-    previous_direction = None
-    for dicom_ in dicoms:
-        current_direction = None
-        # if the stack number decreases we moved to the next stack
-        if previous_position is not None:
-            current_direction = numpy.array(dicom_.ImagePositionPatient) - previous_position
-            current_direction = current_direction / numpy.linalg.norm(current_direction)
-        if current_direction is not None and \
-                previous_direction is not None and \
-                not numpy.allclose(current_direction, previous_direction, rtol=0.05, atol=0.05):
-            previous_position = numpy.array(dicom_.ImagePositionPatient)
-            previous_direction = None
-            stack_index += 1
-        else:
-            previous_position = numpy.array(dicom_.ImagePositionPatient)
-            previous_direction = current_direction
-
-        if stack_index >= len(grouped_dicoms):
-            grouped_dicoms.append([])
-        grouped_dicoms[stack_index].append(dicom_)
-
-    return grouped_dicoms
+    # Use the same function as classic Siemens
+    return _classic_get_grouped_dicoms(dicom_input)
 
 
 def _get_bvals_bvecs(grouped_dicoms):

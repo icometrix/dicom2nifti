@@ -14,13 +14,13 @@ import numpy
 import pydicom.config as pydicom_config
 from pydicom.tag import Tag
 
-from .common import get_vendor, Vendor, is_multiframe_dicom, get_ss_value, get_fl_value, get_fd_value, \
+from .common import is_multiframe_dicom, get_ss_value, get_fl_value, get_fd_value, \
     get_fd_array_value, set_tr_te, create_affine, apply_scaling, get_volume_pixeldata, \
-    sort_dicoms, get_is_value, get_numpy_type, do_scaling, write_bval_file, write_bvec_file, get_nifti_data
+    sort_dicoms, get_is_value, get_numpy_type, do_scaling, write_bval_file, write_bvec_file, get_nifti_data, \
+    initial_dicom_checks
 from .settings import Dicom2NiftiSettings as settings
-from .convert_generic import generic_dicom_to_nifti, remove_duplicate_slices, \
-    remove_localizers_by_imagetype, remove_localizers_by_orientation
-from .exceptions import ConversionError, ConversionValidationError
+from .convert_generic import generic_dicom_to_nifti
+from .exceptions import ConversionError
 
 pydicom_config.enforce_valid_values = False
 logger = logging.getLogger(__name__)
@@ -36,21 +36,7 @@ def philips_dicom_to_nifti(dicom_input, output_file=None):
     :param output_file: file path to the output nifti
     :param dicom_input: directory with dicom files for 1 scan
     """
-
-    assert get_vendor(dicom_input) == Vendor.PHILIPS
-
-    # remove duplicate slices based on position and data
-    dicom_input = remove_duplicate_slices(dicom_input)
-
-    # remove localizers based on image type
-    dicom_input = remove_localizers_by_imagetype(dicom_input)
-
-    # remove_localizers based on image orientation (only valid if slicecount is validated)
-    dicom_input = remove_localizers_by_orientation(dicom_input)
-
-    # if no dicoms remain raise exception
-    if not dicom_input:
-        raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
+    dicom_input = initial_dicom_checks(dicom_input)
 
     if is_multiframe_dicom(dicom_input):
         _assert_explicit_vr(dicom_input)
@@ -70,7 +56,7 @@ def philips_dicom_to_nifti(dicom_input, output_file=None):
             return _singleframe_to_nifti(grouped_dicoms, output_file)
 
     logger.info('Assuming anatomical data')
-    return generic_dicom_to_nifti(dicom_input, output_file)
+    return generic_dicom_to_nifti(dicom_input, output_file, False)
 
 
 def _assert_explicit_vr(dicom_input):
@@ -78,7 +64,7 @@ def _assert_explicit_vr(dicom_input):
     Assert that explicit vr is used
     """
     if settings.validate_multiframe_implicit:
-        header = dicom_input[0]
+        header = dicom_input[0][0] if isinstance(dicom_input[0], list) else dicom_input[0]
         if header.file_meta[0x0002, 0x0010].value == '1.2.840.10008.1.2':
             raise ConversionError('IMPLICIT_VR_ENHANCED_DICOM')
 
@@ -88,10 +74,10 @@ def _is_multiframe_diffusion_imaging(dicom_input):
     Use this function to detect if a dicom series is a philips multiframe dti dataset
     NOTE: We already assue this is a 4D dataset as input
     """
-    header = dicom_input[0]
-
-    if "PerFrameFunctionalGroupsSequence" not in header:
+    if not is_multiframe_dicom(dicom_input):
         return False
+
+    header = dicom_input[0][0] if isinstance(dicom_input[0], list) else dicom_input[0]
 
     # check if there is diffusion info in the frame
     found_diffusion = False
@@ -114,7 +100,7 @@ def _is_multiframe_4d(dicom_input):
     if not is_multiframe_dicom(dicom_input):
         return False
 
-    header = dicom_input[0]
+    header = dicom_input[0][0] if isinstance(dicom_input[0], list) else dicom_input[0]
 
     # check if there are multiple stacks
     number_of_stack_slices = get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
@@ -135,7 +121,7 @@ def _is_multiframe_anatomical(dicom_input):
     if not is_multiframe_dicom(dicom_input):
         return False
 
-    header = dicom_input[0]
+    header = dicom_input[0][0] if isinstance(dicom_input[0], list) else dicom_input[0]
 
     # check if there are multiple stacks
     number_of_stack_slices = get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
@@ -151,7 +137,7 @@ def _is_singleframe_4d(dicom_input):
     """
     Use this function to detect if a dicom series is a philips singleframe 4D dataset
     """
-    header = dicom_input[0]
+    header = dicom_input[0][0] if isinstance(dicom_input[0], list) else dicom_input[0]
 
     # check if there are stack information
     slice_number_mr_tag = Tag(0x2001, 0x100a)
@@ -159,7 +145,7 @@ def _is_singleframe_4d(dicom_input):
         return False
 
     # check if there are multiple timepoints
-    grouped_dicoms = _get_grouped_dicoms(dicom_input)
+    grouped_dicoms = dicom_input if isinstance(dicom_input[0], list) else _get_grouped_dicoms(dicom_input)
     if len(grouped_dicoms) <= 1:
         return False
 
@@ -228,22 +214,18 @@ def _multiframe_to_nifti(dicom_input, output_file):
     """
     This function will convert philips 4D or anatomical multiframe series to a nifti
     """
-
-    # Read the multiframe dicom file
-    logger.info('Read dicom file')
-    multiframe_dicom = dicom_input[0]
+    multiframe_dicom = dicom_input[0][0] if isinstance(dicom_input[0], list) else dicom_input[0]
 
     # Create mosaic block
     logger.info('Creating data block')
     full_block = _multiframe_to_block(multiframe_dicom)
 
-    logger.info('Creating affine')
-
     # Create the nifti header info
+    logger.info('Creating affine')
     affine = _create_affine_multiframe(multiframe_dicom)
-    logger.info('Creating nifti')
 
     # Convert to nifti
+    logger.info('Creating nifti')
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
@@ -264,47 +246,50 @@ def _multiframe_to_nifti(dicom_input, output_file):
         bvec_file = None
         if output_file is not None:
             # Create the bval en bvec files
+            logger.info('Creating bval and bvec files')
             base_path = os.path.dirname(output_file)
             base_name = os.path.splitext(os.path.splitext(os.path.basename(output_file))[0])[0]
-            logger.info('Creating bval en bvec files')
             bval_file = '%s/%s.bval' % (base_path, base_name)
             bvec_file = '%s/%s.bvec' % (base_path, base_name)
-        bval, bvec, bval_file, bvec_file = _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nii_image,
-                                                               output_file)
+        nii_image, bval, bvec, bval_file, bvec_file = \
+            _create_multiframe_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nii_image, output_file)
 
-        return {'NII_FILE': output_file,
-                'BVAL_FILE': bval_file,
-                'BVEC_FILE': bvec_file,
-                'NII': nii_image,
-                'BVAL': bval,
-                'BVEC': bvec}
+        return {
+            'NII_FILE': output_file,
+            'BVAL_FILE': bval_file,
+            'BVEC_FILE': bvec_file,
+            'NII': nii_image,
+            'BVAL': bval,
+            'BVEC': bvec
+        }
 
-    return {'NII_FILE': output_file,
-            'NII': nii_image}
+    return {
+        'NII_FILE': output_file,
+        'NII': nii_image
+    }
 
 
 def _singleframe_to_nifti(grouped_dicoms, output_file):
     """
     This function will convert a philips singleframe series to a nifti
     """
-
     # Create mosaic block
     logger.info('Creating data block')
     full_block = _singleframe_to_block(grouped_dicoms)
 
-    logger.info('Creating affine')
     # Create the nifti header info
+    logger.info('Creating affine')
     affine, slice_increment = create_affine(grouped_dicoms[0])
 
-    logger.info('Creating nifti')
     # Convert to nifti
+    logger.info('Creating nifti')
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
     set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
 
+    # Save to disk
     if output_file is not None:
-        # Save to disk
         logger.info('Saving nifti to disk %s' % output_file)
         nii_image.header.set_slope_inter(1, 0)
         nii_image.header.set_xyzt_units(2)  # set units for xyz (leave t as unknown)
@@ -322,23 +307,24 @@ def _singleframe_to_nifti(grouped_dicoms, output_file):
             logger.info('Creating bval en bvec files')
             bval_file = '%s.bval' % base_name
             bvec_file = '%s.bvec' % base_name
-        nii_image, bval, bvec, bval_file, bvec_file = _create_singleframe_bvals_bvecs(grouped_dicoms,
-                                                                                      bval_file,
-                                                                                      bvec_file,
-                                                                                      nii_image,
-                                                                                      output_file)
+        nii_image, bval, bvec, bval_file, bvec_file = \
+            _create_singleframe_bvals_bvecs(grouped_dicoms, bval_file, bvec_file, nii_image, output_file)
 
-        return {'NII_FILE': output_file,
-                'BVAL_FILE': bval_file,
-                'BVEC_FILE': bvec_file,
-                'NII': nii_image,
-                'BVAL': bval,
-                'BVEC': bvec,
-                'MAX_SLICE_INCREMENT': slice_increment}
-
-    return {'NII_FILE': output_file,
+        return {
+            'NII_FILE': output_file,
+            'BVAL_FILE': bval_file,
+            'BVEC_FILE': bvec_file,
             'NII': nii_image,
-            'MAX_SLICE_INCREMENT': slice_increment}
+            'BVAL': bval,
+            'BVEC': bvec,
+            'MAX_SLICE_INCREMENT': slice_increment
+        }
+
+    return {
+        'NII_FILE': output_file,
+        'NII': nii_image,
+        'MAX_SLICE_INCREMENT': slice_increment
+    }
 
 
 def _singleframe_to_block(grouped_dicoms):
@@ -352,7 +338,6 @@ def _singleframe_to_block(grouped_dicoms):
         current_block = _stack_to_block(grouped_dicoms[index])
         current_block = current_block[:, :, :, numpy.newaxis]
         data_blocks.append(current_block)
-
     try:
         full_block = numpy.concatenate(data_blocks, axis=3)
     except:
@@ -431,11 +416,12 @@ def _create_affine_multiframe(multiframe_dicom):
     number_of_stack_slices = int(get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
     delta_s = abs(numpy.linalg.norm(last_image_pos - image_pos)) / (number_of_stack_slices - 1)
 
-    return numpy.array(
-        [[-image_orient1[0] * delta_c, -image_orient2[0] * delta_r, -delta_s * normal[0], -image_pos[0]],
-         [-image_orient1[1] * delta_c, -image_orient2[1] * delta_r, -delta_s * normal[1], -image_pos[1]],
-         [image_orient1[2] * delta_c, image_orient2[2] * delta_r, delta_s * normal[2], image_pos[2]],
-         [0, 0, 0, 1]])
+    return numpy.array([
+        [-image_orient1[0] * delta_c, -image_orient2[0] * delta_r, -delta_s * normal[0], -image_pos[0]],
+        [-image_orient1[1] * delta_c, -image_orient2[1] * delta_r, -delta_s * normal[1], -image_pos[1]],
+        [image_orient1[2] * delta_c, image_orient2[2] * delta_r, delta_s * normal[2], image_pos[2]],
+        [0, 0, 0, 1]
+    ])
 
 
 def _multiframe_to_block(multiframe_dicom):
@@ -526,7 +512,7 @@ def _get_t_position_index(multiframe_dicom):
     return None
 
 
-def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_file):
+def _create_multiframe_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_file):
     """
     Write the bvals from the sorted dicom files to a bval file
     Inspired by https://github.com/IBIC/ibicUtils/blob/master/ibicBvalsBvecs.py
@@ -560,29 +546,7 @@ def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_fil
         bvals = None
         bvecs = None
 
-    return bvals, bvecs, bval_file, bvec_file
-
-
-def _fix_diffusion_images(bvals, bvecs, nifti, nifti_file):
-    """
-    This function will remove the last timepoint from the nifti, bvals and bvecs if the last vector is 0,0,0
-    This is sometimes added at the end by philips
-    """
-    # if all zero continue of if the last bvec is not all zero continue
-    if numpy.count_nonzero(bvecs) == 0 or not numpy.count_nonzero(bvals[-1]) == 0:
-        # nothing needs to be done here
-        return nifti, bvals, bvecs
-    # remove last elements from bvals and bvecs
-    bvals = bvals[:-1]
-    bvecs = bvecs[:-1]
-
-    # remove last elements from the nifti
-    new_nifti = nibabel.Nifti1Image(get_nifti_data(nifti)[:, :, :, :-1].squeeze(), nifti.affine)
-    new_nifti.header.set_slope_inter(1, 0)
-    new_nifti.header.set_xyzt_units(2)  # set units for xyz (leave t as unknown)
-    new_nifti.to_filename(nifti_file)
-
-    return new_nifti, bvals, bvecs
+    return nifti, bvals, bvecs, bval_file, bvec_file
 
 
 def _create_singleframe_bvals_bvecs(grouped_dicoms, bval_file, bvec_file, nifti, nifti_file):
@@ -625,3 +589,25 @@ def _create_singleframe_bvals_bvecs(grouped_dicoms, bval_file, bvec_file, nifti,
         bvals = None
         bvecs = None
     return nifti, bvals, bvecs, bval_file, bvec_file
+
+
+def _fix_diffusion_images(bvals, bvecs, nifti, nifti_file):
+    """
+    This function will remove the last timepoint from the nifti, bvals and bvecs if the last vector is 0,0,0
+    This is sometimes added at the end by philips
+    """
+    # if all zero continue of if the last bvec is not all zero continue
+    if numpy.count_nonzero(bvecs) == 0 or not numpy.count_nonzero(bvals[-1]) == 0:
+        # nothing needs to be done here
+        return nifti, bvals, bvecs
+    # remove last elements from bvals and bvecs
+    bvals = bvals[:-1]
+    bvecs = bvecs[:-1]
+
+    # remove last elements from the nifti
+    new_nifti = nibabel.Nifti1Image(get_nifti_data(nifti)[:, :, :, :-1].squeeze(), nifti.affine)
+    new_nifti.header.set_slope_inter(1, 0)
+    new_nifti.header.set_xyzt_units(2)  # set units for xyz (leave t as unknown)
+    new_nifti.to_filename(nifti_file)
+
+    return new_nifti, bvals, bvecs
