@@ -7,6 +7,7 @@ validate_instance_number = False
 validate_multiframe_implicit = True
 pydicom_read_force = False
 gdcmconv_path = None
+dcmdjpeg_path = None
 resample = False
 resample_padding = 0
 resample_spline_interpolation_order = 0  # spline interpolation order (0 nn , 1 bilinear, 3 cubic)
@@ -176,3 +177,13 @@ def set_gdcmconv_path(path):
     """
     global gdcmconv_path
     gdcmconv_path = path
+
+
+def set_dcmdjpeg_path(path):
+    """
+    Set where the filepath to the dcmdjpeg executable (needed is it is not found in your PATH)
+
+    :param path: the file path to the dcmdjpeg executable
+    """
+    global dcmdjpeg_path
+    dcmdjpeg_path = path
