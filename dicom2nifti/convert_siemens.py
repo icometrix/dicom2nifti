@@ -457,40 +457,48 @@ def _get_mosaic_type(mosaic):
         raise ConversionError("MOSAIC_TYPE_NOT_SUPPORTED")
 
 
+def _get_mosaic_block_dimensions(mosaic):
+    """
+    # get the dimensions of one tile format is 64p*64 or 80*80 or something similar
+    :param mosaic:
+    :return: (rows, columns, nr of slices)
+    """
+    ascconv_headers = _get_asconv_headers(mosaic)
+
+    size_z = int(re.findall(r'sSliceArray\.lSize\s*=\s*(\d+)', ascconv_headers)[0])
+
+    # get the number of rows and columns
+    number_x = number_y = ceil(sqrt(size_z))
+    size_x = int(mosaic.Columns / number_x)
+    size_y = int(mosaic.Rows / number_y)
+    return number_x, number_y, size_x, size_y, size_z
+
 def _mosaic_to_block(mosaic):
     """
     Convert a mosaic slice to a block of data by reading the headers, splitting the mosaic and appending
     """
     # get the mosaic type
     mosaic_type = _get_mosaic_type(mosaic)
-    ascconv_headers = _get_asconv_headers(mosaic)
-    print(ascconv_headers)
-
-    number_z = int(re.findall(r'sSliceArray\.lSize\s*=\s*(\d+)', ascconv_headers)[0])
-
-    # get the number of rows and columns
-    number_x = number_y = ceil(sqrt(number_z))
-    size_x = int(mosaic.Columns / number_x)
-    size_y = int(mosaic.Rows / number_y)
+    number_x, number_y, size_x, size_y, size_z = _get_mosaic_block_dimensions(mosaic)
 
     # recreate 2d slice
     data_2d = mosaic.pixel_array
     # create 3d block
-    data_3d = numpy.zeros((number_z, size_y, size_x), dtype=data_2d.dtype)
+    data_3d = numpy.zeros((size_z, size_y, size_x), dtype=data_2d.dtype)
     # fill 3d block by taking the correct portions of the slice
     z_index = 0
     for y_index in range(0, number_y):
-        if z_index >= number_z:
+        if z_index >= size_z:
             break
         for x_index in range(0, number_x):
             if mosaic_type == MosaicType.ASCENDING:
                 data_3d[z_index, :, :] = data_2d[size_y * y_index:size_y * (y_index + 1),
                                          size_x * x_index:size_x * (x_index + 1)]
             else:
-                data_3d[number_z - (z_index + 1), :, :] = data_2d[size_y * y_index:size_y * (y_index + 1),
+                data_3d[size_z - (z_index + 1), :, :] = data_2d[size_y * y_index:size_y * (y_index + 1),
                                                          size_x * x_index:size_x * (x_index + 1)]
             z_index += 1
-            if z_index >= number_z:
+            if z_index >= size_z:
                 break
     # reorient the block of data
     data_3d = numpy.transpose(data_3d, (2, 1, 0))
@@ -518,11 +526,20 @@ def _create_affine_siemens_mosaic(dicom_input):
     image_pos = dicom_header.ImagePositionPatient
 
     delta_s = dicom_header.SpacingBetweenSlices
-    return numpy.array(
+    affine = numpy.array(
         [[-image_orient1[0] * delta_c, -image_orient2[0] * delta_r, -delta_s * normal[0], -image_pos[0]],
          [-image_orient1[1] * delta_c, -image_orient2[1] * delta_r, -delta_s * normal[1], -image_pos[1]],
          [image_orient1[2] * delta_c, image_orient2[2] * delta_r, delta_s * normal[2], image_pos[2]],
          [0, 0, 0, 1]])
+
+    # The ImagePositionPatient in mosaic dicom refers to the top left voxel of the mosaic rather than the center
+    # of the first (unpacked) slice. The correction is described in https://nipy.org/nibabel/dicom/dicom_mosaic.html
+    _, _, size_x, size_y, _ = _get_mosaic_block_dimensions(dicom_input[0])
+    affine[0:3, [3]] += numpy.dot(affine[0:3, 0:2],
+                                  numpy.array([[(dicom_header.Columns - size_x) / 2],
+                                               [(dicom_header.Rows - size_y) / 2]]))
+
+    return affine
 
 
 def _create_bvals(sorted_dicoms, bval_file):
