@@ -463,38 +463,34 @@ def _mosaic_to_block(mosaic):
     """
     # get the mosaic type
     mosaic_type = _get_mosaic_type(mosaic)
-
-    # get the size of one tile format is 64p*64 or 80*80 or something similar
-    matches = re.findall(r'(\d+)\D+(\d+)\D*', str(mosaic[Tag(0x0051, 0x100b)].value))[0]
-
     ascconv_headers = _get_asconv_headers(mosaic)
-    size = [int(matches[0]),
-            int(matches[1]),
-            int(re.findall(r'sSliceArray\.lSize\s*=\s*(\d+)', ascconv_headers)[0])]
+    print(ascconv_headers)
+
+    number_z = int(re.findall(r'sSliceArray\.lSize\s*=\s*(\d+)', ascconv_headers)[0])
 
     # get the number of rows and columns
-    number_x = number_y = ceil(sqrt(size[2]))
-    #number_x = int(mosaic.Rows / size[0])
-    #number_y = int(mosaic.Columns / size[1])
+    number_x = number_y = ceil(sqrt(number_z))
+    size_x = int(mosaic.Columns / number_x)
+    size_y = int(mosaic.Rows / number_y)
 
     # recreate 2d slice
     data_2d = mosaic.pixel_array
     # create 3d block
-    data_3d = numpy.zeros((size[2], size[1], size[0]), dtype=data_2d.dtype)
+    data_3d = numpy.zeros((number_z, size_y, size_x), dtype=data_2d.dtype)
     # fill 3d block by taking the correct portions of the slice
     z_index = 0
     for y_index in range(0, number_y):
-        if z_index >= size[2]:
+        if z_index >= number_z:
             break
         for x_index in range(0, number_x):
             if mosaic_type == MosaicType.ASCENDING:
-                data_3d[z_index, :, :] = data_2d[size[1] * y_index:size[1] * (y_index + 1),
-                                         size[0] * x_index:size[0] * (x_index + 1)]
+                data_3d[z_index, :, :] = data_2d[size_y * y_index:size_y * (y_index + 1),
+                                         size_x * x_index:size_x * (x_index + 1)]
             else:
-                data_3d[size[2] - (z_index + 1), :, :] = data_2d[size[1] * y_index:size[1] * (y_index + 1),
-                                                         size[0] * x_index:size[0] * (x_index + 1)]
+                data_3d[number_z - (z_index + 1), :, :] = data_2d[size_y * y_index:size_y * (y_index + 1),
+                                                         size_x * x_index:size_x * (x_index + 1)]
             z_index += 1
-            if z_index >= size[2]:
+            if z_index >= number_z:
                 break
     # reorient the block of data
     data_3d = numpy.transpose(data_3d, (2, 1, 0))
