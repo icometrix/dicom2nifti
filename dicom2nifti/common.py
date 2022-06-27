@@ -533,12 +533,19 @@ def multiframe_create_affine(dicoms):
 
     # Create affine matrix (http://nipy.sourceforge.net/nibabel/dicom/dicom_orientation.html#dicom-slice-affine)
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
-    image_orient1 = numpy.array(frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
-    image_orient2 = numpy.array(frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
-    first_image_pos = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
+    image_orient1, image_orient2 = _multiframe_get_image_orientations(dicoms[0], 0)
 
-    delta_r = float(frame_info[0].PixelMeasuresSequence[0].PixelSpacing[0])
-    delta_c = float(frame_info[0].PixelMeasuresSequence[0].PixelSpacing[1])
+    if 'PixelMeasuresSequence' in frame_info[0]:
+        delta_r = float(frame_info[0].PixelMeasuresSequence[0].PixelSpacing[0])
+        delta_c = float(frame_info[0].PixelMeasuresSequence[0].PixelSpacing[1])
+    elif "SharedFunctionalGroupsSequence" in dicoms[0] and \
+             "PixelMeasuresSequence" in dicoms[0].SharedFunctionalGroupsSequence[0]:
+        shared_frame_info = dicoms[0].SharedFunctionalGroupsSequence
+        delta_r = numpy.array(shared_frame_info[0].PixelMeasuresSequence[0].PixelSpacing[0])
+        delta_c = numpy.array(shared_frame_info[0].PixelMeasuresSequence[0].PixelSpacing[1])
+    else:
+        logger.warning('Unsupported or missing PixelMeasuresSequence')
+        raise ConversionError('Unsupported or missing PixelMeasuresSequence')
 
     image_pos = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
 
@@ -634,8 +641,8 @@ def multiframe_is_orthogonal(dicoms, log_details=False):
     :param dicoms: check that we have a volume without skewing
     """
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
-    first_image_orient1 = numpy.array(frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
-    first_image_orient2 = numpy.array(frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
+
+    first_image_orient1, first_image_orient2 = _multiframe_get_image_orientations(dicoms[0], 0)
     first_image_pos = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
 
     last_image_pos = numpy.array(frame_info[-1].PlanePositionSequence[0].ImagePositionPatient)
@@ -884,19 +891,35 @@ def validate_slicecount(dicoms):
         logger.warning('---------------------------------------------------------')
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
 
+def _multiframe_get_image_orientations(dicom_headers, frame_number=0):
+    frame_info = dicom_headers.PerFrameFunctionalGroupsSequence
+    if "PlaneOrientationSequence" in frame_info[frame_number]:
+        image_orient1 = numpy.array(frame_info[frame_number].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
+        image_orient2 = numpy.array(frame_info[frame_number].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
+    elif "SharedFunctionalGroupsSequence" in dicom_headers and \
+            "PlaneOrientationSequence" in dicom_headers.SharedFunctionalGroupsSequence[0]:
+        shared_frame_info = dicom_headers.SharedFunctionalGroupsSequence
+        image_orient1 = numpy.array(shared_frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
+        image_orient2 = numpy.array(shared_frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
+    else:
+        logger.warning('Unsupported or missing PlaneOrientationSequence')
+        raise ConversionError('Unsupported or missing PlaneOrientationSequence')
+
+    return image_orient1, image_orient2
+
 def multiframe_validate_orientation(dicoms):
     """
     Validate that all dicoms have the same orientation
 
     :param dicoms: list of dicoms
     """
+
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
-    first_image_orient1 = numpy.array(frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
-    first_image_orient2 = numpy.array(frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
-    for frame_ in frame_info:
+    first_image_orient1, first_image_orient2 = _multiframe_get_image_orientations(dicoms[0], 0)
+
+    for frame_index, frame_ in enumerate(frame_info):
         # Create affine matrix (http://nipy.sourceforge.net/nibabel/dicom/dicom_orientation.html#dicom-slice-affine)
-        image_orient1 = numpy.array(frame_.PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
-        image_orient2 = numpy.array(frame_.PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
+        image_orient1, image_orient2 = _multiframe_get_image_orientations(dicoms[0], frame_index)
         if not numpy.allclose(image_orient1, first_image_orient1, rtol=0.001, atol=0.001) \
                 or not numpy.allclose(image_orient2, first_image_orient2, rtol=0.001, atol=0.001):
             logger.warning('Image orientations not consistent through all slices')

@@ -97,6 +97,12 @@ def dicom_to_nifti(dicom_input, output_file):
 
     # remove localizers based on image type
     dicom_input = remove_localizers_by_imagetype(dicom_input)
+
+    # convert
+    if common.is_multiframe_dicom(dicom_input):
+        logger.info('Found sequence type: MULTIFRAME')
+        return multiframe_to_nifti(dicom_input, output_file)
+
     # if no dicoms remain we should raise exception
     if len(dicom_input) < 1:
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
