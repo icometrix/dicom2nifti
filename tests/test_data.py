@@ -131,6 +131,10 @@ HITACHI_ANATOMICAL = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 HITACHI_ANATOMICAL_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                            'data', 'hitachi', 'anatomical', '001_implicit')
 
+# HYPERFINE DATASETS
+HYPERFINE_ANATOMICAL = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'data', 'hyperfine', 'anatomical', '001')
+
 # FAILING
 FAILING_SLICEINCREMENT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                       'data', 'failing', 'sliceincrement', '001')
