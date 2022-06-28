@@ -4,19 +4,16 @@ dicom2nifti
 
 @author: abrys
 """
-import pydicom
-
+import logging
 import os
 import struct
 
+import numpy
+import pydicom
 from pydicom.tag import Tag
 
-import logging
-import numpy
-
-import settings as settings
-from dicom2nifti.exceptions import ConversionValidationError, ConversionError
 import dicom2nifti.settings
+from dicom2nifti.exceptions import ConversionValidationError, ConversionError
 
 logger = logging.getLogger(__name__)
 
@@ -1003,7 +1000,7 @@ def is_dicom_file(filename):
     file_stream.close()
     if data == b'DICM':
         return True
-    if settings.pydicom_read_force:
+    if dicom2nifti.settings.pydicom_read_force:
         try:
             dicom_headers = pydicom.read_file(filename, defer_size="1 KB", stop_before_pixels=True, force=True)
             if dicom_headers is not None:
