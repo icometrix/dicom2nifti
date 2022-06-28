@@ -15,4 +15,6 @@ else
     curl -sL https://github.com/icometrix/dicom2nifti/archive/${GIT_TAG}.tar.gz | openssl sha256
 fi
 
-python setup.py sdist upload -r pypi
+rm -Rf dist
+python -m build
+twine upload -r pypi dist/*
