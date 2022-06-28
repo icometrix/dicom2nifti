@@ -11,10 +11,10 @@ else
     echo "Creating and pushing tag ${GIT_TAG}."
     git tag ${GIT_TAG}
     git push  --tags git@github.com:icometrix/dicom2nifti.git
-    echo "Generating SHA256 for conda forge."
-    curl -sL https://github.com/icometrix/dicom2nifti/archive/${GIT_TAG}.tar.gz | openssl sha256
 fi
 
 rm -Rf dist
 python -m build
 twine upload -r pypi dist/*
+echo "Generating SHA256 for conda forge."
+curl -sL https://github.com/icometrix/dicom2nifti/archive/${GIT_TAG}.tar.gz | openssl sha256
