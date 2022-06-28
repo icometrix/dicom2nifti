@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>dicom2nifti package &mdash; dicom2nifti  documentation</title>
@@ -21,10 +22,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -33,6 +35,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -89,7 +93,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">dicom2nifti package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dicom2nifti.common">dicom2nifti.common module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dicom2nifti.compressed_dicom">dicom2nifti.compressed_dicom module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dicom2nifti.convert_dicom">dicom2nifti.convert_dicom module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dicom2nifti.convert_dir">dicom2nifti.convert_dir module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dicom2nifti.convert_ge">dicom2nifti.convert_ge module</a></li>
@@ -170,22 +173,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="dicom2nifti-package">
-<h1>dicom2nifti package<a class="headerlink" href="#dicom2nifti-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-dicom2nifti.common">
-<span id="dicom2nifti-common-module"></span><h2>dicom2nifti.common module<a class="headerlink" href="#module-dicom2nifti.common" title="Permalink to this headline">¶</a></h2>
+  <section id="dicom2nifti-package">
+<h1>dicom2nifti package<a class="headerlink" href="#dicom2nifti-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.common">
+<span id="dicom2nifti-common-module"></span><h2>dicom2nifti.common module<a class="headerlink" href="#module-dicom2nifti.common" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.common.apply_scaling">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">apply_scaling</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">dicom_headers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#apply_scaling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.apply_scaling" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.apply_scaling">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">apply_scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dicom_headers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#apply_scaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.apply_scaling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rescale the data based on the RescaleSlope and RescaleOffset
 Based on the scaling from pydicomseries</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dicom_headers</strong> – dicom headers to use to retreive the scaling factors</p></li>
 <li><p><strong>data</strong> – the input data</p></li>
@@ -194,29 +197,29 @@ Based on the scaling from pydicomseries</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.create_affine">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">create_affine</code><span class="sig-paren">(</span><em class="sig-param">sorted_dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#create_affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.create_affine" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.create_affine">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">create_affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sorted_dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#create_affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.create_affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to generate the affine matrix for a dicom series
 This method was based on (<a class="reference external" href="http://nipy.org/nibabel/dicom/dicom_orientation.html">http://nipy.org/nibabel/dicom/dicom_orientation.html</a>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>sorted_dicoms</strong> – list with sorted dicom files</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.do_scaling">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">do_scaling</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">rescale_slope</em>, <em class="sig-param">rescale_intercept</em>, <em class="sig-param">private_scale_slope=1.0</em>, <em class="sig-param">private_scale_intercept=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#do_scaling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.do_scaling" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.do_scaling">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">do_scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_slope</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_intercept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private_scale_slope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private_scale_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#do_scaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.do_scaling" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_fd_array_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_fd_array_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em>, <em class="sig-param">count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_fd_array_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_fd_array_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_fd_array_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_fd_array_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_fd_array_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_fd_array_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getters for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>count</strong> – number of items in the array</p></li>
 <li><p><strong>tag</strong> – the tag to read</p></li>
@@ -225,198 +228,295 @@ This method was based on (<a class="reference external" href="http://nipy.org/ni
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_fd_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_fd_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_fd_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_fd_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_fd_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_fd_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_fd_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_fd_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getters for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> – the tag to read</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_fl_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_fl_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_fl_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_fl_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_fl_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_fl_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_fl_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_fl_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getters for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> – the tag to read</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_is_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_is_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_is_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_is_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_is_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_is_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_is_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_is_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getters for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> – the tag to read</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_numpy_type">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_numpy_type</code><span class="sig-paren">(</span><em class="sig-param">dicom_header</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_numpy_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_numpy_type" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_nifti_data">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_nifti_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nifti_image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_nifti_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_nifti_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that replicates the deprecated nifti.get_data behavior</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_numpy_type">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_numpy_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_header</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_numpy_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_numpy_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make NumPy format code, e.g. “uint16”, “int32” etc
 from two pieces of info:
 mosaic.PixelRepresentation – 0 for unsigned, 1 for signed;
 mosaic.BitsAllocated – 8, 16, or 32</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_header</strong> – the read dicom file/headers</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy format string</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_ss_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_ss_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_ss_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_ss_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_ss_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_ss_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_ss_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_ss_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getters for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> – the tag to read</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.get_volume_pixeldata">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">get_volume_pixeldata</code><span class="sig-paren">(</span><em class="sig-param">sorted_slices</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_volume_pixeldata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.get_volume_pixeldata" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.get_volume_pixeldata">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">get_volume_pixeldata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sorted_slices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#get_volume_pixeldata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.get_volume_pixeldata" title="Permalink to this definition">¶</a></dt>
 <dd><p>the slice and intercept calculation can cause the slices to have different dtypes
 we should get the correct dtype that can cover all of them</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>sorted_slices</strong> (<em>list of slices</em>) – sliced sored in the correct order to create volume</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_ge">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_ge</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_ge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_ge" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_ge">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_ge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_ge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_ge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this function to detect if a dicom series is a GE dataset</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_input</strong> – list with dicom objects</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_hitachi">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_hitachi</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_hitachi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_hitachi" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_hitachi">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_hitachi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_hitachi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_hitachi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this function to detect if a dicom series is a hitachi dataset</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_input</strong> – directory with dicom files for 1 scan of a dicom_header</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_multiframe_dicom">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_multiframe_dicom</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_multiframe_dicom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_multiframe_dicom" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_multiframe_dicom">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_multiframe_dicom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_multiframe_dicom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_multiframe_dicom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this function to detect if a dicom series is a siemens 4D dataset
 NOTE: Only the first slice will be checked so you can only provide an already sorted dicom directory
 (containing one series)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_input</strong> – directory with dicom files for 1 scan</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_orthogonal">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_orthogonal</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em>, <em class="sig-param">log_details=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_orthogonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_orthogonal" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_orthogonal">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_orthogonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_orthogonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_orthogonal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that volume is orthonormal</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – check that we have a volume without skewing</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_orthogonal_nifti">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_orthogonal_nifti</code><span class="sig-paren">(</span><em class="sig-param">nifti_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_orthogonal_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_orthogonal_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_orthogonal_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_orthogonal_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nifti_image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_orthogonal_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_orthogonal_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that volume is orthonormal</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – check that we have a volume without skewing</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_philips">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_philips</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_philips"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_philips" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_philips">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_philips</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_philips"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_philips" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this function to detect if a dicom series is a philips dataset</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_input</strong> – directory with dicom files for 1 scan of a dicom_header</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_siemens">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_siemens</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_siemens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_siemens" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_siemens">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_siemens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_siemens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_siemens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this function to detect if a dicom series is a siemens dataset</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_input</strong> – directory with dicom files for 1 scan</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_slice_increment_inconsistent">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_slice_increment_inconsistent</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_slice_increment_inconsistent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_slice_increment_inconsistent" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_slice_increment_inconsistent">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_slice_increment_inconsistent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_slice_increment_inconsistent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_slice_increment_inconsistent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that the distance between all slices is equal (or very close to)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.is_valid_imaging_dicom">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">is_valid_imaging_dicom</code><span class="sig-paren">(</span><em class="sig-param">dicom_header</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_valid_imaging_dicom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.is_valid_imaging_dicom" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.is_valid_imaging_dicom">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">is_valid_imaging_dicom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_header</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#is_valid_imaging_dicom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.is_valid_imaging_dicom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function will do some basic checks to see if this is a valid imaging dicom</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.read_dicom_directory">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">read_dicom_directory</code><span class="sig-paren">(</span><em class="sig-param">dicom_directory</em>, <em class="sig-param">stop_before_pixels=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#read_dicom_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.read_dicom_directory" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_create_affine">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_create_affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_create_affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_create_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate the affine matrix for a dicom series
+This method was based on (<a class="reference external" href="http://nipy.org/nibabel/dicom/dicom_orientation.html">http://nipy.org/nibabel/dicom/dicom_orientation.html</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sorted_dicoms</strong> – list with sorted dicom files</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_get_volume_pixeldata">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_get_volume_pixeldata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_get_volume_pixeldata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_get_volume_pixeldata" title="Permalink to this definition">¶</a></dt>
+<dd><p>the slice and intercept calculation can cause the slices to have different dtypes
+we should get the correct dtype that can cover all of them</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sorted_slices</strong> (<em>list of slices</em>) – sliced sored in the correct order to create volume</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_is_orthogonal">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_is_orthogonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_is_orthogonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_is_orthogonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that volume is orthonormal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – check that we have a volume without skewing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_is_slice_increment_inconsistent">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_is_slice_increment_inconsistent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_is_slice_increment_inconsistent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_is_slice_increment_inconsistent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the distance between all slices is equal (or very close to)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_validate_orientation">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_validate_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_validate_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_validate_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that all dicoms have the same orientation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_validate_orthogonal">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_validate_orthogonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_validate_orthogonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_validate_orthogonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that volume is orthonormal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – check that we have a volume without skewing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_validate_slice_increment">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_validate_slice_increment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_validate_slice_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_validate_slice_increment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the distance between all slices is equal (or very close to)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.multiframe_validate_slicecount">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">multiframe_validate_slicecount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#multiframe_validate_slicecount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.multiframe_validate_slicecount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that volume is big enough to create a meaningfull volume
+This will also skip localizers and alike</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.read_dicom_directory">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">read_dicom_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_before_pixels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#read_dicom_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.read_dicom_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read all dicom files in a given directory (stop before pixels)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stop_before_pixels</strong> (<em>bool</em>) – Should we stop reading before the pixeldata (handy if we only want header info)</p></li>
-<li><p><strong>dicom_directory</strong> (<em>six.string_types</em>) – Directory with dicom data</p></li>
+<li><p><strong>dicom_directory</strong> (<em>str</em>) – Directory with dicom data</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of dicom objects</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.set_fd_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">set_fd_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#set_fd_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.set_fd_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.set_fd_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">set_fd_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#set_fd_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.set_fd_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setters for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> – the value to set on the tag</p></li>
 <li><p><strong>tag</strong> – the tag to read</p></li>
@@ -425,12 +525,12 @@ NOTE: Only the first slice will be checked so you can only provide an already so
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.set_ss_value">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">set_ss_value</code><span class="sig-paren">(</span><em class="sig-param">tag</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#set_ss_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.set_ss_value" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.set_ss_value">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">set_ss_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#set_ss_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.set_ss_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setter for data that also work with implicit transfersyntax</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> – the value to set on the tag</p></li>
 <li><p><strong>tag</strong> – the tag to read</p></li>
@@ -439,12 +539,12 @@ NOTE: Only the first slice will be checked so you can only provide an already so
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.set_tr_te">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">set_tr_te</code><span class="sig-paren">(</span><em class="sig-param">nifti_image</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">echo_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#set_tr_te"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.set_tr_te" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.set_tr_te">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">set_tr_te</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nifti_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetition_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">echo_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#set_tr_te"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.set_tr_te" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the tr and te in the nifti headers</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>echo_time</strong> – echo time</p></li>
 <li><p><strong>repetition_time</strong> – repetition time</p></li>
@@ -454,68 +554,79 @@ NOTE: Only the first slice will be checked so you can only provide an already so
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.sort_dicoms">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">sort_dicoms</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#sort_dicoms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.sort_dicoms" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.sort_dicoms">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">sort_dicoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#sort_dicoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.sort_dicoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sort the dicoms based om the image possition patient</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.validate_orientation">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">validate_orientation</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.validate_orientation" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.validate_instance_number">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">validate_instance_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_instance_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.validate_instance_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the instance number is consistent through all slices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.validate_orientation">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">validate_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.validate_orientation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that all dicoms have the same orientation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.validate_orthogonal">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">validate_orthogonal</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_orthogonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.validate_orthogonal" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.validate_orthogonal">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">validate_orthogonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_orthogonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.validate_orthogonal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that volume is orthonormal</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – check that we have a volume without skewing</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.validate_slice_increment">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">validate_slice_increment</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_slice_increment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.validate_slice_increment" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.validate_slice_increment">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">validate_slice_increment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_slice_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.validate_slice_increment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that the distance between all slices is equal (or very close to)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.validate_slicecount">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">validate_slicecount</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_slicecount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.validate_slicecount" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.validate_slicecount">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">validate_slicecount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#validate_slicecount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.validate_slicecount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that volume is big enough to create a meaningfull volume
 This will also skip localizers and alike</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicoms</strong> – list of dicoms</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.write_bval_file">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">write_bval_file</code><span class="sig-paren">(</span><em class="sig-param">bvals</em>, <em class="sig-param">bval_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#write_bval_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.write_bval_file" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.write_bval_file">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">write_bval_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bval_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#write_bval_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.write_bval_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an array of bvals to a bval file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bvals</strong> – array with the values</p></li>
 <li><p><strong>bval_file</strong> – filepath to write to</p></li>
@@ -524,12 +635,12 @@ This will also skip localizers and alike</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.common.write_bvec_file">
-<code class="sig-prename descclassname">dicom2nifti.common.</code><code class="sig-name descname">write_bvec_file</code><span class="sig-paren">(</span><em class="sig-param">bvecs</em>, <em class="sig-param">bvec_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#write_bvec_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.common.write_bvec_file" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.common.write_bvec_file">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.common.</span></span><span class="sig-name descname"><span class="pre">write_bvec_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bvecs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bvec_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/common.html#write_bvec_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.common.write_bvec_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an array of bvecs to a bvec file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bvecs</strong> – array with the vectors</p></li>
 <li><p><strong>bvec_file</strong> – filepath to write to</p></li>
@@ -538,93 +649,58 @@ This will also skip localizers and alike</p>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.compressed_dicom">
-<span id="dicom2nifti-compressed-dicom-module"></span><h2>dicom2nifti.compressed_dicom module<a class="headerlink" href="#module-dicom2nifti.compressed_dicom" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="dicom2nifti.compressed_dicom.compress_directory">
-<code class="sig-prename descclassname">dicom2nifti.compressed_dicom.</code><code class="sig-name descname">compress_directory</code><span class="sig-paren">(</span><em class="sig-param">dicom_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/compressed_dicom.html#compress_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.compressed_dicom.compress_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function can be used to convert a folder of jpeg compressed images to an uncompressed ones</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dicom_directory</strong> – directory of dicom files to compress</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dicom2nifti.compressed_dicom.is_dicom_file">
-<code class="sig-prename descclassname">dicom2nifti.compressed_dicom.</code><code class="sig-name descname">is_dicom_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/compressed_dicom.html#is_dicom_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.compressed_dicom.is_dicom_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Util function to check if file is a dicom file
-the first 128 bytes are preamble
-the next 4 bytes should contain DICM otherwise it is not a dicom</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>six.string_types</em>) – file to check for the DICM header block</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if it is a dicom file</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dicom2nifti.compressed_dicom.read_file">
-<code class="sig-prename descclassname">dicom2nifti.compressed_dicom.</code><code class="sig-name descname">read_file</code><span class="sig-paren">(</span><em class="sig-param">dicom_file</em>, <em class="sig-param">defer_size=None</em>, <em class="sig-param">stop_before_pixels=False</em>, <em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/compressed_dicom.html#read_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.compressed_dicom.read_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="module-dicom2nifti.convert_dicom">
-<span id="dicom2nifti-convert-dicom-module"></span><h2>dicom2nifti.convert_dicom module<a class="headerlink" href="#module-dicom2nifti.convert_dicom" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_dicom">
+<span id="dicom2nifti-convert-dicom-module"></span><h2>dicom2nifti.convert_dicom module<a class="headerlink" href="#module-dicom2nifti.convert_dicom" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="class">
-<dt id="dicom2nifti.convert_dicom.Vendor">
-<em class="property">class </em><code class="sig-prename descclassname">dicom2nifti.convert_dicom.</code><code class="sig-name descname">Vendor</code><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#Vendor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.Vendor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_dicom.</span></span><span class="sig-name descname"><span class="pre">Vendor</span></span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#Vendor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Enum with the vendor</p>
-<dl class="attribute">
-<dt id="dicom2nifti.convert_dicom.Vendor.GE">
-<code class="sig-name descname">GE</code><em class="property"> = 2</em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.GE" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.Vendor.GE">
+<span class="sig-name descname"><span class="pre">GE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.GE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.convert_dicom.Vendor.GENERIC">
-<code class="sig-name descname">GENERIC</code><em class="property"> = 0</em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.GENERIC" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.Vendor.GENERIC">
+<span class="sig-name descname"><span class="pre">GENERIC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.GENERIC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.convert_dicom.Vendor.HITACHI">
-<code class="sig-name descname">HITACHI</code><em class="property"> = 4</em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.HITACHI" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.Vendor.HITACHI">
+<span class="sig-name descname"><span class="pre">HITACHI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.HITACHI" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.convert_dicom.Vendor.PHILIPS">
-<code class="sig-name descname">PHILIPS</code><em class="property"> = 3</em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.PHILIPS" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.Vendor.PHILIPS">
+<span class="sig-name descname"><span class="pre">PHILIPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.PHILIPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.convert_dicom.Vendor.SIEMENS">
-<code class="sig-name descname">SIEMENS</code><em class="property"> = 1</em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.SIEMENS" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.Vendor.SIEMENS">
+<span class="sig-name descname"><span class="pre">SIEMENS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#dicom2nifti.convert_dicom.Vendor.SIEMENS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_dicom.are_imaging_dicoms">
-<code class="sig-prename descclassname">dicom2nifti.convert_dicom.</code><code class="sig-name descname">are_imaging_dicoms</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#are_imaging_dicoms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.are_imaging_dicoms" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.are_imaging_dicoms">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_dicom.</span></span><span class="sig-name descname"><span class="pre">are_imaging_dicoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#are_imaging_dicoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.are_imaging_dicoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will check the dicom headers to see which type of series it is
 Possibilities are fMRI, DTI, Anatomical (if no clear type is found anatomical is used)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dicom_input</strong> – directory with dicom files or a list of dicom objects</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_dicom.dicom_array_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_dicom.</code><code class="sig-name descname">dicom_array_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">dicom_list</em>, <em class="sig-param">output_file</em>, <em class="sig-param">reorient_nifti=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#dicom_array_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.dicom_array_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.dicom_array_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_dicom.</span></span><span class="sig-name descname"><span class="pre">dicom_array_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient_nifti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#dicom_array_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.dicom_array_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts dicom single series (see pydicom) to nifty, mimicking SPM</p>
 <p>Examples: See unit test</p>
 <p>will return a dictionary containing
@@ -638,7 +714,7 @@ You should check that the data you are trying to convert is supported by this co
 <p>Inspired by <a class="reference external" href="http://nipy.sourceforge.net/nibabel/dicom/spm_dicom.html">http://nipy.sourceforge.net/nibabel/dicom/spm_dicom.html</a>
 Inspired by <a class="reference external" href="http://code.google.com/p/pydicom/source/browse/source/dicom/contrib/pydicom_series.py">http://code.google.com/p/pydicom/source/browse/source/dicom/contrib/pydicom_series.py</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reorient_nifti</strong> – if True the nifti affine and data will be updated so the data is stored LAS oriented</p></li>
 <li><p><strong>output_file</strong> – file path to write to</p></li>
@@ -648,9 +724,9 @@ Inspired by <a class="reference external" href="http://code.google.com/p/pydicom
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_dicom.dicom_series_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_dicom.</code><code class="sig-name descname">dicom_series_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">original_dicom_directory</em>, <em class="sig-param">output_file=None</em>, <em class="sig-param">reorient_nifti=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#dicom_series_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.dicom_series_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dicom.dicom_series_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_dicom.</span></span><span class="sig-name descname"><span class="pre">dicom_series_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_dicom_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient_nifti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dicom.html#dicom_series_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_dicom.dicom_series_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts dicom single series (see pydicom) to nifty, mimicking SPM</p>
 <p>Examples: See unit test</p>
 <p>will return a dictionary containing
@@ -664,7 +740,7 @@ You should check that the data you are trying to convert is supported by this co
 <p>Inspired by <a class="reference external" href="http://nipy.sourceforge.net/nibabel/dicom/spm_dicom.html">http://nipy.sourceforge.net/nibabel/dicom/spm_dicom.html</a>
 Inspired by <a class="reference external" href="http://code.google.com/p/pydicom/source/browse/source/dicom/contrib/pydicom_series.py">http://code.google.com/p/pydicom/source/browse/source/dicom/contrib/pydicom_series.py</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reorient_nifti</strong> – if True the nifti affine and data will be updated so the data is stored LAS oriented</p></li>
 <li><p><strong>output_file</strong> – file path to write to if not set to None</p></li>
@@ -675,17 +751,17 @@ Inspired by <a class="reference external" href="http://code.google.com/p/pydicom
 <p>:return nibabel image</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.convert_dir">
-<span id="dicom2nifti-convert-dir-module"></span><h2>dicom2nifti.convert_dir module<a class="headerlink" href="#module-dicom2nifti.convert_dir" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_dir">
+<span id="dicom2nifti-convert-dir-module"></span><h2>dicom2nifti.convert_dir module<a class="headerlink" href="#module-dicom2nifti.convert_dir" title="Permalink to this heading">¶</a></h2>
 <p>this module houses all the code to just convert a directory of random dicom files</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.convert_dir.convert_directory">
-<code class="sig-prename descclassname">dicom2nifti.convert_dir.</code><code class="sig-name descname">convert_directory</code><span class="sig-paren">(</span><em class="sig-param">dicom_directory</em>, <em class="sig-param">output_folder</em>, <em class="sig-param">compression=True</em>, <em class="sig-param">reorient=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dir.html#convert_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_dir.convert_directory" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_dir.convert_directory">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_dir.</span></span><span class="sig-name descname"><span class="pre">convert_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_dir.html#convert_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_dir.convert_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will order all dicom files by series and order them one by one</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>compression</strong> – enable or disable gzip compression</p></li>
 <li><p><strong>reorient</strong> – reorient the dicoms according to LAS orientation</p></li>
@@ -696,19 +772,19 @@ Inspired by <a class="reference external" href="http://code.google.com/p/pydicom
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.convert_ge">
-<span id="dicom2nifti-convert-ge-module"></span><h2>dicom2nifti.convert_ge module<a class="headerlink" href="#module-dicom2nifti.convert_ge" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_ge">
+<span id="dicom2nifti-convert-ge-module"></span><h2>dicom2nifti.convert_ge module<a class="headerlink" href="#module-dicom2nifti.convert_ge" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.convert_ge.dicom_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_ge.</code><code class="sig-name descname">dicom_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em>, <em class="sig-param">output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_ge.html#dicom_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_ge.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_ge.dicom_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_ge.</span></span><span class="sig-name descname"><span class="pre">dicom_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_ge.html#dicom_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_ge.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the main dicom to nifti conversion fuction for ge images.
 As input ge images are required. It will then determine the type of images and do the correct conversion</p>
 <p>Examples: See unit test</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_file</strong> – the filepath to the output nifti file</p></li>
 <li><p><strong>dicom_input</strong> – list with dicom objects</p></li>
@@ -717,18 +793,23 @@ As input ge images are required. It will then determine the type of images and d
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.convert_generic">
-<span id="dicom2nifti-convert-generic-module"></span><h2>dicom2nifti.convert_generic module<a class="headerlink" href="#module-dicom2nifti.convert_generic" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_generic">
+<span id="dicom2nifti-convert-generic-module"></span><h2>dicom2nifti.convert_generic module<a class="headerlink" href="#module-dicom2nifti.convert_generic" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.convert_generic.dicom_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_generic.</code><code class="sig-name descname">dicom_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em>, <em class="sig-param">output_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#dicom_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_generic.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_generic.create_rgba_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_generic.</span></span><span class="sig-name descname"><span class="pre">create_rgba_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#create_rgba_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_generic.create_rgba_nifti" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_generic.dicom_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_generic.</span></span><span class="sig-name descname"><span class="pre">dicom_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#dicom_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_generic.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will convert an anatomical dicom series to a nifti</p>
 <p>Examples: See unit test</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_file</strong> – filepath to the output nifti</p></li>
 <li><p><strong>dicom_input</strong> – directory with the dicom files for a single scan, or list of read in dicoms</p></li>
@@ -737,40 +818,55 @@ As input ge images are required. It will then determine the type of images and d
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_generic.remove_duplicate_slices">
-<code class="sig-prename descclassname">dicom2nifti.convert_generic.</code><code class="sig-name descname">remove_duplicate_slices</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#remove_duplicate_slices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_generic.remove_duplicate_slices" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_generic.multiframe_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_generic.</span></span><span class="sig-name descname"><span class="pre">multiframe_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#multiframe_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_generic.multiframe_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will convert an anatomical dicom series to a nifti</p>
+<p>Examples: See unit test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_file</strong> – filepath to the output nifti</p></li>
+<li><p><strong>dicom_input</strong> – directory with the dicom files for a single scan, or list of read in dicoms</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_generic.remove_duplicate_slices">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_generic.</span></span><span class="sig-name descname"><span class="pre">remove_duplicate_slices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#remove_duplicate_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_generic.remove_duplicate_slices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search dicoms for localizers and delete them</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_generic.remove_localizers_by_imagetype">
-<code class="sig-prename descclassname">dicom2nifti.convert_generic.</code><code class="sig-name descname">remove_localizers_by_imagetype</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#remove_localizers_by_imagetype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_generic.remove_localizers_by_imagetype" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_generic.remove_localizers_by_imagetype">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_generic.</span></span><span class="sig-name descname"><span class="pre">remove_localizers_by_imagetype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#remove_localizers_by_imagetype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_generic.remove_localizers_by_imagetype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search dicoms for localizers and delete them</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_generic.remove_localizers_by_orientation">
-<code class="sig-prename descclassname">dicom2nifti.convert_generic.</code><code class="sig-name descname">remove_localizers_by_orientation</code><span class="sig-paren">(</span><em class="sig-param">dicoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#remove_localizers_by_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_generic.remove_localizers_by_orientation" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_generic.remove_localizers_by_orientation">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_generic.</span></span><span class="sig-name descname"><span class="pre">remove_localizers_by_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_generic.html#remove_localizers_by_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_generic.remove_localizers_by_orientation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removing localizers based on the orientation.
 This is needed as in some cases with ct data there are some localizer/projection type images that cannot
 be distiguished by the dicom headers. This is why we kick out all orientations that do not have more than 4 files
 4 is the limit anyway for converting to nifti on our case</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.convert_hitachi">
-<span id="dicom2nifti-convert-hitachi-module"></span><h2>dicom2nifti.convert_hitachi module<a class="headerlink" href="#module-dicom2nifti.convert_hitachi" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_hitachi">
+<span id="dicom2nifti-convert-hitachi-module"></span><h2>dicom2nifti.convert_hitachi module<a class="headerlink" href="#module-dicom2nifti.convert_hitachi" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.convert_hitachi.dicom_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_hitachi.</code><code class="sig-name descname">dicom_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em>, <em class="sig-param">output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_hitachi.html#dicom_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_hitachi.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_hitachi.dicom_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_hitachi.</span></span><span class="sig-name descname"><span class="pre">dicom_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_hitachi.html#dicom_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_hitachi.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the main dicom to nifti conversion fuction for hitachi images.
 As input hitachi images are required. It will then determine the type of images and do the correct conversion</p>
 <p>Examples: See unit test</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_file</strong> – file path to the output nifti</p></li>
 <li><p><strong>dicom_input</strong> – directory with dicom files for 1 scan</p></li>
@@ -779,19 +875,19 @@ As input hitachi images are required. It will then determine the type of images 
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.convert_philips">
-<span id="dicom2nifti-convert-philips-module"></span><h2>dicom2nifti.convert_philips module<a class="headerlink" href="#module-dicom2nifti.convert_philips" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_philips">
+<span id="dicom2nifti-convert-philips-module"></span><h2>dicom2nifti.convert_philips module<a class="headerlink" href="#module-dicom2nifti.convert_philips" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.convert_philips.dicom_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_philips.</code><code class="sig-name descname">dicom_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em>, <em class="sig-param">output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_philips.html#dicom_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_philips.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_philips.dicom_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_philips.</span></span><span class="sig-name descname"><span class="pre">dicom_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_philips.html#dicom_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_philips.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the main dicom to nifti conversion fuction for philips images.
 As input philips images are required. It will then determine the type of images and do the correct conversion</p>
 <p>Examples: See unit test</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_file</strong> – file path to the output nifti</p></li>
 <li><p><strong>dicom_input</strong> – directory with dicom files for 1 scan</p></li>
@@ -800,35 +896,35 @@ As input philips images are required. It will then determine the type of images 
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.convert_siemens">
-<span id="dicom2nifti-convert-siemens-module"></span><h2>dicom2nifti.convert_siemens module<a class="headerlink" href="#module-dicom2nifti.convert_siemens" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.convert_siemens">
+<span id="dicom2nifti-convert-siemens-module"></span><h2>dicom2nifti.convert_siemens module<a class="headerlink" href="#module-dicom2nifti.convert_siemens" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="class">
-<dt id="dicom2nifti.convert_siemens.MosaicType">
-<em class="property">class </em><code class="sig-prename descclassname">dicom2nifti.convert_siemens.</code><code class="sig-name descname">MosaicType</code><a class="reference internal" href="_modules/dicom2nifti/convert_siemens.html#MosaicType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_siemens.MosaicType" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dicom2nifti.convert_siemens.MosaicType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_siemens.</span></span><span class="sig-name descname"><span class="pre">MosaicType</span></span><a class="reference internal" href="_modules/dicom2nifti/convert_siemens.html#MosaicType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_siemens.MosaicType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Enum for the possible types of mosaic data</p>
-<dl class="attribute">
-<dt id="dicom2nifti.convert_siemens.MosaicType.ASCENDING">
-<code class="sig-name descname">ASCENDING</code><em class="property"> = 1</em><a class="headerlink" href="#dicom2nifti.convert_siemens.MosaicType.ASCENDING" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_siemens.MosaicType.ASCENDING">
+<span class="sig-name descname"><span class="pre">ASCENDING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#dicom2nifti.convert_siemens.MosaicType.ASCENDING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.convert_siemens.MosaicType.DESCENDING">
-<code class="sig-name descname">DESCENDING</code><em class="property"> = 2</em><a class="headerlink" href="#dicom2nifti.convert_siemens.MosaicType.DESCENDING" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.convert_siemens.MosaicType.DESCENDING">
+<span class="sig-name descname"><span class="pre">DESCENDING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#dicom2nifti.convert_siemens.MosaicType.DESCENDING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.convert_siemens.dicom_to_nifti">
-<code class="sig-prename descclassname">dicom2nifti.convert_siemens.</code><code class="sig-name descname">dicom_to_nifti</code><span class="sig-paren">(</span><em class="sig-param">dicom_input</em>, <em class="sig-param">output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_siemens.html#dicom_to_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.convert_siemens.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.convert_siemens.dicom_to_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.convert_siemens.</span></span><span class="sig-name descname"><span class="pre">dicom_to_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicom_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/convert_siemens.html#dicom_to_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.convert_siemens.dicom_to_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the main dicom to nifti conversion function for ge images.
 As input ge images are required. It will then determine the type of images and do the correct conversion</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_file</strong> – filepath to the output nifti</p></li>
 <li><p><strong>dicom_input</strong> – directory with dicom files for 1 scan</p></li>
@@ -837,41 +933,41 @@ As input ge images are required. It will then determine the type of images and d
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.exceptions">
-<span id="dicom2nifti-exceptions-module"></span><h2>dicom2nifti.exceptions module<a class="headerlink" href="#module-dicom2nifti.exceptions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.exceptions">
+<span id="dicom2nifti-exceptions-module"></span><h2>dicom2nifti.exceptions module<a class="headerlink" href="#module-dicom2nifti.exceptions" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="exception">
-<dt id="dicom2nifti.exceptions.ConversionError">
-<em class="property">exception </em><code class="sig-prename descclassname">dicom2nifti.exceptions.</code><code class="sig-name descname">ConversionError</code><span class="sig-paren">(</span><em class="sig-param">message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/exceptions.html#ConversionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.exceptions.ConversionError" title="Permalink to this definition">¶</a></dt>
+<dl class="py exception">
+<dt class="sig sig-object py" id="dicom2nifti.exceptions.ConversionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConversionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/exceptions.html#ConversionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.exceptions.ConversionError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Custom error type to distinguish between know validations and script errors</p>
 </dd></dl>
 
-<dl class="exception">
-<dt id="dicom2nifti.exceptions.ConversionValidationError">
-<em class="property">exception </em><code class="sig-prename descclassname">dicom2nifti.exceptions.</code><code class="sig-name descname">ConversionValidationError</code><span class="sig-paren">(</span><em class="sig-param">message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/exceptions.html#ConversionValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.exceptions.ConversionValidationError" title="Permalink to this definition">¶</a></dt>
+<dl class="py exception">
+<dt class="sig sig-object py" id="dicom2nifti.exceptions.ConversionValidationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConversionValidationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/exceptions.html#ConversionValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.exceptions.ConversionValidationError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Custom error type to distinguish between know validations and script errors</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.image_reorientation">
-<span id="dicom2nifti-image-reorientation-module"></span><h2>dicom2nifti.image_reorientation module<a class="headerlink" href="#module-dicom2nifti.image_reorientation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.image_reorientation">
+<span id="dicom2nifti-image-reorientation-module"></span><h2>dicom2nifti.image_reorientation module<a class="headerlink" href="#module-dicom2nifti.image_reorientation" title="Permalink to this heading">¶</a></h2>
 <p>Created on Thu Aug  1 16:10:56 2013</p>
 <p>&#64;author: vterzopoulos, abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.image_reorientation.reorient_image">
-<code class="sig-prename descclassname">dicom2nifti.image_reorientation.</code><code class="sig-name descname">reorient_image</code><span class="sig-paren">(</span><em class="sig-param">input_image</em>, <em class="sig-param">output_image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_reorientation.html#reorient_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_reorientation.reorient_image" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.image_reorientation.reorient_image">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.image_reorientation.</span></span><span class="sig-name descname"><span class="pre">reorient_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_reorientation.html#reorient_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_reorientation.reorient_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the orientation of the Image data in order to be in LAS space
 x will represent the coronal plane, y the sagittal and z the axial plane.
 x increases from Right (R) to Left (L), y from Posterior (P) to Anterior (A) and z from Inferior (I) to Superior (S)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The output image in nibabel form</p>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>output_image</strong> – filepath to the nibabel image</p></li>
 <li><p><strong>input_image</strong> – filepath to the nibabel image</p></li>
@@ -880,21 +976,21 @@ x increases from Right (R) to Left (L), y from Posterior (P) to Anterior (A) and
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.image_volume">
-<span id="dicom2nifti-image-volume-module"></span><h2>dicom2nifti.image_volume module<a class="headerlink" href="#module-dicom2nifti.image_volume" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.image_volume">
+<span id="dicom2nifti-image-volume-module"></span><h2>dicom2nifti.image_volume module<a class="headerlink" href="#module-dicom2nifti.image_volume" title="Permalink to this heading">¶</a></h2>
 <p>Created on Fri Jun  7 07:40:20 2013</p>
 <p>&#64;author: abrys</p>
-<dl class="class">
-<dt id="dicom2nifti.image_volume.ImageVolume">
-<em class="property">class </em><code class="sig-prename descclassname">dicom2nifti.image_volume.</code><code class="sig-name descname">ImageVolume</code><span class="sig-paren">(</span><em class="sig-param">nifti_image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#ImageVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_volume.ImageVolume" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.ImageVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.image_volume.</span></span><span class="sig-name descname"><span class="pre">ImageVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nifti_image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#ImageVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_volume.ImageVolume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class representing an imagevolume.
 You can provide it with a nifti and can be used to get slices in a certain direction
 It will take the affine matrix into account to find the correct orientation</p>
-<dl class="method">
-<dt id="dicom2nifti.image_volume.ImageVolume.get_slice">
-<code class="sig-name descname">get_slice</code><span class="sig-paren">(</span><em class="sig-param">slice_type</em>, <em class="sig-param">slice_number</em>, <em class="sig-param">time_point=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#ImageVolume.get_slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_volume.ImageVolume.get_slice" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.ImageVolume.get_slice">
+<span class="sig-name descname"><span class="pre">get_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slice_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#ImageVolume.get_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_volume.ImageVolume.get_slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a slice of the dataset.
 slice.data contains the window/levelled values, in uint8
 slice.original_data contains the original data for this slice
@@ -905,99 +1001,99 @@ slice.original_data contains the original data for this slice
 
 </dd></dl>
 
-<dl class="class">
-<dt id="dicom2nifti.image_volume.Slice">
-<em class="property">class </em><code class="sig-prename descclassname">dicom2nifti.image_volume.</code><code class="sig-name descname">Slice</code><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#Slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_volume.Slice" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.Slice">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.image_volume.</span></span><span class="sig-name descname"><span class="pre">Slice</span></span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#Slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_volume.Slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class containing all data for a single slice in an image volume</p>
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.Slice.original_data">
-<code class="sig-name descname">original_data</code><em class="property"> = None</em><a class="headerlink" href="#dicom2nifti.image_volume.Slice.original_data" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.Slice.original_data">
+<span class="sig-name descname"><span class="pre">original_data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dicom2nifti.image_volume.Slice.original_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.Slice.slice_orientation">
-<code class="sig-name descname">slice_orientation</code><em class="property"> = None</em><a class="headerlink" href="#dicom2nifti.image_volume.Slice.slice_orientation" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.Slice.slice_orientation">
+<span class="sig-name descname"><span class="pre">slice_orientation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dicom2nifti.image_volume.Slice.slice_orientation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="dicom2nifti.image_volume.SliceOrientation">
-<em class="property">class </em><code class="sig-prename descclassname">dicom2nifti.image_volume.</code><code class="sig-name descname">SliceOrientation</code><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#SliceOrientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceOrientation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.image_volume.</span></span><span class="sig-name descname"><span class="pre">SliceOrientation</span></span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#SliceOrientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class containing the orientation of a slice</p>
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceOrientation.normal_component">
-<code class="sig-name descname">normal_component</code><em class="property"> = None</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.normal_component" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceOrientation.normal_component">
+<span class="sig-name descname"><span class="pre">normal_component</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.normal_component" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceOrientation.x_component">
-<code class="sig-name descname">x_component</code><em class="property"> = None</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.x_component" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceOrientation.x_component">
+<span class="sig-name descname"><span class="pre">x_component</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.x_component" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceOrientation.x_inverted">
-<code class="sig-name descname">x_inverted</code><em class="property"> = False</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.x_inverted" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceOrientation.x_inverted">
+<span class="sig-name descname"><span class="pre">x_inverted</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.x_inverted" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceOrientation.y_component">
-<code class="sig-name descname">y_component</code><em class="property"> = None</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.y_component" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceOrientation.y_component">
+<span class="sig-name descname"><span class="pre">y_component</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.y_component" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceOrientation.y_inverted">
-<code class="sig-name descname">y_inverted</code><em class="property"> = False</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.y_inverted" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceOrientation.y_inverted">
+<span class="sig-name descname"><span class="pre">y_inverted</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceOrientation.y_inverted" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="dicom2nifti.image_volume.SliceType">
-<em class="property">class </em><code class="sig-prename descclassname">dicom2nifti.image_volume.</code><code class="sig-name descname">SliceType</code><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#SliceType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_volume.SliceType" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dicom2nifti.image_volume.</span></span><span class="sig-name descname"><span class="pre">SliceType</span></span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#SliceType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_volume.SliceType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>ENUM like container for the slice types</p>
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceType.AXIAL">
-<code class="sig-name descname">AXIAL</code><em class="property"> = 1</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceType.AXIAL" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceType.AXIAL">
+<span class="sig-name descname"><span class="pre">AXIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceType.AXIAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceType.CORONAL">
-<code class="sig-name descname">CORONAL</code><em class="property"> = 3</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceType.CORONAL" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceType.CORONAL">
+<span class="sig-name descname"><span class="pre">CORONAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceType.CORONAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="dicom2nifti.image_volume.SliceType.SAGITTAL">
-<code class="sig-name descname">SAGITTAL</code><em class="property"> = 2</em><a class="headerlink" href="#dicom2nifti.image_volume.SliceType.SAGITTAL" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.SliceType.SAGITTAL">
+<span class="sig-name descname"><span class="pre">SAGITTAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#dicom2nifti.image_volume.SliceType.SAGITTAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.image_volume.load">
-<code class="sig-prename descclassname">dicom2nifti.image_volume.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">nifti_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.image_volume.load" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.image_volume.load">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.image_volume.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nifti_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/image_volume.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.image_volume.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.patch_pydicom_encodings">
-<span id="dicom2nifti-patch-pydicom-encodings-module"></span><h2>dicom2nifti.patch_pydicom_encodings module<a class="headerlink" href="#module-dicom2nifti.patch_pydicom_encodings" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.patch_pydicom_encodings">
+<span id="dicom2nifti-patch-pydicom-encodings-module"></span><h2>dicom2nifti.patch_pydicom_encodings module<a class="headerlink" href="#module-dicom2nifti.patch_pydicom_encodings" title="Permalink to this heading">¶</a></h2>
 <p>Importing this file will extend the pydicom encoding mapping fixing issues when reading less frequently used encodings</p>
-<dl class="function">
-<dt id="dicom2nifti.patch_pydicom_encodings.apply">
-<code class="sig-prename descclassname">dicom2nifti.patch_pydicom_encodings.</code><code class="sig-name descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/patch_pydicom_encodings.html#apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.patch_pydicom_encodings.apply" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.patch_pydicom_encodings.apply">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.patch_pydicom_encodings.</span></span><span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/patch_pydicom_encodings.html#apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.patch_pydicom_encodings.apply" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.resample">
-<span id="dicom2nifti-resample-module"></span><h2>dicom2nifti.resample module<a class="headerlink" href="#module-dicom2nifti.resample" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti.resample">
+<span id="dicom2nifti-resample-module"></span><h2>dicom2nifti.resample module<a class="headerlink" href="#module-dicom2nifti.resample" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-<dl class="function">
-<dt id="dicom2nifti.resample.resample_nifti_images">
-<code class="sig-prename descclassname">dicom2nifti.resample.</code><code class="sig-name descname">resample_nifti_images</code><span class="sig-paren">(</span><em class="sig-param">nifti_images</em>, <em class="sig-param">voxel_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/resample.html#resample_nifti_images"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.resample.resample_nifti_images" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.resample.resample_nifti_images">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.resample.</span></span><span class="sig-name descname"><span class="pre">resample_nifti_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nifti_images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/resample.html#resample_nifti_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.resample.resample_nifti_images" title="Permalink to this definition">¶</a></dt>
 <dd><p>In this function we will create an orthogonal image and resample the original images to this space</p>
 <p>In this calculation we work in 3 spaces / coordinate systems</p>
 <ul class="simple">
@@ -1016,140 +1112,154 @@ x and y are perpendicular with the x and y or the image</p>
 <p>We now have the new xyz axis, origin and size and can create the new affine used for resampling</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.resample.resample_single_nifti">
-<code class="sig-prename descclassname">dicom2nifti.resample.</code><code class="sig-name descname">resample_single_nifti</code><span class="sig-paren">(</span><em class="sig-param">input_nifti</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/resample.html#resample_single_nifti"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.resample.resample_single_nifti" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.resample.resample_single_nifti">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.resample.</span></span><span class="sig-name descname"><span class="pre">resample_single_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_nifti</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/resample.html#resample_single_nifti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.resample.resample_single_nifti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resample a gantry tilted image in place</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti.settings">
-<span id="dicom2nifti-settings-module"></span><h2>dicom2nifti.settings module<a class="headerlink" href="#module-dicom2nifti.settings" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_pydicom_read_force">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_pydicom_read_force</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_pydicom_read_force"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_pydicom_read_force" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="module-dicom2nifti.settings">
+<span id="dicom2nifti-settings-module"></span><h2>dicom2nifti.settings module<a class="headerlink" href="#module-dicom2nifti.settings" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_pydicom_read_force">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_pydicom_read_force</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_pydicom_read_force"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_pydicom_read_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable the pydicom read force to try to read non conform dicom data</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_resampling">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_resampling</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_resampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_resampling" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_resampling">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_resampling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_resampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_resampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable resampling in case of gantry tilted data (disabled by default)</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_validate_multiframe_implicit">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_validate_multiframe_implicit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_multiframe_implicit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_multiframe_implicit" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_validate_instance_number">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_validate_instance_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_instance_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_instance_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable the validation of the slice increment.
+This allows for converting data where the slice increment is not consistent.
+USE WITH CAUTION!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_validate_multiframe_implicit">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_validate_multiframe_implicit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_multiframe_implicit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_multiframe_implicit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable the validation that checks that data is not multiframe implicit
 This allows to sometimes convert Philips Multiframe with implicit transfer syntax</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_validate_orientation">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_validate_orientation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_orientation" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_validate_orientation">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_validate_orientation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_orientation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable the validation of the slice orientation.
 This validation checks that all slices have the same orientation (are parallel).
 USE WITH CAUTION!</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_validate_orthogonal">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_validate_orthogonal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_orthogonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_orthogonal" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_validate_orthogonal">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_validate_orthogonal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_orthogonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_orthogonal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable the validation whether the volume is orthogonal (so without gantry tilting or alike).
 This allows for converting gantry tilted data.
 The gantry tilting will be reflected in the affine matrix and not in the data
 USE WITH CAUTION!</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_validate_slice_increment">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_validate_slice_increment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_slice_increment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_slice_increment" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_validate_slice_increment">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_validate_slice_increment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_slice_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_slice_increment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable the validation of the slice increment.
 This allows for converting data where the slice increment is not consistent.
 USE WITH CAUTION!</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.disable_validate_slicecount">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">disable_validate_slicecount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_slicecount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_slicecount" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.disable_validate_slicecount">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">disable_validate_slicecount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#disable_validate_slicecount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.disable_validate_slicecount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable the validation of the minimal slice count of 4 slices.
 This allows for converting data with less slices.
 Usually less than 4 could be considered localizer or similar thus ignoring these scans by default
 USE WITH CAUTION!</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_pydicom_read_force">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_pydicom_read_force</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_pydicom_read_force"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_pydicom_read_force" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_pydicom_read_force">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_pydicom_read_force</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_pydicom_read_force"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_pydicom_read_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable the pydicom read force to try to read non conform dicom data</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_resampling">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_resampling</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_resampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_resampling" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_resampling">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_resampling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_resampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_resampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable resampling in case of gantry tilted data (disabled by default)</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_validate_multiframe_implicit">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_validate_multiframe_implicit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_multiframe_implicit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_multiframe_implicit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable the validation that checks that data is not multiframe implicit again (DEFAULT ENABLED)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_validate_orientation">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_validate_orientation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_orientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_orientation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable the slice orientation validation again (DEFAULT ENABLED)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_validate_orthogonal">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_validate_orthogonal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_orthogonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_orthogonal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable the validation whether the volume is orthogonal again (DEFAULT ENABLED)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_validate_slice_increment">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_validate_slice_increment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_slice_increment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_slice_increment" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_validate_instance_number">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_validate_instance_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_instance_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_instance_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable the slice increment validation again (DEFAULT ENABLED)</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.enable_validate_slicecount">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">enable_validate_slicecount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_slicecount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_slicecount" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_validate_multiframe_implicit">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_validate_multiframe_implicit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_multiframe_implicit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_multiframe_implicit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the validation that checks that data is not multiframe implicit again (DEFAULT ENABLED)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_validate_orientation">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_validate_orientation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the slice orientation validation again (DEFAULT ENABLED)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_validate_orthogonal">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_validate_orthogonal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_orthogonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_orthogonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the validation whether the volume is orthogonal again (DEFAULT ENABLED)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_validate_slice_increment">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_validate_slice_increment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_slice_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_slice_increment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the slice increment validation again (DEFAULT ENABLED)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.enable_validate_slicecount">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">enable_validate_slicecount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#enable_validate_slicecount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.enable_validate_slicecount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable the validation of the minimal slice count of 4 slices again (DEFAULT ENABLED)</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.set_gdcmconv_path">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">set_gdcmconv_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#set_gdcmconv_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.set_gdcmconv_path" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.set_gdcmconv_path">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">set_gdcmconv_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#set_gdcmconv_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.set_gdcmconv_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set where the filepath to the gdcmconv executable (needed is it is not found in your PATH)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>path</strong> – the file path to the gdcmconv executable</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.set_resample_padding">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">set_resample_padding</code><span class="sig-paren">(</span><em class="sig-param">padding</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#set_resample_padding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.set_resample_padding" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.set_resample_padding">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">set_resample_padding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">padding</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#set_resample_padding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.set_resample_padding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the spline interpolation padding</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dicom2nifti.settings.set_resample_spline_interpolation_order">
-<code class="sig-prename descclassname">dicom2nifti.settings.</code><code class="sig-name descname">set_resample_spline_interpolation_order</code><span class="sig-paren">(</span><em class="sig-param">order</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#set_resample_spline_interpolation_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dicom2nifti.settings.set_resample_spline_interpolation_order" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="dicom2nifti.settings.set_resample_spline_interpolation_order">
+<span class="sig-prename descclassname"><span class="pre">dicom2nifti.settings.</span></span><span class="sig-name descname"><span class="pre">set_resample_spline_interpolation_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dicom2nifti/settings.html#set_resample_spline_interpolation_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dicom2nifti.settings.set_resample_spline_interpolation_order" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the spline interpolation order used during resampling of gantry tilted data</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-dicom2nifti">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dicom2nifti" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-dicom2nifti">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dicom2nifti" title="Permalink to this heading">¶</a></h2>
 <p>dicom2nifti</p>
 <p>&#64;author: abrys</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -1169,7 +1279,7 @@ USE WITH CAUTION!</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 

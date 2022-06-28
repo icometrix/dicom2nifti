@@ -21,10 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -33,6 +34,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -155,25 +158,17 @@
 
 <span class="sd">@author: abrys</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">nibabel</span>
-
 <span class="kn">import</span> <span class="nn">dicom2nifti.compressed_dicom</span> <span class="k">as</span> <span class="nn">compressed_dicom</span>
-<span class="kn">import</span> <span class="nn">dicom2nifti.patch_pydicom_encodings</span>
-
-<span class="n">dicom2nifti</span><span class="o">.</span><span class="n">patch_pydicom_encodings</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">struct</span>
 
-<span class="kn">import</span> <span class="nn">pydicom</span>
-<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="k">import</span> <span class="n">Tag</span>
+<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="kn">import</span> <span class="n">Tag</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="k">import</span> <span class="n">ConversionValidationError</span><span class="p">,</span> <span class="n">ConversionError</span>
+<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="kn">import</span> <span class="n">ConversionValidationError</span><span class="p">,</span> <span class="n">ConversionError</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.settings</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -186,7 +181,7 @@
 <span class="sd">    Read all dicom files in a given directory (stop before pixels)</span>
 
 <span class="sd">    :type stop_before_pixels: bool</span>
-<span class="sd">    :type dicom_directory: six.string_types</span>
+<span class="sd">    :type dicom_directory: str</span>
 <span class="sd">    :param stop_before_pixels: Should we stop reading before the pixeldata (handy if we only want header info)</span>
 <span class="sd">    :param dicom_directory: Directory with dicom data</span>
 <span class="sd">    :return: List of dicom objects</span>
@@ -321,7 +316,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if it is philips and multiframe dicom then we assume it is ok</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">is_philips</span><span class="p">([</span><span class="n">dicom_header</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">is_philips</span><span class="p">([</span><span class="n">dicom_header</span><span class="p">])</span> <span class="ow">or</span> <span class="n">is_siemens</span><span class="p">([</span><span class="n">dicom_header</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">is_multiframe_dicom</span><span class="p">([</span><span class="n">dicom_header</span><span class="p">]):</span>
                 <span class="k">return</span> <span class="kc">True</span>
 
@@ -346,11 +341,32 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
+<div class="viewcode-block" id="multiframe_get_volume_pixeldata"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_get_volume_pixeldata">[docs]</a><span class="k">def</span> <span class="nf">multiframe_get_volume_pixeldata</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    the slice and intercept calculation can cause the slices to have different dtypes</span>
+<span class="sd">    we should get the correct dtype that can cover all of them</span>
+
+<span class="sd">    :type sorted_slices: list of slices</span>
+<span class="sd">    :param sorted_slices: sliced sored in the correct order to create volume</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># create the new volume with with the correct data</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="n">_get_slice_pixeldata</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Done</span>
+    <span class="c1"># if rgb data do separate transpose</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vol</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">vol</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">vol</span></div>
+
+
 <div class="viewcode-block" id="get_volume_pixeldata"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.get_volume_pixeldata">[docs]</a><span class="k">def</span> <span class="nf">get_volume_pixeldata</span><span class="p">(</span><span class="n">sorted_slices</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    the slice and intercept calculation can cause the slices to have different dtypes</span>
 <span class="sd">    we should get the correct dtype that can cover all of them</span>
-<span class="sd">    </span>
+
 <span class="sd">    :type sorted_slices: list of slices</span>
 <span class="sd">    :param sorted_slices: sliced sored in the correct order to create volume</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -369,7 +385,11 @@
     <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">slices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># Done</span>
-    <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># if rgb data do separate transpose</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vol</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">vol</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">vol</span></div>
 
 
@@ -657,6 +677,47 @@
         <span class="c1"># join the bvals using a space and write to the file</span>
         <span class="n">text_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">bvals</span><span class="p">)))</span></div>
 
+<div class="viewcode-block" id="multiframe_create_affine"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_create_affine">[docs]</a><span class="k">def</span> <span class="nf">multiframe_create_affine</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to generate the affine matrix for a dicom series</span>
+<span class="sd">    This method was based on (http://nipy.org/nibabel/dicom/dicom_orientation.html)</span>
+
+<span class="sd">    :param sorted_dicoms: list with sorted dicom files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create affine matrix (http://nipy.sourceforge.net/nibabel/dicom/dicom_orientation.html#dicom-slice-affine)</span>
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PerFrameFunctionalGroupsSequence</span>
+    <span class="n">image_orient1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">image_orient2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">first_image_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="n">delta_r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PixelMeasuresSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PixelSpacing</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">delta_c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PixelMeasuresSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PixelSpacing</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">image_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="n">last_image_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Single slice</span>
+        <span class="n">slice_thickness</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s2">&quot;SliceThickness&quot;</span> <span class="ow">in</span> <span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PixelMeasuresSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">slice_thickness</span> <span class="o">=</span> <span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PixelMeasuresSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">SliceThickness</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">image_orient1</span><span class="p">,</span> <span class="n">image_orient2</span><span class="p">)</span> <span class="o">*</span> <span class="n">slice_thickness</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">image_pos</span> <span class="o">-</span> <span class="n">last_image_pos</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame_info</span><span class="p">))</span>
+
+    <span class="c1"># check if this is actually a volume and not all slices on the same location</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConversionError</span><span class="p">(</span><span class="s2">&quot;NOT_A_VOLUME&quot;</span><span class="p">)</span>
+
+    <span class="n">affine</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[[</span><span class="o">-</span><span class="n">image_orient1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">delta_c</span><span class="p">,</span> <span class="o">-</span><span class="n">image_orient2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">delta_r</span><span class="p">,</span> <span class="o">-</span><span class="n">step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">image_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+         <span class="p">[</span><span class="o">-</span><span class="n">image_orient1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">delta_c</span><span class="p">,</span> <span class="o">-</span><span class="n">image_orient2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">delta_r</span><span class="p">,</span> <span class="o">-</span><span class="n">step</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">image_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+         <span class="p">[</span><span class="n">image_orient1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">delta_c</span><span class="p">,</span> <span class="n">image_orient2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">delta_r</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">image_pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">affine</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="create_affine"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.create_affine">[docs]</a><span class="k">def</span> <span class="nf">create_affine</span><span class="p">(</span><span class="n">sorted_dicoms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -679,7 +740,10 @@
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_dicoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Single slice</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">slice_thickness</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s2">&quot;SliceThickness&quot;</span> <span class="ow">in</span> <span class="n">sorted_dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">slice_thickness</span> <span class="o">=</span> <span class="n">sorted_dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">SliceThickness</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">image_orient1</span><span class="p">,</span> <span class="n">image_orient2</span><span class="p">)</span> <span class="o">*</span> <span class="n">slice_thickness</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">image_pos</span> <span class="o">-</span> <span class="n">last_image_pos</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_dicoms</span><span class="p">))</span>
 
@@ -695,6 +759,15 @@
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">affine</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="multiframe_validate_orthogonal"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_validate_orthogonal">[docs]</a><span class="k">def</span> <span class="nf">multiframe_validate_orthogonal</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that volume is orthonormal</span>
+
+<span class="sd">    :param dicoms: check that we have a volume without skewing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if only one slice we do not need this check</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">multiframe_is_orthogonal</span><span class="p">(</span><span class="n">dicoms</span><span class="p">,</span> <span class="n">log_details</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;NON_CUBICAL_IMAGE/GANTRY_TILT&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="validate_orthogonal"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.validate_orthogonal">[docs]</a><span class="k">def</span> <span class="nf">validate_orthogonal</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -702,9 +775,41 @@
 
 <span class="sd">    :param dicoms: check that we have a volume without skewing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if only one slice we do not need this check</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_orthogonal</span><span class="p">(</span><span class="n">dicoms</span><span class="p">,</span> <span class="n">log_details</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;NON_CUBICAL_IMAGE/GANTRY_TILT&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="multiframe_is_orthogonal"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_is_orthogonal">[docs]</a><span class="k">def</span> <span class="nf">multiframe_is_orthogonal</span><span class="p">(</span><span class="n">dicoms</span><span class="p">,</span> <span class="n">log_details</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that volume is orthonormal</span>
+
+<span class="sd">    :param dicoms: check that we have a volume without skewing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PerFrameFunctionalGroupsSequence</span>
+    <span class="n">first_image_orient1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">first_image_orient2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">first_image_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="n">last_image_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="n">first_image_dir</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">first_image_orient1</span><span class="p">,</span> <span class="n">first_image_orient2</span><span class="p">)</span>
+    <span class="n">first_image_dir</span> <span class="o">/=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">first_image_dir</span><span class="p">)</span>
+
+    <span class="n">combined_dir</span> <span class="o">=</span> <span class="n">last_image_pos</span> <span class="o">-</span> <span class="n">first_image_pos</span>
+    <span class="n">combined_dir</span> <span class="o">/=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">combined_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">first_image_dir</span><span class="p">,</span> <span class="n">combined_dir</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span> \
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">first_image_dir</span><span class="p">,</span> <span class="o">-</span><span class="n">combined_dir</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">log_details</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Orthogonality check failed: non cubical image&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">first_image_dir</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">combined_dir</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="is_orthogonal"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.is_orthogonal">[docs]</a><span class="k">def</span> <span class="nf">is_orthogonal</span><span class="p">(</span><span class="n">dicoms</span><span class="p">,</span> <span class="n">log_details</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -736,13 +841,12 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_orthogonal_nifti"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.is_orthogonal_nifti">[docs]</a><span class="k">def</span> <span class="nf">is_orthogonal_nifti</span><span class="p">(</span><span class="n">nifti_file</span><span class="p">):</span>
+<div class="viewcode-block" id="is_orthogonal_nifti"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.is_orthogonal_nifti">[docs]</a><span class="k">def</span> <span class="nf">is_orthogonal_nifti</span><span class="p">(</span><span class="n">nifti_image</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate that volume is orthonormal</span>
 
 <span class="sd">    :param dicoms: check that we have a volume without skewing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nifti_image</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nifti_file</span><span class="p">)</span>
     <span class="n">affine</span> <span class="o">=</span> <span class="n">nifti_image</span><span class="o">.</span><span class="n">affine</span>
 
     <span class="n">transformed_x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">affine</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]]))[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">3</span><span class="p">]</span>
@@ -785,6 +889,29 @@
     <span class="k">if</span> <span class="n">diff_z</span> <span class="o">&gt;=</span> <span class="n">diff_x</span> <span class="ow">and</span> <span class="n">diff_z</span> <span class="o">&gt;=</span> <span class="n">diff_y</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">dicom_input_sorted_z</span></div>
 
+<div class="viewcode-block" id="multiframe_validate_slice_increment"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_validate_slice_increment">[docs]</a><span class="k">def</span> <span class="nf">multiframe_validate_slice_increment</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that the distance between all slices is equal (or very close to)</span>
+
+<span class="sd">    :param dicoms: list of dicoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PerFrameFunctionalGroupsSequence</span>
+    <span class="n">first_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+    <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="n">increment</span> <span class="o">=</span> <span class="n">first_image_position</span> <span class="o">-</span> <span class="n">previous_image_position</span>
+    <span class="k">for</span> <span class="n">frame_</span> <span class="ow">in</span> <span class="n">frame_info</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+        <span class="n">current_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+        <span class="n">current_increment</span> <span class="o">=</span> <span class="n">previous_image_position</span> <span class="o">-</span> <span class="n">current_image_position</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">increment</span><span class="p">,</span> <span class="n">current_increment</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Slice increment not consistent through all slices&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">previous_image_position</span><span class="p">,</span> <span class="n">increment</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">current_image_position</span><span class="p">,</span> <span class="n">current_increment</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;SLICE_INCREMENT_INCONSISTENT&#39;</span><span class="p">)</span>
+        <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">current_image_position</span></div>
 
 <div class="viewcode-block" id="validate_slice_increment"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.validate_slice_increment">[docs]</a><span class="k">def</span> <span class="nf">validate_slice_increment</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -792,6 +919,11 @@
 
 <span class="sd">    :param dicoms: list of dicoms</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if only one slice we do not need to run the checks</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span>
+
     <span class="n">first_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
     <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
 
@@ -811,12 +943,60 @@
         <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">current_image_position</span></div>
 
 
+<div class="viewcode-block" id="validate_instance_number"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.validate_instance_number">[docs]</a><span class="k">def</span> <span class="nf">validate_instance_number</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that the instance number is consistent through all slices</span>
+
+<span class="sd">    :param dicoms: list of dicoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;InstanceNumber&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">return</span>
+    <span class="n">first_instance_number</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">InstanceNumber</span><span class="p">)</span>
+    <span class="n">previous_instance_number</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">InstanceNumber</span><span class="p">)</span>
+
+    <span class="n">instance_number_increment</span> <span class="o">=</span> <span class="n">first_instance_number</span> <span class="o">-</span> <span class="n">previous_instance_number</span>
+    <span class="k">for</span> <span class="n">dicom_</span> <span class="ow">in</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+        <span class="n">current_instance_number</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicom_</span><span class="o">.</span><span class="n">InstanceNumber</span><span class="p">)</span>
+        <span class="n">current_instance_number_increment</span> <span class="o">=</span> <span class="n">previous_instance_number</span> <span class="o">-</span> <span class="n">current_instance_number</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">instance_number_increment</span> <span class="o">==</span> <span class="n">current_instance_number_increment</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Instance Number not consistent through all slices&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">previous_instance_number</span><span class="p">,</span> <span class="n">current_instance_number</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;INSTANCE_NUMBER_INCONSISTENT&#39;</span><span class="p">)</span>
+        <span class="n">previous_instance_number</span> <span class="o">=</span> <span class="n">current_instance_number</span></div>
+
+
+<div class="viewcode-block" id="multiframe_is_slice_increment_inconsistent"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_is_slice_increment_inconsistent">[docs]</a><span class="k">def</span> <span class="nf">multiframe_is_slice_increment_inconsistent</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that the distance between all slices is equal (or very close to)</span>
+
+<span class="sd">    :param dicoms: list of dicoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sliceincrement_inconsistent</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PerFrameFunctionalGroupsSequence</span>
+    <span class="n">first_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+    <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+
+    <span class="n">increment</span> <span class="o">=</span> <span class="n">first_image_position</span> <span class="o">-</span> <span class="n">previous_image_position</span>
+    <span class="k">for</span> <span class="n">frame_</span> <span class="ow">in</span> <span class="n">frame_info</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+        <span class="n">current_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_</span><span class="o">.</span><span class="n">PlanePositionSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
+        <span class="n">current_increment</span> <span class="o">=</span> <span class="n">previous_image_position</span> <span class="o">-</span> <span class="n">current_image_position</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">increment</span><span class="p">,</span> <span class="n">current_increment</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+            <span class="n">sliceincrement_inconsistent</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+        <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">current_image_position</span>
+    <span class="k">return</span> <span class="n">sliceincrement_inconsistent</span></div>
+
+
 <div class="viewcode-block" id="is_slice_increment_inconsistent"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.is_slice_increment_inconsistent">[docs]</a><span class="k">def</span> <span class="nf">is_slice_increment_inconsistent</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate that the distance between all slices is equal (or very close to)</span>
 
 <span class="sd">    :param dicoms: list of dicoms</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
     <span class="n">sliceincrement_inconsistent</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">first_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
     <span class="n">previous_image_position</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dicoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ImagePositionPatient</span><span class="p">)</span>
@@ -832,6 +1012,20 @@
     <span class="k">return</span> <span class="n">sliceincrement_inconsistent</span></div>
 
 
+<div class="viewcode-block" id="multiframe_validate_slicecount"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_validate_slicecount">[docs]</a><span class="k">def</span> <span class="nf">multiframe_validate_slicecount</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that volume is big enough to create a meaningfull volume</span>
+<span class="sd">    This will also skip localizers and alike</span>
+
+<span class="sd">    :param dicoms: list of dicoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PerFrameFunctionalGroupsSequence</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame_info</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;At least 3 slices are needed for correct conversion&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;TOO_FEW_SLICES/LOCALIZER&#39;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="validate_slicecount"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.validate_slicecount">[docs]</a><span class="k">def</span> <span class="nf">validate_slicecount</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate that volume is big enough to create a meaningfull volume</span>
@@ -840,10 +1034,31 @@
 <span class="sd">    :param dicoms: list of dicoms</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicoms</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;At least 4 slices are needed for correct conversion&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;At least 3 slices are needed for correct conversion&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;TOO_FEW_SLICES/LOCALIZER&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="multiframe_validate_orientation"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.multiframe_validate_orientation">[docs]</a><span class="k">def</span> <span class="nf">multiframe_validate_orientation</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that all dicoms have the same orientation</span>
+
+<span class="sd">    :param dicoms: list of dicoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frame_info</span> <span class="o">=</span> <span class="n">dicoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PerFrameFunctionalGroupsSequence</span>
+    <span class="n">first_image_orient1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">first_image_orient2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">frame_</span> <span class="ow">in</span> <span class="n">frame_info</span><span class="p">:</span>
+        <span class="c1"># Create affine matrix (http://nipy.sourceforge.net/nibabel/dicom/dicom_orientation.html#dicom-slice-affine)</span>
+        <span class="n">image_orient1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">image_orient2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_</span><span class="o">.</span><span class="n">PlaneOrientationSequence</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ImageOrientationPatient</span><span class="p">)[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">image_orient1</span><span class="p">,</span> <span class="n">first_image_orient1</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span> \
+                <span class="ow">or</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">image_orient2</span><span class="p">,</span> <span class="n">first_image_orient2</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Image orientations not consistent through all slices&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">image_orient1</span><span class="p">,</span> <span class="n">first_image_orient1</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">image_orient2</span><span class="p">,</span> <span class="n">first_image_orient2</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------------&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;IMAGE_ORIENTATION_INCONSISTENT&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="validate_orientation"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.validate_orientation">[docs]</a><span class="k">def</span> <span class="nf">validate_orientation</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -882,6 +1097,13 @@
     <span class="n">nifti_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">structarr</span><span class="p">[</span><span class="s1">&#39;db_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;?TR:</span><span class="si">%.3f</span><span class="s1"> TE:</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">repetition_time</span><span class="p">,</span> <span class="n">echo_time</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">nifti_image</span></div>
+
+
+<div class="viewcode-block" id="get_nifti_data"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.common.get_nifti_data">[docs]</a><span class="k">def</span> <span class="nf">get_nifti_data</span><span class="p">(</span><span class="n">nifti_image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function that replicates the deprecated nifti.get_data behavior</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">nifti_image</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
@@ -894,7 +1116,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 

@@ -21,10 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -33,6 +34,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -155,25 +158,17 @@
 
 <span class="sd">@author: abrys</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-
-<span class="kn">import</span> <span class="nn">dicom2nifti.patch_pydicom_encodings</span>
-<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="k">import</span> <span class="n">ConversionError</span>
-
-<span class="n">dicom2nifti</span><span class="o">.</span><span class="n">patch_pydicom_encodings</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="kn">import</span> <span class="n">ConversionError</span>
 
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="nb">pow</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="nb">pow</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">nibabel</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="k">import</span> <span class="n">Tag</span>
-
-<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">string_types</span>
+<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="kn">import</span> <span class="n">Tag</span>
 
 <span class="kn">import</span> <span class="nn">dicom2nifti.common</span> <span class="k">as</span> <span class="nn">common</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.convert_generic</span> <span class="k">as</span> <span class="nn">convert_generic</span>
@@ -270,6 +265,8 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving nifti to disk </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_file</span><span class="p">)</span>
     <span class="c1"># Save to disk</span>
     <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_slope_inter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_xyzt_units</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># set units for xyz (leave t as unknown)</span>
         <span class="n">nii_image</span><span class="o">.</span><span class="n">to_filename</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">_is_diffusion_imaging</span><span class="p">(</span><span class="n">grouped_dicoms</span><span class="p">):</span>
@@ -392,7 +389,7 @@
 
         <span class="c1"># bval can be stored both in string as number format in dicom so implement both</span>
         <span class="c1"># some workarounds needed for implicit transfer syntax to work</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dicom_</span><span class="p">[</span><span class="n">Tag</span><span class="p">(</span><span class="mh">0x0043</span><span class="p">,</span> <span class="mh">0x1039</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>  <span class="c1"># this works for python2.7</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dicom_</span><span class="p">[</span><span class="n">Tag</span><span class="p">(</span><span class="mh">0x0043</span><span class="p">,</span> <span class="mh">0x1039</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># this works for python2.7</span>
             <span class="n">original_bval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dicom_</span><span class="p">[</span><span class="n">Tag</span><span class="p">(</span><span class="mh">0x0043</span><span class="p">,</span> <span class="mh">0x1039</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dicom_</span><span class="p">[</span><span class="n">Tag</span><span class="p">(</span><span class="mh">0x0043</span><span class="p">,</span> <span class="mh">0x1039</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>  <span class="c1"># this works for python3.o</span>
             <span class="n">original_bval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dicom_</span><span class="p">[</span><span class="n">Tag</span><span class="p">(</span><span class="mh">0x0043</span><span class="p">,</span> <span class="mh">0x1039</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
@@ -445,7 +442,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 

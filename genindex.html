@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -22,10 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -34,6 +34,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -194,19 +196,19 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dicom2nifti.html#dicom2nifti.compressed_dicom.compress_directory">compress_directory() (in module dicom2nifti.compressed_dicom)</a>
-</li>
       <li><a href="dicom2nifti.html#dicom2nifti.exceptions.ConversionError">ConversionError</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.exceptions.ConversionValidationError">ConversionValidationError</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.convert_dir.convert_directory">convert_directory() (in module dicom2nifti.convert_dir)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.image_volume.SliceType.CORONAL">CORONAL (dicom2nifti.image_volume.SliceType attribute)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.create_affine">create_affine() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.convert_generic.create_rgba_nifti">create_rgba_nifti() (in module dicom2nifti.convert_generic)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -216,40 +218,113 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.convert_siemens.MosaicType.DESCENDING">DESCENDING (dicom2nifti.convert_siemens.MosaicType attribute)</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti">dicom2nifti (module)</a>
+      <li>
+    dicom2nifti
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.common">dicom2nifti.common (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.common
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.common">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.compressed_dicom">dicom2nifti.compressed_dicom (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_dicom
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_dicom">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_dicom">dicom2nifti.convert_dicom (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_dir
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_dir">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_dir">dicom2nifti.convert_dir (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_ge
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_ge">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_ge">dicom2nifti.convert_ge (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_generic
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_generic">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_generic">dicom2nifti.convert_generic (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_hitachi
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_hitachi">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_hitachi">dicom2nifti.convert_hitachi (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_philips
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_philips">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_philips">dicom2nifti.convert_philips (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.convert_siemens
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_siemens">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.convert_siemens">dicom2nifti.convert_siemens (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.exceptions
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.exceptions">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.exceptions">dicom2nifti.exceptions (module)</a>
+      </ul></li>
+      <li>
+    dicom2nifti.image_reorientation
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.image_reorientation">module</a>
 </li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.image_reorientation">dicom2nifti.image_reorientation (module)</a>
-</li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.image_volume">dicom2nifti.image_volume (module)</a>
-</li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.patch_pydicom_encodings">dicom2nifti.patch_pydicom_encodings (module)</a>
-</li>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.resample">dicom2nifti.resample (module)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="dicom2nifti.html#module-dicom2nifti.settings">dicom2nifti.settings (module)</a>
+      <li>
+    dicom2nifti.image_volume
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.image_volume">module</a>
 </li>
+      </ul></li>
+      <li>
+    dicom2nifti.patch_pydicom_encodings
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.patch_pydicom_encodings">module</a>
+</li>
+      </ul></li>
+      <li>
+    dicom2nifti.resample
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.resample">module</a>
+</li>
+      </ul></li>
+      <li>
+    dicom2nifti.settings
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.settings">module</a>
+</li>
+      </ul></li>
       <li><a href="dicom2nifti.html#dicom2nifti.convert_dicom.dicom_array_to_nifti">dicom_array_to_nifti() (in module dicom2nifti.convert_dicom)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.convert_dicom.dicom_series_to_nifti">dicom_series_to_nifti() (in module dicom2nifti.convert_dicom)</a>
@@ -269,6 +344,8 @@
       <li><a href="dicom2nifti.html#dicom2nifti.settings.disable_pydicom_read_force">disable_pydicom_read_force() (in module dicom2nifti.settings)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.settings.disable_resampling">disable_resampling() (in module dicom2nifti.settings)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.settings.disable_validate_instance_number">disable_validate_instance_number() (in module dicom2nifti.settings)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.settings.disable_validate_multiframe_implicit">disable_validate_multiframe_implicit() (in module dicom2nifti.settings)</a>
 </li>
@@ -291,6 +368,8 @@
       <li><a href="dicom2nifti.html#dicom2nifti.settings.enable_pydicom_read_force">enable_pydicom_read_force() (in module dicom2nifti.settings)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.settings.enable_resampling">enable_resampling() (in module dicom2nifti.settings)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.settings.enable_validate_instance_number">enable_validate_instance_number() (in module dicom2nifti.settings)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.settings.enable_validate_multiframe_implicit">enable_validate_multiframe_implicit() (in module dicom2nifti.settings)</a>
 </li>
@@ -324,6 +403,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.common.get_is_value">get_is_value() (in module dicom2nifti.common)</a>
 </li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.get_nifti_data">get_nifti_data() (in module dicom2nifti.common)</a>
+</li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.get_numpy_type">get_numpy_type() (in module dicom2nifti.common)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.image_volume.ImageVolume.get_slice">get_slice() (dicom2nifti.image_volume.ImageVolume method)</a>
@@ -348,18 +429,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.image_volume.ImageVolume">ImageVolume (class in dicom2nifti.image_volume)</a>
 </li>
-      <li><a href="dicom2nifti.html#dicom2nifti.compressed_dicom.is_dicom_file">is_dicom_file() (in module dicom2nifti.compressed_dicom)</a>
-</li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.is_ge">is_ge() (in module dicom2nifti.common)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.is_hitachi">is_hitachi() (in module dicom2nifti.common)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.is_multiframe_dicom">is_multiframe_dicom() (in module dicom2nifti.common)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.common.is_orthogonal">is_orthogonal() (in module dicom2nifti.common)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.common.is_orthogonal_nifti">is_orthogonal_nifti() (in module dicom2nifti.common)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.is_philips">is_philips() (in module dicom2nifti.common)</a>
@@ -384,7 +463,62 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    module
+
+      <ul>
+        <li><a href="dicom2nifti.html#module-dicom2nifti">dicom2nifti</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.common">dicom2nifti.common</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_dicom">dicom2nifti.convert_dicom</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_dir">dicom2nifti.convert_dir</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_ge">dicom2nifti.convert_ge</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_generic">dicom2nifti.convert_generic</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_hitachi">dicom2nifti.convert_hitachi</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_philips">dicom2nifti.convert_philips</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.convert_siemens">dicom2nifti.convert_siemens</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.exceptions">dicom2nifti.exceptions</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.image_reorientation">dicom2nifti.image_reorientation</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.image_volume">dicom2nifti.image_volume</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.patch_pydicom_encodings">dicom2nifti.patch_pydicom_encodings</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.resample">dicom2nifti.resample</a>
+</li>
+        <li><a href="dicom2nifti.html#module-dicom2nifti.settings">dicom2nifti.settings</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.convert_siemens.MosaicType">MosaicType (class in dicom2nifti.convert_siemens)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_create_affine">multiframe_create_affine() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_get_volume_pixeldata">multiframe_get_volume_pixeldata() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_is_orthogonal">multiframe_is_orthogonal() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_is_slice_increment_inconsistent">multiframe_is_slice_increment_inconsistent() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.convert_generic.multiframe_to_nifti">multiframe_to_nifti() (in module dicom2nifti.convert_generic)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_validate_orientation">multiframe_validate_orientation() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_validate_orthogonal">multiframe_validate_orthogonal() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_validate_slice_increment">multiframe_validate_slice_increment() (in module dicom2nifti.common)</a>
+</li>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.multiframe_validate_slicecount">multiframe_validate_slicecount() (in module dicom2nifti.common)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -417,8 +551,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dicom2nifti.html#dicom2nifti.common.read_dicom_directory">read_dicom_directory() (in module dicom2nifti.common)</a>
-</li>
-      <li><a href="dicom2nifti.html#dicom2nifti.compressed_dicom.read_file">read_file() (in module dicom2nifti.compressed_dicom)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.convert_generic.remove_duplicate_slices">remove_duplicate_slices() (in module dicom2nifti.convert_generic)</a>
 </li>
@@ -474,6 +606,8 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dicom2nifti.html#dicom2nifti.common.validate_instance_number">validate_instance_number() (in module dicom2nifti.common)</a>
+</li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.validate_orientation">validate_orientation() (in module dicom2nifti.common)</a>
 </li>
       <li><a href="dicom2nifti.html#dicom2nifti.common.validate_orthogonal">validate_orthogonal() (in module dicom2nifti.common)</a>
@@ -537,7 +671,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 

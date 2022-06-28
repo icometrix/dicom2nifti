@@ -21,10 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -33,6 +34,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -154,6 +157,7 @@
 <span class="n">validate_orientation</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">validate_orthogonal</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">validate_slice_increment</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">validate_instance_number</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">validate_multiframe_implicit</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">pydicom_read_force</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">gdcmconv_path</span> <span class="o">=</span> <span class="kc">None</span>
@@ -170,6 +174,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">validate_slice_increment</span>
     <span class="n">validate_slice_increment</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="disable_validate_instance_number"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.settings.disable_validate_instance_number">[docs]</a><span class="k">def</span> <span class="nf">disable_validate_instance_number</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disable the validation of the slice increment.</span>
+<span class="sd">    This allows for converting data where the slice increment is not consistent.</span>
+<span class="sd">    USE WITH CAUTION!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">validate_instance_number</span>
+    <span class="n">validate_instance_number</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="disable_validate_orientation"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.settings.disable_validate_orientation">[docs]</a><span class="k">def</span> <span class="nf">disable_validate_orientation</span><span class="p">():</span>
@@ -219,6 +233,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">validate_slice_increment</span>
     <span class="n">validate_slice_increment</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="enable_validate_instance_number"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.settings.enable_validate_instance_number">[docs]</a><span class="k">def</span> <span class="nf">enable_validate_instance_number</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enable the slice increment validation again (DEFAULT ENABLED)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">validate_instance_number</span>
+    <span class="n">validate_instance_number</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="enable_validate_orientation"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.settings.enable_validate_orientation">[docs]</a><span class="k">def</span> <span class="nf">enable_validate_orientation</span><span class="p">():</span>
@@ -320,7 +342,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 

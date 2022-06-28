@@ -21,10 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -33,6 +34,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -155,27 +158,81 @@
 
 <span class="sd">@author: abrys</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">dicom2nifti.patch_pydicom_encodings</span>
-
-<span class="n">dicom2nifti</span><span class="o">.</span><span class="n">patch_pydicom_encodings</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
-
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">nibabel</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="k">import</span> <span class="n">Tag</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="kn">import</span> <span class="n">Tag</span>
 
 <span class="kn">import</span> <span class="nn">dicom2nifti.common</span> <span class="k">as</span> <span class="nn">common</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.settings</span> <span class="k">as</span> <span class="nn">settings</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.resample</span> <span class="k">as</span> <span class="nn">resample</span>
-<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="k">import</span> <span class="n">ConversionError</span>
+<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="kn">import</span> <span class="n">ConversionError</span><span class="p">,</span> <span class="n">ConversionValidationError</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+<div class="viewcode-block" id="multiframe_to_nifti"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.convert_generic.multiframe_to_nifti">[docs]</a><span class="k">def</span> <span class="nf">multiframe_to_nifti</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function will convert an anatomical dicom series to a nifti</span>
+
+<span class="sd">    Examples: See unit test</span>
+
+<span class="sd">    :param output_file: filepath to the output nifti</span>
+<span class="sd">    :param dicom_input: directory with the dicom files for a single scan, or list of read in dicoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConversionError</span><span class="p">(</span><span class="s1">&#39;NO_DICOM_FILES_FOUND&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">validate_slicecount</span><span class="p">:</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">multiframe_validate_slicecount</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">validate_orientation</span><span class="p">:</span>
+        <span class="c1"># validate that all slices have the same orientation</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">multiframe_validate_orientation</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">validate_orthogonal</span><span class="p">:</span>
+        <span class="c1"># validate that we have an orthogonal image (to detect gantry tilting etc)</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">multiframe_validate_orthogonal</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+
+    <span class="c1"># validate slice increment inconsistent</span>
+    <span class="n">slice_increment_inconsistent</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">validate_slice_increment</span><span class="p">:</span>
+        <span class="c1"># validate that all slices have a consistent slice increment</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">multiframe_validate_slice_increment</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">common</span><span class="o">.</span><span class="n">multiframe_is_slice_increment_inconsistent</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">):</span>
+        <span class="n">slice_increment_inconsistent</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># if inconsistent increment and we allow resampling then do the resampling based conversion to maintain the correct geometric shape</span>
+    <span class="k">if</span> <span class="n">slice_increment_inconsistent</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">resample</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Conversion of inconsistent slice increment with resampling not supported for mutlframe&#39;</span><span class="p">)</span>
+        <span class="c1"># TODO add support for this if it actually exists</span>
+    <span class="c1"># do the normal conversion</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Get data; originally z,y,x, transposed to x,y,z</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">multiframe_get_volume_pixeldata</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+
+        <span class="n">affine</span><span class="p">,</span> <span class="n">max_slice_increment</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">multiframe_create_affine</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+
+        <span class="c1"># Convert to nifti</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># do not squeeze single slice data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PhotometricInterpretation</span> <span class="o">==</span> <span class="s1">&#39;RGB&#39;</span><span class="p">:</span>
+            <span class="n">nii_image</span> <span class="o">=</span> <span class="n">create_rgba_nifti</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nii_image</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
+
+    <span class="c1"># Set TR and TE if available</span>
+    <span class="k">if</span> <span class="n">Tag</span><span class="p">(</span><span class="mh">0x0018</span><span class="p">,</span> <span class="mh">0x0080</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">Tag</span><span class="p">(</span><span class="mh">0x0018</span><span class="p">,</span> <span class="mh">0x0081</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">set_tr_te</span><span class="p">(</span><span class="n">nii_image</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">RepetitionTime</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">EchoTime</span><span class="p">))</span>
+
+    <span class="c1"># Save to disk</span>
+    <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving nifti to disk </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_slope_inter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_xyzt_units</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># set units for xyz (leave t as unknown)</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">to_filename</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">,</span>
+            <span class="s1">&#39;NII&#39;</span><span class="p">:</span> <span class="n">nii_image</span><span class="p">,</span>
+            <span class="s1">&#39;MAX_SLICE_INCREMENT&#39;</span><span class="p">:</span> <span class="n">max_slice_increment</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="dicom_to_nifti"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.convert_generic.dicom_to_nifti">[docs]</a><span class="k">def</span> <span class="nf">dicom_to_nifti</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -194,7 +251,12 @@
 
     <span class="c1"># remove localizers based on image type</span>
     <span class="n">dicom_input</span> <span class="o">=</span> <span class="n">remove_localizers_by_imagetype</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+    <span class="c1"># if no dicoms remain we should raise exception</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConversionValidationError</span><span class="p">(</span><span class="s1">&#39;TOO_FEW_SLICES/LOCALIZER&#39;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">validate_slicecount</span><span class="p">:</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">validate_slicecount</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
         <span class="c1"># remove_localizers based on image orientation (only valid if slicecount is validated)</span>
         <span class="n">dicom_input</span> <span class="o">=</span> <span class="n">remove_localizers_by_orientation</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
 
@@ -218,6 +280,10 @@
     <span class="k">elif</span> <span class="n">common</span><span class="o">.</span><span class="n">is_slice_increment_inconsistent</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">):</span>
         <span class="n">slice_increment_inconsistent</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">validate_instance_number</span><span class="p">:</span>
+        <span class="c1"># validate that all slices have a consistent instance_number</span>
+        <span class="n">common</span><span class="o">.</span><span class="n">validate_instance_number</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
+
     <span class="c1"># if inconsistent increment and we allow resampling then do the resampling based conversion to maintain the correct geometric shape</span>
     <span class="k">if</span> <span class="n">slice_increment_inconsistent</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">resample</span><span class="p">:</span>
         <span class="n">nii_image</span><span class="p">,</span> <span class="n">max_slice_increment</span> <span class="o">=</span> <span class="n">_convert_slice_incement_inconsistencies</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
@@ -229,7 +295,12 @@
         <span class="n">affine</span><span class="p">,</span> <span class="n">max_slice_increment</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">create_affine</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span>
 
         <span class="c1"># Convert to nifti</span>
-        <span class="n">nii_image</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># do not squeeze single slice data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">PhotometricInterpretation</span> <span class="o">==</span> <span class="s1">&#39;RGB&#39;</span><span class="p">:</span>
+            <span class="n">nii_image</span> <span class="o">=</span> <span class="n">create_rgba_nifti</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nii_image</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
 
     <span class="c1"># Set TR and TE if available</span>
     <span class="k">if</span> <span class="n">Tag</span><span class="p">(</span><span class="mh">0x0018</span><span class="p">,</span> <span class="mh">0x0080</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">Tag</span><span class="p">(</span><span class="mh">0x0018</span><span class="p">,</span> <span class="mh">0x0081</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dicom_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
@@ -238,11 +309,25 @@
     <span class="c1"># Save to disk</span>
     <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving nifti to disk </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_slope_inter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">nii_image</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_xyzt_units</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># set units for xyz (leave t as unknown)</span>
         <span class="n">nii_image</span><span class="o">.</span><span class="n">to_filename</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">,</span>
             <span class="s1">&#39;NII&#39;</span><span class="p">:</span> <span class="n">nii_image</span><span class="p">,</span>
             <span class="s1">&#39;MAX_SLICE_INCREMENT&#39;</span><span class="p">:</span> <span class="n">max_slice_increment</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="create_rgba_nifti"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.convert_generic.create_rgba_nifti">[docs]</a><span class="k">def</span> <span class="nf">create_rgba_nifti</span><span class="p">(</span><span class="n">rgb_data</span><span class="p">,</span> <span class="n">affine</span><span class="p">):</span>
+    <span class="c1"># ras_pos is a 4-d numpy array, with the last dim holding RGB</span>
+    <span class="n">shape_3d</span> <span class="o">=</span> <span class="n">rgb_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="c1"># we generate using rgb for speed data but export rgba in order for the frontend to support it</span>
+    <span class="n">rgba_data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape_3d</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span><span class="p">,),</span> <span class="mi">255</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">rgba_data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">rgb_data</span>
+    <span class="n">rgba_dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;u1&#39;</span><span class="p">)])</span>
+    <span class="c1"># copy used to force fresh internal structure</span>
+    <span class="n">rgba_data</span> <span class="o">=</span> <span class="n">rgba_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">rgba_dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape_3d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">rgba_data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="remove_duplicate_slices"><a class="viewcode-back" href="../../dicom2nifti.html#dicom2nifti.convert_generic.remove_duplicate_slices">[docs]</a><span class="k">def</span> <span class="nf">remove_duplicate_slices</span><span class="p">(</span><span class="n">dicoms</span><span class="p">):</span>
@@ -328,7 +413,7 @@
                 <span class="n">filtered_dicoms</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sorted_dicoms</span><span class="p">[</span><span class="n">orientation</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">filtered_dicoms</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">six</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">itervalues</span><span class="p">(</span><span class="n">sorted_dicoms</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">sorted_dicoms</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span></div>
 
 
 <span class="k">def</span> <span class="nf">_convert_slice_incement_inconsistencies</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">):</span>
@@ -364,12 +449,17 @@
     <span class="k">for</span> <span class="n">dicom_slices</span> <span class="ow">in</span> <span class="n">slice_incement_groups</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">get_volume_pixeldata</span><span class="p">(</span><span class="n">dicom_slices</span><span class="p">)</span>
         <span class="n">affine</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">create_affine</span><span class="p">(</span><span class="n">dicom_slices</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># do not squeeze single slice data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
         <span class="n">current_volume</span> <span class="o">=</span> <span class="n">nibabel</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">affine</span><span class="p">)</span>
         <span class="n">slice_increment</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">current_volume</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">())</span>
         <span class="n">voxel_sizes</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">slice_increment</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_volume</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()</span>
-        <span class="n">slice_increments</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">slice_increment</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dicom_slices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">slice_increments</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">slice_increment</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dicom_slices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">slice_incement_niftis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_volume</span><span class="p">)</span>
-    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">voxel_sizes</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">slice_increments</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
+
+    <span class="n">tenth_percentile_incement</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">slice_increments</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="n">most_used_increment</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">slice_increments</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">tenth_percentile_incement</span><span class="p">))</span>
+    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">voxel_sizes</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">most_used_increment</span><span class="p">]</span>
 
     <span class="n">nifti_volume</span> <span class="o">=</span> <span class="n">resample</span><span class="o">.</span><span class="n">resample_nifti_images</span><span class="p">(</span><span class="n">slice_incement_niftis</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">)</span>
 
@@ -386,7 +476,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 

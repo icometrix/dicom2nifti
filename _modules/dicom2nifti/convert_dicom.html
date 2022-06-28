@@ -21,10 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -33,6 +34,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -155,26 +158,18 @@
 
 <span class="sd">@author: abrys</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">dicom2nifti.compressed_dicom</span> <span class="k">as</span> <span class="nn">compressed_dicom</span>
-<span class="kn">import</span> <span class="nn">dicom2nifti.patch_pydicom_encodings</span>
-<span class="kn">from</span> <span class="nn">dicom2nifti</span> <span class="k">import</span> <span class="n">convert_hitachi</span>
-
-<span class="n">dicom2nifti</span><span class="o">.</span><span class="n">patch_pydicom_encodings</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">dicom2nifti</span> <span class="kn">import</span> <span class="n">convert_hitachi</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">reraise</span>
+<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="kn">import</span> <span class="n">Tag</span>
 
-<span class="kn">from</span> <span class="nn">pydicom.tag</span> <span class="k">import</span> <span class="n">Tag</span>
-
-<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="k">import</span> <span class="n">ConversionValidationError</span><span class="p">,</span> <span class="n">ConversionError</span>
+<span class="kn">from</span> <span class="nn">dicom2nifti.exceptions</span> <span class="kn">import</span> <span class="n">ConversionValidationError</span><span class="p">,</span> <span class="n">ConversionError</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.convert_generic</span> <span class="k">as</span> <span class="nn">convert_generic</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.convert_siemens</span> <span class="k">as</span> <span class="nn">convert_siemens</span>
 <span class="kn">import</span> <span class="nn">dicom2nifti.convert_ge</span> <span class="k">as</span> <span class="nn">convert_ge</span>
@@ -237,10 +232,7 @@
         <span class="k">return</span> <span class="n">dicom_array_to_nifti</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">reorient_nifti</span><span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
-        <span class="n">reraise</span><span class="p">(</span>
-            <span class="n">tp</span><span class="o">=</span><span class="n">ConversionError</span><span class="p">,</span>
-            <span class="n">value</span><span class="o">=</span><span class="n">ConversionError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exception</span><span class="p">)),</span>
-            <span class="n">tb</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">raise</span> <span class="n">exception</span>
 
     <span class="k">finally</span><span class="p">:</span>
         <span class="c1"># remove the copied data</span>
@@ -291,12 +283,12 @@
 
     <span class="c1"># do image reorientation if needed</span>
     <span class="k">if</span> <span class="n">reorient_nifti</span> <span class="ow">or</span> <span class="n">settings</span><span class="o">.</span><span class="n">resample</span><span class="p">:</span>
-        <span class="n">image_reorientation</span><span class="o">.</span><span class="n">reorient_image</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">])</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image_reorientation</span><span class="o">.</span><span class="n">reorient_image</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII&#39;</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">])</span>
 
     <span class="c1"># resampling needs to be after reorientation</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">resample</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">is_orthogonal_nifti</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">]):</span>
-            <span class="n">resample</span><span class="o">.</span><span class="n">resample_single_nifti</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">common</span><span class="o">.</span><span class="n">is_orthogonal_nifti</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII&#39;</span><span class="p">]):</span>
+            <span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resample</span><span class="o">.</span><span class="n">resample_single_nifti</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII&#39;</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;NII_FILE&#39;</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
 
@@ -310,7 +302,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># if it is philips and multiframe dicom then we assume it is ok</span>
-    <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">is_philips</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">is_philips</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">)</span> <span class="ow">or</span> <span class="n">common</span><span class="o">.</span><span class="n">is_siemens</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">common</span><span class="o">.</span><span class="n">is_multiframe_dicom</span><span class="p">(</span><span class="n">dicom_input</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
 
@@ -378,7 +370,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016-2020, icometrix
+        &copy; Copyright 2016-2022, icometrix
 
     </p>
   </div> 
