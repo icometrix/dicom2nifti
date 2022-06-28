@@ -12,14 +12,6 @@ dicom2nifti.common module
    :undoc-members:
    :show-inheritance:
 
-dicom2nifti.compressed\_dicom module
-------------------------------------
-
-.. automodule:: dicom2nifti.compressed_dicom
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 dicom2nifti.convert\_dicom module
 ---------------------------------
 
@@ -123,7 +115,6 @@ dicom2nifti.settings module
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Module contents
 ---------------

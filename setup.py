@@ -37,6 +37,6 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX :: Linux'],
-    install_requires=['nibabel', 'numpy', 'scipy', 'pydicom>=1.3.0'],
+    install_requires=['nibabel', 'numpy', 'scipy', 'pydicom>=2.2.0', 'python-gdcm'],
     setup_requires=['nose', 'coverage']
 )

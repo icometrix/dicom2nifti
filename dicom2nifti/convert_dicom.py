@@ -5,25 +5,24 @@ dicom2nifti
 @author: abrys
 """
 import logging
-
-import dicom2nifti.compressed_dicom as compressed_dicom
-from dicom2nifti import convert_hitachi
-
 import os
-import tempfile
 import shutil
+import tempfile
 
+from nibabel.pydicom_compat import pydicom
 from pydicom.tag import Tag
 
-from dicom2nifti.exceptions import ConversionValidationError, ConversionError
-import dicom2nifti.convert_generic as convert_generic
-import dicom2nifti.convert_siemens as convert_siemens
-import dicom2nifti.convert_ge as convert_ge
-import dicom2nifti.convert_philips as convert_philips
 import dicom2nifti.common as common
+import dicom2nifti.convert_ge as convert_ge
+import dicom2nifti.convert_generic as convert_generic
+import dicom2nifti.convert_philips as convert_philips
+import dicom2nifti.convert_siemens as convert_siemens
 import dicom2nifti.image_reorientation as image_reorientation
-import dicom2nifti.settings as settings
 import dicom2nifti.resample as resample
+import dicom2nifti.settings as settings
+from dicom2nifti import convert_hitachi
+from dicom2nifti.exceptions import ConversionValidationError, ConversionError
+
 logger = logging.getLogger(__name__)
 
 
@@ -196,11 +195,11 @@ def _get_first_header(dicom_directory):
         for file_name in file_names:
             file_path = os.path.join(root, file_name)
             # check wither it is a dicom file
-            if not compressed_dicom.is_dicom_file(file_path):
+            if not common.is_dicom_file(file_path):
                 continue
             # read the headers
-            return compressed_dicom.read_file(file_path,
-                                              stop_before_pixels=True,
-                                              force=dicom2nifti.settings.pydicom_read_force)
+            return pydicom.read_file(file_path,
+                                     stop_before_pixels=True,
+                                     force=dicom2nifti.settings.pydicom_read_force)
     # no dicom files found
     raise ConversionError('NO_DICOM_FILES_FOUND')

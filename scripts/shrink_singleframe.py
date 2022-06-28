@@ -4,13 +4,11 @@ dicom2nifti
 
 @author: abrys
 """
-import pydicom
-import pydicom.dataset
+import logging
 import os
 
-import logging
-
-import dicom2nifti.compressed_dicom as compressed_dicom
+import pydicom
+import pydicom.dataset
 
 
 def _shrink_file(dicom_file_in, subsample_factor):
@@ -26,7 +24,7 @@ def _shrink_file(dicom_file_in, subsample_factor):
     dicom_file_out = dicom_file_in
 
     # Load dicom_file_in
-    dicom_in = compressed_dicom.read_file(dicom_file_in)
+    dicom_in = pydicom.read_file(dicom_file_in)
 
     # Create new dicom file
     # Set new file meta information

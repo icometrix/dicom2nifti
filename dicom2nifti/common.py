@@ -4,7 +4,7 @@ dicom2nifti
 
 @author: abrys
 """
-import dicom2nifti.compressed_dicom as compressed_dicom
+import pydicom
 
 import os
 import struct
@@ -14,6 +14,7 @@ from pydicom.tag import Tag
 import logging
 import numpy
 
+import settings as settings
 from dicom2nifti.exceptions import ConversionValidationError, ConversionError
 import dicom2nifti.settings
 
@@ -36,11 +37,11 @@ def read_dicom_directory(dicom_directory, stop_before_pixels=False):
     for root, _, files in os.walk(dicom_directory):
         for dicom_file in files:
             file_path = os.path.join(root, dicom_file)
-            if compressed_dicom.is_dicom_file(file_path):
-                dicom_headers = compressed_dicom.read_file(file_path,
-                                                           defer_size="1 KB",
-                                                           stop_before_pixels=stop_before_pixels,
-                                                           force=dicom2nifti.settings.pydicom_read_force)
+            if is_dicom_file(file_path):
+                dicom_headers = pydicom.read_file(file_path,
+                                                  defer_size="1 KB",
+                                                  stop_before_pixels=stop_before_pixels,
+                                                  force=dicom2nifti.settings.pydicom_read_force)
                 if is_valid_imaging_dicom(dicom_headers):
                     dicom_input.append(dicom_headers)
     return dicom_input
@@ -523,6 +524,7 @@ def write_bval_file(bvals, bval_file):
         # join the bvals using a space and write to the file
         text_file.write('%s\n' % ' '.join(map(str, bvals)))
 
+
 def multiframe_create_affine(dicoms):
     """
     Function to generate the affine matrix for a dicom series
@@ -539,7 +541,7 @@ def multiframe_create_affine(dicoms):
         delta_r = float(frame_info[0].PixelMeasuresSequence[0].PixelSpacing[0])
         delta_c = float(frame_info[0].PixelMeasuresSequence[0].PixelSpacing[1])
     elif "SharedFunctionalGroupsSequence" in dicoms[0] and \
-             "PixelMeasuresSequence" in dicoms[0].SharedFunctionalGroupsSequence[0]:
+            "PixelMeasuresSequence" in dicoms[0].SharedFunctionalGroupsSequence[0]:
         shared_frame_info = dicoms[0].SharedFunctionalGroupsSequence
         delta_r = numpy.array(shared_frame_info[0].PixelMeasuresSequence[0].PixelSpacing[0])
         delta_c = numpy.array(shared_frame_info[0].PixelMeasuresSequence[0].PixelSpacing[1])
@@ -571,6 +573,7 @@ def multiframe_create_affine(dicoms):
          [0, 0, 0, 1]]
     )
     return affine, numpy.linalg.norm(step)
+
 
 def create_affine(sorted_dicoms):
     """
@@ -612,6 +615,7 @@ def create_affine(sorted_dicoms):
     )
     return affine, numpy.linalg.norm(step)
 
+
 def multiframe_validate_orthogonal(dicoms):
     """
     Validate that volume is orthonormal
@@ -621,6 +625,7 @@ def multiframe_validate_orthogonal(dicoms):
     # if only one slice we do not need this check
     if not multiframe_is_orthogonal(dicoms, log_details=True):
         raise ConversionValidationError('NON_CUBICAL_IMAGE/GANTRY_TILT')
+
 
 def validate_orthogonal(dicoms):
     """
@@ -633,6 +638,7 @@ def validate_orthogonal(dicoms):
         return
     if not is_orthogonal(dicoms, log_details=True):
         raise ConversionValidationError('NON_CUBICAL_IMAGE/GANTRY_TILT')
+
 
 def multiframe_is_orthogonal(dicoms, log_details=False):
     """
@@ -663,6 +669,7 @@ def multiframe_is_orthogonal(dicoms, log_details=False):
             logger.warning('---------------------------------------------------------')
         return False
     return True
+
 
 def is_orthogonal(dicoms, log_details=False):
     """
@@ -742,6 +749,7 @@ def sort_dicoms(dicoms):
     if diff_z >= diff_x and diff_z >= diff_y:
         return dicom_input_sorted_z
 
+
 def multiframe_validate_slice_increment(dicoms):
     """
     Validate that the distance between all slices is equal (or very close to)
@@ -765,6 +773,7 @@ def multiframe_validate_slice_increment(dicoms):
             logger.warning('---------------------------------------------------------')
             raise ConversionValidationError('SLICE_INCREMENT_INCONSISTENT')
         previous_image_position = current_image_position
+
 
 def validate_slice_increment(dicoms):
     """
@@ -874,10 +883,10 @@ def multiframe_validate_slicecount(dicoms):
     """
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
     if len(frame_info) <= 3:
-
         logger.warning('At least 3 slices are needed for correct conversion')
         logger.warning('---------------------------------------------------------')
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
+
 
 def validate_slicecount(dicoms):
     """
@@ -890,6 +899,7 @@ def validate_slicecount(dicoms):
         logger.warning('At least 3 slices are needed for correct conversion')
         logger.warning('---------------------------------------------------------')
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
+
 
 def _multiframe_get_image_orientations(dicom_headers, frame_number=0):
     frame_info = dicom_headers.PerFrameFunctionalGroupsSequence
@@ -906,6 +916,7 @@ def _multiframe_get_image_orientations(dicom_headers, frame_number=0):
         raise ConversionError('Unsupported or missing PlaneOrientationSequence')
 
     return image_orient1, image_orient2
+
 
 def multiframe_validate_orientation(dicoms):
     """
@@ -928,6 +939,7 @@ def multiframe_validate_orientation(dicoms):
             logger.warning('%s %s' % (image_orient2, first_image_orient2))
             logger.warning('---------------------------------------------------------')
             raise ConversionValidationError('IMAGE_ORIENTATION_INCONSISTENT')
+
 
 def validate_orientation(dicoms):
     """
@@ -973,3 +985,29 @@ def get_nifti_data(nifti_image):
     Function that replicates the deprecated nifti.get_data behavior
     """
     return numpy.asanyarray(nifti_image.dataobj)
+
+
+def is_dicom_file(filename):
+    """
+    Util function to check if file is a dicom file
+    the first 128 bytes are preamble
+    the next 4 bytes should contain DICM otherwise it is not a dicom
+
+    :param filename: file to check for the DICM header block
+    :type filename: str
+    :returns: True if it is a dicom file
+    """
+    file_stream = open(filename, 'rb')
+    file_stream.seek(128)
+    data = file_stream.read(4)
+    file_stream.close()
+    if data == b'DICM':
+        return True
+    if settings.pydicom_read_force:
+        try:
+            dicom_headers = pydicom.read_file(filename, defer_size="1 KB", stop_before_pixels=True, force=True)
+            if dicom_headers is not None:
+                return True
+        except:
+            pass
+    return False

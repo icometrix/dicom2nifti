@@ -4,15 +4,16 @@ dicom2nifti
 
 @author: abrys
 """
-import pydicom
-import pydicom.uid
-import pydicom.dataset
-import logging
-import numpy
-import os
 import datetime
+import logging
+import os
 
-import dicom2nifti.compressed_dicom as compressed_dicom
+import numpy
+import pydicom
+import pydicom.dataset
+import pydicom.uid
+
+import common
 from dicom2nifti.common import read_dicom_directory, is_philips, is_siemens, is_ge
 
 
@@ -129,7 +130,7 @@ def _anonymize_file(dicom_file_in, dicom_file_out, fields_to_keep):
                    'ImplementationClassUID']
 
     # Load dicom_file_in
-    dicom_in = compressed_dicom.read_file(dicom_file_in)
+    dicom_in = pydicom.read_file(dicom_file_in)
 
     # Create new dicom file
     # Set new file meta information
@@ -208,7 +209,7 @@ def _anonymize_files(dicom_directory_in, dicom_directory_out, fields_to_keep):
             dicom_file_in = os.path.join(root, file_name)
             current_dir = root[len(dicom_directory_in) + 1:]
             dicom_file_out = os.path.join(dicom_directory_out, current_dir, file_name)
-            if compressed_dicom.is_dicom_file(dicom_file_in):
+            if common.is_dicom_file(dicom_file_in):
                 logging.info("Processing " + dicom_file_in)
                 _anonymize_file(dicom_file_in, dicom_file_out, fields_to_keep)
             else:

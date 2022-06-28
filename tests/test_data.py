@@ -14,6 +14,14 @@ GENERIC_ANATOMICAL_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__fil
                                            'data', 'generic', 'anatomical', '001_implicit')
 GENERIC_COMPRESSED = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   'data', 'generic', 'compressed', '001')
+GENERIC_COMPRESSED_JPEG = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'data', 'generic', 'compressed_jpeg', '001')
+GENERIC_COMPRESSED_J2K = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'data', 'generic', 'compressed_j2k', '001')
+GENERIC_COMPRESSED_JPEGLS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'data', 'generic', 'compressed_jpegls', '001')
+GENERIC_COMPRESSED_RLE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'data', 'generic', 'compressed_rle', '001')
 GENERIC_RGB = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            'data', 'generic', 'rgb', '001')
 GENERIC_COMPRESSED_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__file__)),

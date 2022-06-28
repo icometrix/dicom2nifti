@@ -6,7 +6,6 @@ validate_slice_increment = True
 validate_instance_number = False
 validate_multiframe_implicit = True
 pydicom_read_force = False
-gdcmconv_path = None
 resample = False
 resample_padding = 0
 resample_spline_interpolation_order = 0  # spline interpolation order (0 nn , 1 bilinear, 3 cubic)
@@ -167,12 +166,3 @@ def set_resample_spline_interpolation_order(order):
     global resample_spline_interpolation_order
     resample_spline_interpolation_order = order
 
-
-def set_gdcmconv_path(path):
-    """
-    Set where the filepath to the gdcmconv executable (needed is it is not found in your PATH)
-
-    :param path: the file path to the gdcmconv executable
-    """
-    global gdcmconv_path
-    gdcmconv_path = path

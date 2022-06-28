@@ -6,9 +6,7 @@
 import difflib
 import sys
 
-import dicom
-
-import dicom2nifti.compressed_dicom as compressed_dicom
+import pydicom
 
 
 def dicom_diff(file1, file2):
@@ -17,7 +15,7 @@ def dicom_diff(file1, file2):
     Inspired by https://code.google.com/p/pydicom/source/browse/source/dicom/examples/DicomDiff.py
     """
 
-    datasets = compressed_dicom.read_file(file1), compressed_dicom.read_file(file2)
+    datasets = pydicom.read_file(file1), pydicom.read_file(file2)
 
     rep = []
 

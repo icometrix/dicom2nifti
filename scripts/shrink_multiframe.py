@@ -5,15 +5,13 @@ dicom2nifti
 @author: abrys
 """
 
-import dicom
-import os
-
 import logging
-import numpy
 
-import dicom2nifti.compressed_dicom as compressed_dicom
-from dicom2nifti.convert_philips import _is_multiframe_diffusion_imaging, _is_multiframe_4d
+import numpy
+import pydicom
+
 import dicom2nifti.common as common
+from dicom2nifti.convert_philips import _is_multiframe_diffusion_imaging, _is_multiframe_4d
 
 
 def shrink_multiframe(input_file, output_file=None, slice_count=8, timepoint_count=4):
@@ -21,7 +19,7 @@ def shrink_multiframe(input_file, output_file=None, slice_count=8, timepoint_cou
         output_file = input_file
 
     # Load dicom_file_in
-    dicom_in = compressed_dicom.read_file(input_file)
+    dicom_in = pydicom.read_file(input_file)
 
     if _is_multiframe_diffusion_imaging([dicom_in]) or _is_multiframe_4d([dicom_in]):
 

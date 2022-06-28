@@ -28,9 +28,8 @@ pip:
 
    pip install dicom2nifti
 
-To support compressed dicom formats (JPEG, JPEG2000) we use gdcmconv from GDCM.
-Please install and check that gdcmconv is available from you default path.
-http://gdcm.sourceforge.net/wiki/index.php/Main_Page
+To support compressed dicom formats (JPEG, JPEG2000) we use GDCM in combination with pydicom.
+Please install gdcm as required. https://pydicom.github.io/pydicom/stable/tutorials/installation.html
 
 ---------------
  Updating
