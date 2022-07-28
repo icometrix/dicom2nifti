@@ -236,17 +236,20 @@ def _multiframe_to_nifti(dicom_input, output_file):
     logger.info('Creating affine')
 
     # Create the nifti header info
-    affine = _create_affine_multiframe(multiframe_dicom)
+    affine, max_slice_increment = common.multiframe_create_affine([multiframe_dicom], full_block)
     logger.info('Creating nifti')
 
     # Convert to nifti
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    timing_parameters = multiframe_dicom.SharedFunctionalGroupsSequence[0].MRTimingAndRelatedParametersSequence[0]
-    first_frame = multiframe_dicom[Tag(0x5200, 0x9230)][0]
-    common.set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
-                     float(first_frame[0x2005, 0x140f][0].EchoTime))
+    try:
+        timing_parameters = multiframe_dicom.SharedFunctionalGroupsSequence[0].MRTimingAndRelatedParametersSequence[0]
+        first_frame = multiframe_dicom[Tag(0x5200, 0x9230)][0]
+        common.set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
+                         float(first_frame.MREchoSequence[0].EchoTime))
+    except:
+        logger.info('Unable to set timing info')
 
     # Save to disk
     if output_file is not None:
@@ -276,7 +279,8 @@ def _multiframe_to_nifti(dicom_input, output_file):
                 'BVEC': bvec}
 
     return {'NII_FILE': output_file,
-            'NII': nii_image}
+            'NII': nii_image,
+            'MAX_SLICE_INCREMENT': max_slice_increment}
 
 
 def _singleframe_to_nifti(grouped_dicoms, output_file):
@@ -403,35 +407,6 @@ def _get_grouped_dicoms(dicom_input):
         previous_stack_position = stack_position
 
     return grouped_dicoms
-
-
-def _create_affine_multiframe(multiframe_dicom):
-    """
-    Function to create the affine matrix for a siemens mosaic dataset
-    This will work for siemens dti and 4D if in mosaic format
-    """
-    first_frame = multiframe_dicom[Tag(0x5200, 0x9230)][0]
-    last_frame = multiframe_dicom[Tag(0x5200, 0x9230)][-1]
-    # Create affine matrix (http://nipy.sourceforge.net/nibabel/dicom/dicom_orientation.html#dicom-slice-affine)
-    image_orient1 = numpy.array(first_frame.PlaneOrientationSequence[0].ImageOrientationPatient)[0:3].astype(float)
-    image_orient2 = numpy.array(first_frame.PlaneOrientationSequence[0].ImageOrientationPatient)[3:6].astype(float)
-
-    normal = numpy.cross(image_orient1, image_orient2)
-
-    delta_r = float(first_frame[0x2005, 0x140f][0].PixelSpacing[0])
-    delta_c = float(first_frame[0x2005, 0x140f][0].PixelSpacing[1])
-
-    image_pos = numpy.array(first_frame.PlanePositionSequence[0].ImagePositionPatient).astype(float)
-    last_image_pos = numpy.array(last_frame.PlanePositionSequence[0].ImagePositionPatient).astype(float)
-
-    number_of_stack_slices = int(common.get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
-    delta_s = abs(numpy.linalg.norm(last_image_pos - image_pos)) / (number_of_stack_slices - 1)
-
-    return numpy.array(
-        [[-image_orient1[0] * delta_c, -image_orient2[0] * delta_r, -delta_s * normal[0], -image_pos[0]],
-         [-image_orient1[1] * delta_c, -image_orient2[1] * delta_r, -delta_s * normal[1], -image_pos[1]],
-         [image_orient1[2] * delta_c, image_orient2[2] * delta_r, delta_s * normal[2], image_pos[2]],
-         [0, 0, 0, 1]])
 
 
 def _multiframe_to_block(multiframe_dicom):

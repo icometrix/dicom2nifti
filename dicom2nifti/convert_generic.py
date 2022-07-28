@@ -55,7 +55,7 @@ def multiframe_to_nifti(dicom_input, output_file):
         # Get data; originally z,y,x, transposed to x,y,z
         data = common.multiframe_get_volume_pixeldata(dicom_input)
 
-        affine, max_slice_increment = common.multiframe_create_affine(dicom_input)
+        affine, max_slice_increment = common.multiframe_create_affine(dicom_input, data)
 
         # Convert to nifti
         if data.ndim > 3:  # do not squeeze single slice data

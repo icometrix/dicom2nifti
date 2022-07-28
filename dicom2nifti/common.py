@@ -522,7 +522,7 @@ def write_bval_file(bvals, bval_file):
         text_file.write('%s\n' % ' '.join(map(str, bvals)))
 
 
-def multiframe_create_affine(dicoms):
+def multiframe_create_affine(dicoms, data_block):
     """
     Function to generate the affine matrix for a dicom series
     This method was based on (http://nipy.org/nibabel/dicom/dicom_orientation.html)
@@ -557,7 +557,8 @@ def multiframe_create_affine(dicoms):
             slice_thickness = frame_info[0].PixelMeasuresSequence[0].SliceThickness
         step = - numpy.cross(image_orient1, image_orient2) * slice_thickness
     else:
-        step = (image_pos - last_image_pos) / (1 - len(frame_info))
+        slices_per_block = data_block.shape[2]
+        step = (image_pos - last_image_pos) / (1 - slices_per_block)
 
     # check if this is actually a volume and not all slices on the same location
     if numpy.linalg.norm(step) == 0.0:
