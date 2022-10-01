@@ -214,10 +214,10 @@ def remove_localizers_by_imagetype(dicoms):
     # Loop overall files and build dict
     filtered_dicoms = []
     for dicom_ in dicoms:
-        if 'ImageType' in dicom_ and 'LOCALIZER' in dicom_.ImageType:
+        if 'ImageType' in dicom_ and 'LOCALIZER' in dicom_.get('ImageType'):
             continue
         # 'Projection Image' are Localizers for CT only see MSMET-234
-        if 'CT' in dicom_.Modality and 'ImageType' in dicom_ and 'PROJECTION IMAGE' in dicom_.ImageType:
+        if 'CT' in dicom_.get('Modality') and 'ImageType' in dicom_ and 'PROJECTION IMAGE' in dicom_.get('ImageType'):
             continue
         filtered_dicoms.append(dicom_)
     return filtered_dicoms
