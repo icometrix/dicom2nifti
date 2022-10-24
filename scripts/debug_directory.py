@@ -54,5 +54,5 @@ def run_convert_directory3():
 
 
 if __name__ == '__main__':
-    convert_directory.convert_directory("/Users/abrys/Downloads/test_philips/04",
-                                        "/Users/abrys/Downloads/test_philips/04")
+    convert_directory.convert_directory("/Users/abrys/Downloads/MSMET-4510",
+                                        "/Users/abrys/Downloads/MSMET-4510")

@@ -38,6 +38,7 @@ class TestConversionPhilips(unittest.TestCase):
             self.assertTrue(results.get('BVEC_FILE') is None)
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
 
+            # check PHILIPS_DTI
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_DTI),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
             assert_compare_nifti(results['NII_FILE'],
@@ -50,6 +51,7 @@ class TestConversionPhilips(unittest.TestCase):
                                 ground_thruth_filenames(test_data.PHILIPS_DTI)[3])
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
 
+            # check PHILIPS_DTI_002
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_DTI_002),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
             assert_compare_nifti(results['NII_FILE'],
@@ -62,6 +64,7 @@ class TestConversionPhilips(unittest.TestCase):
                                 ground_thruth_filenames(test_data.PHILIPS_DTI_002)[3])
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
 
+            # check PHILIPS_ENHANCED_DTI
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
             assert_compare_nifti(results['NII_FILE'],
@@ -74,6 +77,7 @@ class TestConversionPhilips(unittest.TestCase):
                                 ground_thruth_filenames(test_data.PHILIPS_ENHANCED_DTI)[3])
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
 
+            # check PHILIPS_DTI_IMPLICIT
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_DTI_IMPLICIT),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
             assert_compare_nifti(results['NII_FILE'],
@@ -86,6 +90,7 @@ class TestConversionPhilips(unittest.TestCase):
                                 ground_thruth_filenames(test_data.PHILIPS_DTI_IMPLICIT)[3])
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
 
+            # check PHILIPS_DTI_IMPLICIT_002
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_DTI_IMPLICIT_002),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
             assert_compare_nifti(results['NII_FILE'],
@@ -98,10 +103,12 @@ class TestConversionPhilips(unittest.TestCase):
                                 ground_thruth_filenames(test_data.PHILIPS_DTI_IMPLICIT_002)[3])
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
 
+            # check PHILIPS_ENHANCED_DTI_IMPLICIT
             self.assertRaises(ConversionError,
                               convert_philips.dicom_to_nifti,
                               read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI_IMPLICIT),
                               os.path.join(tmp_output_dir, 'test.nii.gz'))
+
         finally:
             shutil.rmtree(tmp_output_dir)
 

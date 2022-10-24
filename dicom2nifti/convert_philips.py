@@ -57,7 +57,7 @@ def dicom_to_nifti(dicom_input, output_file=None):
 
         if _is_multiframe_anatomical(dicom_input):
             logger.info('Found sequence type: MULTIFRAME ANATOMICAL')
-            return _multiframe_to_nifti(dicom_input, output_file)
+            return convert_generic.multiframe_to_nifti(dicom_input, output_file)
     else:
         logger.info('Found singleframe dicom')
         grouped_dicoms = _get_grouped_dicoms(dicom_input)
@@ -110,11 +110,7 @@ def _is_multiframe_4d(dicom_input):
     if not common.is_multiframe_dicom(dicom_input):
         return False
 
-    header = dicom_input[0]
-
-    # check if there are multiple stacks
-    number_of_stack_slices = common.get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
-    number_of_stacks = int(int(header.NumberOfFrames) / number_of_stack_slices)
+    number_of_stacks, _ = common.multiframe_get_stack_count(dicom_input)
     if number_of_stacks <= 1:
         return False
 
@@ -131,11 +127,7 @@ def _is_multiframe_anatomical(dicom_input):
     if not common.is_multiframe_dicom(dicom_input):
         return False
 
-    header = dicom_input[0]
-
-    # check if there are multiple stacks
-    number_of_stack_slices = common.get_ss_value(header[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
-    number_of_stacks = int(int(header.NumberOfFrames) / number_of_stack_slices)
+    number_of_stacks, _ = common.multiframe_get_stack_count(dicom_input)
 
     if number_of_stacks > 1:
         return False
@@ -231,7 +223,7 @@ def _multiframe_to_nifti(dicom_input, output_file):
 
     # Create mosaic block
     logger.info('Creating data block')
-    full_block = _multiframe_to_block(multiframe_dicom)
+    full_block = common.multiframe_to_block(multiframe_dicom)
 
     logger.info('Creating affine')
 
@@ -409,95 +401,6 @@ def _get_grouped_dicoms(dicom_input):
     return grouped_dicoms
 
 
-def _multiframe_to_block(multiframe_dicom):
-    """
-    Generate a full datablock containing all stacks
-    """
-    # Calculate the amount of stacks and slices in the stack
-    number_of_stack_slices = int(common.get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)]))
-    number_of_stacks = int(int(multiframe_dicom.NumberOfFrames) / number_of_stack_slices)
-
-    # We create a numpy array
-    size_x = multiframe_dicom.pixel_array.shape[2]
-    size_y = multiframe_dicom.pixel_array.shape[1]
-    size_z = number_of_stack_slices
-    size_t = number_of_stacks
-    # get the format
-    format_string = common.get_numpy_type(multiframe_dicom)
-
-    # get header info needed for ordering
-    frame_info = multiframe_dicom[0x5200, 0x9230]
-
-    data_4d = numpy.zeros((size_z, size_y, size_x, size_t), dtype=format_string)
-
-    # loop over each slice and insert in datablock
-    t_location_index = _get_t_position_index(multiframe_dicom)
-    for slice_index in range(0, size_t * size_z):
-
-        z_location = frame_info[slice_index].FrameContentSequence[0].InStackPositionNumber - 1
-        if t_location_index is None:
-            t_location = frame_info[slice_index].FrameContentSequence[0].TemporalPositionIndex - 1
-        else:
-            t_location = frame_info[slice_index].FrameContentSequence[0].DimensionIndexValues[t_location_index] - 1
-
-        block_data = multiframe_dicom.pixel_array[slice_index, :, :]
-        # apply scaling
-        rescale_intercept = frame_info[slice_index].PixelValueTransformationSequence[0].RescaleIntercept
-        rescale_slope = frame_info[slice_index].PixelValueTransformationSequence[0].RescaleSlope
-        block_data = common.do_scaling(block_data,
-                                       rescale_slope, rescale_intercept)
-        # switch to float if needed
-        if block_data.dtype != data_4d.dtype:
-            data_4d = data_4d.astype(block_data.dtype)
-        data_4d[z_location, :, :, t_location] = block_data
-
-    full_block = numpy.zeros((size_x, size_y, size_z, size_t), dtype=data_4d.dtype)
-
-    # loop over each stack and reorganize the data
-    for t_index in range(0, size_t):
-        # transpose the block so the directions are correct
-        data_3d = numpy.transpose(data_4d[:, :, :, t_index], (2, 1, 0))
-        # add the block the the full data
-        full_block[:, :, :, t_index] = data_3d
-
-    return full_block
-
-
-def _get_t_position_index(multiframe_dicom):
-    # First try temporal position index itself
-    if 'DimensionIndexSequence' not in multiframe_dicom:
-        return None
-
-    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
-        item = multiframe_dicom.DimensionIndexSequence[current_index]
-        if 'DimensionDescriptionLabel' in item and \
-                'Temporal Position Index' in item.DimensionDescriptionLabel:
-            return current_index
-
-    # This seems to work for most dti
-    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
-        item = multiframe_dicom.DimensionIndexSequence[current_index]
-        if 'DimensionDescriptionLabel' in item and \
-                'Diffusion Gradient Orientation' in item.DimensionDescriptionLabel:
-            return current_index
-
-    # This seems to work for 3D grace sequences
-    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
-        item = multiframe_dicom.DimensionIndexSequence[current_index]
-        if 'DimensionDescriptionLabel' in item and \
-                'Effective Echo Time' in item.DimensionDescriptionLabel:
-            return current_index
-
-    # First try trigger delay time (inspired by http://www.dclunie.com/papers/SCAR_20040522_CTMRMF.pdf)
-    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
-        item = multiframe_dicom.DimensionIndexSequence[current_index]
-        if 'DimensionDescriptionLabel' in item and \
-                'Trigger Delay Time' in item.DimensionDescriptionLabel:
-            return current_index
-
-    return None
-
-
 def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_file):
     """
     Write the bvals from the sorted dicom files to a bval file
@@ -505,8 +408,7 @@ def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_fil
     """
 
     # create the empty arrays
-    number_of_stack_slices = common.get_ss_value(multiframe_dicom[Tag(0x2001, 0x105f)][0][Tag(0x2001, 0x102d)])
-    number_of_stacks = int(int(multiframe_dicom.NumberOfFrames) / number_of_stack_slices)
+    number_of_stacks, number_of_stack_slices = common.multiframe_get_stack_count([multiframe_dicom])
 
     bvals = numpy.zeros([number_of_stacks], dtype=numpy.int32)
     bvecs = numpy.zeros([number_of_stacks, 3])

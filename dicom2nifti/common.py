@@ -185,25 +185,94 @@ def is_valid_imaging_dicom(dicom_header):
         return False
 
 
-def multiframe_get_volume_pixeldata(dicoms):
+def _get_t_position_index(multiframe_dicom):
+    # First try temporal position index itself
+    if 'DimensionIndexSequence' not in multiframe_dicom:
+        return None
+
+    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
+        item = multiframe_dicom.DimensionIndexSequence[current_index]
+        if 'DimensionDescriptionLabel' in item and \
+                'Temporal Position Index' in item.DimensionDescriptionLabel:
+            return current_index
+
+    # This seems to work for most dti
+    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
+        item = multiframe_dicom.DimensionIndexSequence[current_index]
+        if 'DimensionDescriptionLabel' in item and \
+                'Diffusion Gradient Orientation' in item.DimensionDescriptionLabel:
+            return current_index
+
+    # This seems to work for 3D grace sequences
+    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
+        item = multiframe_dicom.DimensionIndexSequence[current_index]
+        if 'DimensionDescriptionLabel' in item and \
+                'Effective Echo Time' in item.DimensionDescriptionLabel:
+            return current_index
+
+    # First try trigger delay time (inspired by http://www.dclunie.com/papers/SCAR_20040522_CTMRMF.pdf)
+    for current_index in range(len(multiframe_dicom.DimensionIndexSequence)):
+        item = multiframe_dicom.DimensionIndexSequence[current_index]
+        if 'DimensionDescriptionLabel' in item and \
+                'Trigger Delay Time' in item.DimensionDescriptionLabel:
+            return current_index
+
+    return None
+
+
+def multiframe_to_block(multiframe_dicom):
     """
-    the slice and intercept calculation can cause the slices to have different dtypes
-    we should get the correct dtype that can cover all of them
-
-    :type sorted_slices: list of slices
-    :param sorted_slices: sliced sored in the correct order to create volume
+    Generate a full datablock containing all stacks
     """
+    # Calculate the amount of stacks and slices in the stack
+    number_of_stacks, number_of_stack_slices = multiframe_get_stack_count([multiframe_dicom])
 
-    # create the new volume with with the correct data
-    vol = _get_slice_pixeldata(dicoms[0])
+    # We create a numpy array
+    size_x = multiframe_dicom.pixel_array.shape[2]
+    size_y = multiframe_dicom.pixel_array.shape[1]
+    size_z = number_of_stack_slices
+    size_t = number_of_stacks
+    # get the format
+    format_string = get_numpy_type(multiframe_dicom)
 
-    # Done
-    # if rgb data do separate transpose
-    if len(vol.shape) == 4 and vol.shape[3] == 3:
-        vol = numpy.transpose(vol, (2, 1, 0, 3))
-    else:
-        vol = numpy.transpose(vol, (2, 1, 0))
-    return vol
+    # get header info needed for ordering
+    frame_info = multiframe_dicom.PerFrameFunctionalGroupsSequence
+
+    data_4d = numpy.zeros((size_z, size_y, size_x, size_t), dtype=format_string)
+
+    # loop over each slice and insert in datablock
+    t_location_index = _get_t_position_index(multiframe_dicom)
+    for slice_index in range(0, size_t * size_z):
+
+        z_location = frame_info[slice_index].FrameContentSequence[0].InStackPositionNumber - 1
+        if t_location_index is not None:
+            t_location = frame_info[slice_index].FrameContentSequence[0].DimensionIndexValues[t_location_index] - 1
+        elif "TemporalPositionIndex" in frame_info[slice_index].FrameContentSequence[0]:
+            t_location = frame_info[slice_index].FrameContentSequence[0].TemporalPositionIndex - 1
+        else:
+            t_location = 0
+
+        block_data = multiframe_dicom.pixel_array[slice_index, :, :]
+        # apply scaling
+        if "PixelValueTransformationSequence" in frame_info[slice_index]:
+            rescale_intercept = frame_info[slice_index].PixelValueTransformationSequence[0].RescaleIntercept
+            rescale_slope = frame_info[slice_index].PixelValueTransformationSequence[0].RescaleSlope
+            block_data = do_scaling(block_data, rescale_slope, rescale_intercept)
+        # switch to float if needed
+        if block_data.dtype != data_4d.dtype:
+            data_4d = data_4d.astype(block_data.dtype)
+        data_4d[z_location, :, :, t_location] = block_data
+
+    full_block = numpy.zeros((size_x, size_y, size_z, size_t), dtype=data_4d.dtype)
+
+    # loop over each stack and reorganize the data
+    for t_index in range(0, size_t):
+        # transpose the block so the directions are correct
+        data_3d = numpy.transpose(data_4d[:, :, :, t_index], (2, 1, 0))
+        # add the block the full data
+        full_block[:, :, :, t_index] = data_3d
+
+    return full_block
 
 
 def get_volume_pixeldata(sorted_slices):
@@ -884,6 +953,30 @@ def multiframe_validate_slicecount(dicoms):
         logger.warning('At least 3 slices are needed for correct conversion')
         logger.warning('---------------------------------------------------------')
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
+
+
+def multiframe_get_stack_count(dicoms):
+    """
+    Count the number of 3D stacks in a 4D multiframe dicom, for example fmri or DTI
+    Not to be confused with multiframe dicoms containing multiple unrelated stacks
+    """
+    temporal_position_indices = []
+    in_stack_position_numbers = []
+    for functional_group_sequence in dicoms[0].PerFrameFunctionalGroupsSequence:
+        if "TemporalPositionIndex" in functional_group_sequence.FrameContentSequence[0]:
+            temporal_position_indices.append(functional_group_sequence.FrameContentSequence[0].TemporalPositionIndex)
+        if "InStackPositionNumber" in functional_group_sequence.FrameContentSequence[0]:
+            in_stack_position_numbers.append(functional_group_sequence.FrameContentSequence[0].InStackPositionNumber)
+    temporal_position_indices = list(set(temporal_position_indices))
+
+    # try based on temporal position index first but is not always correctly used
+    if len(temporal_position_indices) > 1:
+        return len(temporal_position_indices), int(
+            len(dicoms[0].PerFrameFunctionalGroupsSequence) / len(temporal_position_indices))
+
+    # try based on the in stack position index
+    values, count = numpy.unique(numpy.array(in_stack_position_numbers), return_counts=True)
+    return count[0], len(values)
 
 
 def validate_slicecount(dicoms):

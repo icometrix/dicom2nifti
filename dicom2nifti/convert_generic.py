@@ -17,6 +17,7 @@ from dicom2nifti.exceptions import ConversionError, ConversionValidationError
 
 logger = logging.getLogger(__name__)
 
+
 def multiframe_to_nifti(dicom_input, output_file):
     """
     This function will convert an anatomical dicom series to a nifti
@@ -53,7 +54,7 @@ def multiframe_to_nifti(dicom_input, output_file):
     # do the normal conversion
     else:
         # Get data; originally z,y,x, transposed to x,y,z
-        data = common.multiframe_get_volume_pixeldata(dicom_input)
+        data = common.multiframe_to_block(dicom_input[0])
 
         affine, max_slice_increment = common.multiframe_create_affine(dicom_input, data)
 
