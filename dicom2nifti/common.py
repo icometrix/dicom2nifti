@@ -272,7 +272,7 @@ def multiframe_to_block(multiframe_dicom):
         # add the block the full data
         full_block[:, :, :, t_index] = data_3d
 
-    return full_block
+    return numpy.squeeze(full_block)
 
 
 def get_volume_pixeldata(sorted_slices):
