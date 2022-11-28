@@ -260,7 +260,9 @@ def multiframe_to_block(multiframe_dicom):
             block_data = do_scaling(block_data, rescale_slope, rescale_intercept)
         # switch to float if needed
         if block_data.dtype != data_4d.dtype:
-            data_4d = data_4d.astype(block_data.dtype)
+            new_dtype = numpy.promote_types(block_data.dtype, data_4d.dtype)
+            data_4d = data_4d.astype(new_dtype)
+            block_data = block_data.astype(new_dtype)
         data_4d[z_location, :, :, t_location] = block_data
 
     full_block = numpy.zeros((size_x, size_y, size_z, size_t), dtype=data_4d.dtype)
