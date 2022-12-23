@@ -149,8 +149,20 @@ def is_multiframe_dicom(dicom_input):
 
     if Tag(0x0002, 0x0002) not in header.file_meta:
         return False
-    if header.file_meta[0x0002, 0x0002].value == '1.2.840.10008.5.1.4.1.1.4.1':
+    # enhanced CT image storage
+    if header.file_meta.MediaStorageSOPClassUID == '1.2.840.10008.5.1.4.1.1.2.1':
         return True
+    # enhanced MRI image storage
+    if header.file_meta.MediaStorageSOPClassUID == '1.2.840.10008.5.1.4.1.1.4.1':
+        return True
+
+    # fallback for certain vendors not setting the correct SOPClassUID
+    if "SharedFunctionalGroupsSequence" in header:
+        return True
+
+    if "PerFrameFunctionalGroupsSequence" in header:
+        return True
+
     return False
 
 
@@ -160,9 +172,8 @@ def is_valid_imaging_dicom(dicom_header):
     """
     # if it is philips and multiframe dicom then we assume it is ok
     try:
-        if is_philips([dicom_header]) or is_siemens([dicom_header]):
-            if is_multiframe_dicom([dicom_header]):
-                return True
+        if is_multiframe_dicom([dicom_header]):
+            return True
 
         if "SeriesInstanceUID" not in dicom_header:
             return False
@@ -244,10 +255,15 @@ def multiframe_to_block(multiframe_dicom):
     t_location_index = _get_t_position_index(multiframe_dicom)
     for slice_index in range(0, size_t * size_z):
 
-        z_location = frame_info[slice_index].FrameContentSequence[0].InStackPositionNumber - 1
+        if "FrameContentSequence" in frame_info[slice_index]:
+            z_location = frame_info[slice_index].FrameContentSequence[0].InStackPositionNumber - 1
+        else:
+            z_location = slice_index
+
         if t_location_index is not None:
             t_location = frame_info[slice_index].FrameContentSequence[0].DimensionIndexValues[t_location_index] - 1
-        elif "TemporalPositionIndex" in frame_info[slice_index].FrameContentSequence[0]:
+        elif "FrameContentSequence" in frame_info[slice_index] and \
+                "TemporalPositionIndex" in frame_info[slice_index].FrameContentSequence[0]:
             t_location = frame_info[slice_index].FrameContentSequence[0].TemporalPositionIndex - 1
         else:
             t_location = 0
@@ -613,13 +629,15 @@ def multiframe_create_affine(dicoms, data_block):
         shared_frame_info = dicoms[0].SharedFunctionalGroupsSequence
         delta_r = numpy.array(shared_frame_info[0].PixelMeasuresSequence[0].PixelSpacing[0])
         delta_c = numpy.array(shared_frame_info[0].PixelMeasuresSequence[0].PixelSpacing[1])
+    elif "PixelSpacing" in dicoms[0]:
+        delta_r = numpy.array(dicoms[0].PixelSpacing[0])
+        delta_c = numpy.array(dicoms[0].PixelSpacing[1])
     else:
         logger.warning('Unsupported or missing PixelMeasuresSequence')
         raise ConversionError('Unsupported or missing PixelMeasuresSequence')
 
-    image_pos = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
-
-    last_image_pos = numpy.array(frame_info[-1].PlanePositionSequence[0].ImagePositionPatient)
+    image_pos = _multiframe_get_image_position(dicoms[0], 0)
+    last_image_pos = _multiframe_get_image_position(dicoms[0], -1)
 
     if len(frame_info) == 1:
         # Single slice
@@ -715,12 +733,9 @@ def multiframe_is_orthogonal(dicoms, log_details=False):
 
     :param dicoms: check that we have a volume without skewing
     """
-    frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
-
     first_image_orient1, first_image_orient2 = _multiframe_get_image_orientations(dicoms[0], 0)
-    first_image_pos = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
-
-    last_image_pos = numpy.array(frame_info[-1].PlanePositionSequence[0].ImagePositionPatient)
+    first_image_pos = _multiframe_get_image_position(dicoms[0], 0)
+    last_image_pos = _multiframe_get_image_position(dicoms[0], -1)
 
     first_image_dir = numpy.cross(first_image_orient1, first_image_orient2)
     first_image_dir /= numpy.linalg.norm(first_image_dir)
@@ -827,12 +842,12 @@ def multiframe_validate_slice_increment(dicoms):
     """
 
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
-    first_image_position = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
-    previous_image_position = numpy.array(frame_info[1].PlanePositionSequence[0].ImagePositionPatient)
+    first_image_position = _multiframe_get_image_position(dicoms[0], 0)
+    previous_image_position = _multiframe_get_image_position(dicoms[0], 1)
 
     increment = first_image_position - previous_image_position
-    for frame_ in frame_info[2:]:
-        current_image_position = numpy.array(frame_.PlanePositionSequence[0].ImagePositionPatient)
+    for frame_number in range(2, len(frame_info)):
+        current_image_position = _multiframe_get_image_position(dicoms[0], frame_number)
         current_increment = previous_image_position - current_image_position
         if not numpy.allclose(increment, current_increment, rtol=0.05, atol=0.1):
             logger.warning('Slice increment not consistent through all slices')
@@ -906,12 +921,12 @@ def multiframe_is_slice_increment_inconsistent(dicoms):
     """
     sliceincrement_inconsistent = False
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
-    first_image_position = numpy.array(frame_info[0].PlanePositionSequence[0].ImagePositionPatient)
-    previous_image_position = numpy.array(frame_info[1].PlanePositionSequence[0].ImagePositionPatient)
+    first_image_position = _multiframe_get_image_position(dicoms[0], 0)
+    previous_image_position = _multiframe_get_image_position(dicoms[0], 1)
 
     increment = first_image_position - previous_image_position
-    for frame_ in frame_info[2:]:
-        current_image_position = numpy.array(frame_.PlanePositionSequence[0].ImagePositionPatient)
+    for frame_number in range(2, len(frame_info)):
+        current_image_position = _multiframe_get_image_position(dicoms[0], frame_number)
         current_increment = previous_image_position - current_image_position
         if not numpy.allclose(increment, current_increment, rtol=0.05, atol=0.1):
             sliceincrement_inconsistent = True
@@ -965,6 +980,8 @@ def multiframe_get_stack_count(dicoms):
     temporal_position_indices = []
     in_stack_position_numbers = []
     for functional_group_sequence in dicoms[0].PerFrameFunctionalGroupsSequence:
+        if "FrameContentSequence" not in functional_group_sequence:
+            continue
         if "TemporalPositionIndex" in functional_group_sequence.FrameContentSequence[0]:
             temporal_position_indices.append(functional_group_sequence.FrameContentSequence[0].TemporalPositionIndex)
         if "InStackPositionNumber" in functional_group_sequence.FrameContentSequence[0]:
@@ -977,8 +994,13 @@ def multiframe_get_stack_count(dicoms):
             len(dicoms[0].PerFrameFunctionalGroupsSequence) / len(temporal_position_indices))
 
     # try based on the in stack position index
-    values, count = numpy.unique(numpy.array(in_stack_position_numbers), return_counts=True)
-    return count[0], len(values)
+    if len(in_stack_position_numbers) > 1:
+        values, count = numpy.unique(numpy.array(in_stack_position_numbers), return_counts=True)
+        return count[0], len(values)
+
+    # assume 3D block so 1 stack
+    else:
+        return 1, len(dicoms[0].PerFrameFunctionalGroupsSequence)
 
 
 def validate_slicecount(dicoms):
@@ -996,19 +1018,36 @@ def validate_slicecount(dicoms):
 
 def _multiframe_get_image_orientations(dicom_headers, frame_number=0):
     frame_info = dicom_headers.PerFrameFunctionalGroupsSequence
+    shared_info = dicom_headers.get("SharedFunctionalGroupsSequence")
     if "PlaneOrientationSequence" in frame_info[frame_number]:
         image_orient1 = numpy.array(frame_info[frame_number].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
         image_orient2 = numpy.array(frame_info[frame_number].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
-    elif "SharedFunctionalGroupsSequence" in dicom_headers and \
-            "PlaneOrientationSequence" in dicom_headers.SharedFunctionalGroupsSequence[0]:
-        shared_frame_info = dicom_headers.SharedFunctionalGroupsSequence
-        image_orient1 = numpy.array(shared_frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
-        image_orient2 = numpy.array(shared_frame_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
+    elif shared_info is not None and "PlaneOrientationSequence" in shared_info[0]:
+        image_orient1 = numpy.array(shared_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[0:3]
+        image_orient2 = numpy.array(shared_info[0].PlaneOrientationSequence[0].ImageOrientationPatient)[3:6]
+    elif "ImageOrientationPatient" in frame_info[frame_number]:
+        image_orient1 = numpy.array(frame_info[frame_number].ImageOrientationPatient)[0:3]
+        image_orient2 = numpy.array(frame_info[frame_number].ImageOrientationPatient)[3:6]
+    elif shared_info is not None and "ImageOrientationPatient" in shared_info[0]:
+        image_orient1 = numpy.array(shared_info[0].ImageOrientationPatient)[0:3]
+        image_orient2 = numpy.array(shared_info[0].ImageOrientationPatient)[3:6]
     else:
-        logger.warning('Unsupported or missing PlaneOrientationSequence')
-        raise ConversionError('Unsupported or missing PlaneOrientationSequence')
+        logger.warning('Unsupported or missing PlaneOrientationSequence/ImageOrientationPatient')
+        raise ConversionError('Unsupported or missing PlaneOrientationSequence/ImageOrientationPatient')
 
     return image_orient1, image_orient2
+
+
+def _multiframe_get_image_position(dicom_headers, frame_number=0):
+    frame_info = dicom_headers.PerFrameFunctionalGroupsSequence
+
+    if "PlanePositionSequence" in frame_info[frame_number]:
+        return numpy.array(frame_info[frame_number].PlanePositionSequence[0].ImagePositionPatient)
+    elif "ImagePositionPatient" in frame_info[frame_number]:
+        return numpy.array(frame_info[frame_number].ImagePositionPatient)
+    else:
+        logger.warning('Unsupported or missing PlanePositionSequence/ImagePositionPatient')
+        raise ConversionError('Unsupported or missing PlanePositionSequence/ImagePositionPatient')
 
 
 def multiframe_validate_orientation(dicoms):

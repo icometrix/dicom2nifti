@@ -15,13 +15,13 @@ GENERIC_ANATOMICAL_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__fil
 GENERIC_COMPRESSED = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   'data', 'generic', 'compressed', '001')
 GENERIC_COMPRESSED_JPEG = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'data', 'generic', 'compressed_jpeg', '001')
+                                       'data', 'generic', 'compressed_jpeg', '001')
 GENERIC_COMPRESSED_J2K = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'data', 'generic', 'compressed_j2k', '001')
+                                      'data', 'generic', 'compressed_j2k', '001')
 GENERIC_COMPRESSED_JPEGLS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'data', 'generic', 'compressed_jpegls', '001')
+                                         'data', 'generic', 'compressed_jpegls', '001')
 GENERIC_COMPRESSED_RLE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'data', 'generic', 'compressed_rle', '001')
+                                      'data', 'generic', 'compressed_rle', '001')
 GENERIC_RGB = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            'data', 'generic', 'rgb', '001')
 GENERIC_COMPRESSED_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -142,6 +142,10 @@ HITACHI_ANATOMICAL_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__fil
 # HYPERFINE DATASETS
 HYPERFINE_ANATOMICAL = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     'data', 'hyperfine', 'anatomical', '001')
+
+# HYPERFINE DATASETS
+SIRONA_MULTIFRAME_ANATOMICAL = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                            'data', 'sirona_multiframe', 'anatomical', '001')
 
 # FAILING
 FAILING_SLICEINCREMENT = os.path.join(os.path.dirname(os.path.abspath(__file__)),

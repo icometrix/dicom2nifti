@@ -95,9 +95,8 @@ def _is_valid_imaging_dicom(dicom_header):
     """
     # if it is philips and multiframe dicom then we assume it is ok
     try:
-        if common.is_philips([dicom_header]) or common.is_siemens([dicom_header]):
-            if common.is_multiframe_dicom([dicom_header]):
-                return True
+        if common.is_multiframe_dicom([dicom_header]):
+            return True
 
         if "SeriesInstanceUID" not in dicom_header:
             return False

@@ -147,9 +147,8 @@ def are_imaging_dicoms(dicom_input):
     """
 
     # if it is philips and multiframe dicom then we assume it is ok
-    if common.is_philips(dicom_input) or common.is_siemens(dicom_input):
-        if common.is_multiframe_dicom(dicom_input):
-            return True
+    if common.is_multiframe_dicom(dicom_input):
+        return True
 
     # for all others if there is image position patient we assume it is ok
     header = dicom_input[0]

@@ -77,6 +77,8 @@ def anonymize_directory(input_directory, output_directory=None):
                       'NumberOfFrames': None,
                       'SamplesPerPixel': None,
                       'SpacingBetweenSlices': None,
+                      'PerFrameFunctionalGroupsSequence': None,
+                      'SharedFunctionalGroupsSequence': None,
                       # Pixel Data must be specified with hex code as it will not work for compressed dicoms
                       (0x7fe0, 0x0010): None}
 
@@ -216,5 +218,5 @@ def _anonymize_files(dicom_directory_in, dicom_directory_out, fields_to_keep):
                 logging.info("Skipping " + dicom_file_in + ", no dicom file")
 
 if __name__ == '__main__':
-    anonymize_directory('/***',
-                        '/***')
+    anonymize_directory('/Users/abrys/Downloads/cbct_01',
+                        '/Users/abrys/Downloads/cbct_01')

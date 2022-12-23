@@ -52,8 +52,6 @@ def shrink_multiframe(input_file, output_file=None, slice_count=8, timepoint_cou
     else:
         # truncate the data
         dicom_in.PixelData = dicom_in.pixel_array[:slice_count, :, :].tostring()
-        # set number of frames
-        common.set_ss_value(dicom_in[(0x2001, 0x105f)][0][(0x2001, 0x102d)], slice_count)
 
         setattr(dicom_in, 'NumberOfFrames', slice_count)
         # truncate the pre frame groups sequence
@@ -64,7 +62,7 @@ def shrink_multiframe(input_file, output_file=None, slice_count=8, timepoint_cou
 
 
 def main():
-    shrink_multiframe('/Users/abrys/Documents/data/philips_implicit/IM1.dcm',timepoint_count=1)
+    shrink_multiframe('/Users/abrys/Downloads/cbct_01/001.dcm',timepoint_count=1)
 
     pass
 
