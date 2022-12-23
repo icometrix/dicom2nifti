@@ -241,7 +241,7 @@ def _get_bvals_bvecs(grouped_dicoms):
             original_bval = float(dicom_[Tag(0x0043, 0x1039)].value.decode("utf-8").split('\\')[0])
         else:
             original_bval = dicom_[Tag(0x0043, 0x1039)][0]
-        original_bvec = numpy.array([0, 0, 0], dtype=numpy.float)
+        original_bvec = numpy.array([0, 0, 0], dtype=numpy.float32)
         original_bvec[0] = -float(dicom_[Tag(0x0019, 0x10bb)].value)  # invert based upon mricron output
         original_bvec[1] = float(dicom_[Tag(0x0019, 0x10bc)].value)
         original_bvec[2] = float(dicom_[Tag(0x0019, 0x10bd)].value)
