@@ -158,10 +158,12 @@ def is_multiframe_dicom(dicom_input):
 
     # fallback for certain vendors not setting the correct SOPClassUID
     if "SharedFunctionalGroupsSequence" in header:
-        return True
+        if len(header.SharedFunctionalGroupsSequence) > 1:
+            return True
 
     if "PerFrameFunctionalGroupsSequence" in header:
-        return True
+        if len(header.PerFrameFunctionalGroupsSequence) > 1:
+         return True
 
     return False
 

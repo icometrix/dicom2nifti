@@ -194,6 +194,8 @@ def remove_duplicate_slices(dicoms):
     # in case of multiframe this check cannot be done
     if 'ImageOrientationPatient' not in dicoms[0]:
         return dicoms
+    if 'ImagePositionPatient' not in dicoms[0]:
+        return dicoms
 
     for dicom_ in dicoms:
         if tuple(dicom_.ImagePositionPatient) not in dicoms_dict:
