@@ -4,12 +4,13 @@ dicom2nifti
 
 @author: abrys
 """
+import os
 import logging
 import shutil
 import tempfile
 
 import dicom2nifti.convert_dir as convert_directory
-from dicom2nifti import settings
+from dicom2nifti import settings, dicom_series_to_nifti
 
 
 def run_convert_directory():
@@ -54,5 +55,8 @@ def run_convert_directory3():
 
 
 if __name__ == '__main__':
-    convert_directory.convert_directory("/Users/abrys/Downloads/CLIPPING",
-                                        "/Users/abrys/Downloads/CLIPPING")
+    dicom_series_to_nifti(os.path.expanduser("~/Downloads/dicom_download"),
+                          os.path.expanduser("~/Downloads/dicom_download.nii.gz"))
+
+
+

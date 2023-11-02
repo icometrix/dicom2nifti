@@ -238,8 +238,7 @@ def _multiframe_to_nifti(dicom_input, output_file):
     try:
         timing_parameters = multiframe_dicom.SharedFunctionalGroupsSequence[0].MRTimingAndRelatedParametersSequence[0]
         first_frame = multiframe_dicom[Tag(0x5200, 0x9230)][0]
-        common.set_tr_te(nii_image, float(timing_parameters.RepetitionTime),
-                         float(first_frame.MREchoSequence[0].EchoTime))
+        common.set_tr_te(nii_image, timing_parameters.RepetitionTime, first_frame.MREchoSequence[0].EchoTime)
     except:
         logger.info('Unable to set timing info')
 
@@ -293,7 +292,7 @@ def _singleframe_to_nifti(grouped_dicoms, output_file):
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
+    common.set_tr_te(nii_image, grouped_dicoms[0][0].RepetitionTime, grouped_dicoms[0][0].EchoTime)
 
     if output_file is not None:
         # Save to disk

@@ -13,6 +13,7 @@ import unittest
 import nibabel
 import numpy
 
+import convert_generic
 import tests.test_data as test_data
 
 import dicom2nifti.convert_ge as convert_ge
@@ -117,17 +118,17 @@ class TestConversionGE(unittest.TestCase):
         assert not common.is_ge(read_dicom_directory(test_data.HITACHI_ANATOMICAL))
 
     def test_is_4d(self):
-        diffusion_group = convert_ge._get_grouped_dicoms(read_dicom_directory(test_data.GE_DTI))
-        _4d_group = convert_ge._get_grouped_dicoms(read_dicom_directory(test_data.GE_FMRI))
-        anatomical_group = convert_ge._get_grouped_dicoms(read_dicom_directory(test_data.GE_ANATOMICAL))
-        self.assertTrue(convert_ge._is_4d(diffusion_group))
-        self.assertTrue(convert_ge._is_4d(_4d_group))
-        self.assertFalse(convert_ge._is_4d(anatomical_group))
+        diffusion_group = convert_generic.get_grouped_dicoms(read_dicom_directory(test_data.GE_DTI))
+        _4d_group = convert_generic.get_grouped_dicoms(read_dicom_directory(test_data.GE_FMRI))
+        anatomical_group = convert_generic.get_grouped_dicoms(read_dicom_directory(test_data.GE_ANATOMICAL))
+        self.assertTrue(convert_generic.is_4d(diffusion_group))
+        self.assertTrue(convert_generic.is_4d(_4d_group))
+        self.assertFalse(convert_generic.is_4d(anatomical_group))
 
     def test_is_diffusion_imaging(self):
-        diffusion_group = convert_ge._get_grouped_dicoms(read_dicom_directory(test_data.GE_DTI))
-        _4d_group = convert_ge._get_grouped_dicoms(read_dicom_directory(test_data.GE_FMRI))
-        anatomical_group = convert_ge._get_grouped_dicoms(read_dicom_directory(test_data.GE_ANATOMICAL))
+        diffusion_group = convert_generic.get_grouped_dicoms(read_dicom_directory(test_data.GE_DTI))
+        _4d_group = convert_generic.get_grouped_dicoms(read_dicom_directory(test_data.GE_FMRI))
+        anatomical_group = convert_generic.get_grouped_dicoms(read_dicom_directory(test_data.GE_ANATOMICAL))
         assert convert_ge._is_diffusion_imaging(diffusion_group)
         assert not convert_ge._is_diffusion_imaging(_4d_group)
         assert not convert_ge._is_diffusion_imaging(anatomical_group)

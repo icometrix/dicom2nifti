@@ -1105,6 +1105,23 @@ def set_tr_te(nifti_image, repetition_time, echo_time):
     :param repetition_time: repetition time
     :param nifti_image: nifti image to set the info to
     """
+
+    def is_float(number):
+        """
+        Helper to check if something is a float
+        """
+        try:
+            float(number)
+            return True
+        except ValueError:
+            return False
+
+    # only set if it is an actual float, can also be empty/none
+    if not is_float(repetition_time) or not is_float(echo_time):
+        return
+    repetition_time = float(repetition_time)
+    echo_time = float(echo_time)
+
     # set the repetition time in pixdim
     nifti_image.header.structarr['pixdim'][4] = repetition_time / 1000.0
 

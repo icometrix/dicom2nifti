@@ -166,7 +166,7 @@ def _mosaic_4d_to_nifti(dicom_input, output_file):
     if full_block.ndim > 3:
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(sorted_mosaics[0].RepetitionTime), float(sorted_mosaics[0].EchoTime))
+    common.set_tr_te(nii_image, sorted_mosaics[0].RepetitionTime, sorted_mosaics[0].EchoTime)
     logger.info('Saving nifti to disk')
     # Save to disk
     if output_file is not None:
@@ -222,7 +222,7 @@ def _classic_4d_to_nifti(grouped_dicoms, output_file):
     if full_block.ndim > 3:  # do not squeeze single slice data
         full_block = full_block.squeeze()
     nii_image = nibabel.Nifti1Image(full_block, affine)
-    common.set_tr_te(nii_image, float(grouped_dicoms[0][0].RepetitionTime), float(grouped_dicoms[0][0].EchoTime))
+    common.set_tr_te(nii_image, grouped_dicoms[0][0].RepetitionTime, grouped_dicoms[0][0].EchoTime)
     logger.info('Saving nifti to disk')
     # Save to disk
     if output_file is not None:
