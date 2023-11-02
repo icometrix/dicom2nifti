@@ -158,6 +158,12 @@ class TestConversionPhilips(unittest.TestCase):
                                  ground_thruth_filenames(test_data.PHILIPS_ANATOMICAL)[0])
             self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
 
+            results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_ANATOMICAL_SWI),
+                                                     os.path.join(tmp_output_dir, 'test.nii.gz'))
+            assert_compare_nifti(results['NII_FILE'],
+                                 ground_thruth_filenames(test_data.PHILIPS_ANATOMICAL_SWI)[0])
+            self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
+
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_ANATOMICAL_IMPLICIT),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
             assert_compare_nifti(results['NII_FILE'],

@@ -60,6 +60,9 @@ PHILIPS_ANATOMICAL = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 PHILIPS_ANATOMICAL_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                            'data', 'philips', 'anatomical', '001_implicit')
+# icometrix/dicom2nifti#136 dataset containing both magnitude and phase encoded images
+PHILIPS_ANATOMICAL_SWI = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                      'data', 'philips', 'anatomical', '002')
 
 PHILIPS_DTI = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            'data', 'philips', 'dti', '001')

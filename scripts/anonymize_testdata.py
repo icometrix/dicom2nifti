@@ -155,7 +155,7 @@ def _anonymize_file(dicom_file_in, dicom_file_out, fields_to_keep):
 
             # anonimize the dicom pixeldata
             random_data = numpy.random.randint(0, 255, dicom_in.pixel_array.shape).astype(dicom_in.pixel_array.dtype)
-            dicom_out.PixelData = random_data.tostring()  # = byte array (see pydicom docs)
+            dicom_out.PixelData = random_data.tobytes()  # = byte array (see pydicom docs)
 
             # dicom_out.PixelData = dicom_in.pixel_array.tostring()  # = byte array (see pydicom docs)
 
@@ -218,5 +218,5 @@ def _anonymize_files(dicom_directory_in, dicom_directory_out, fields_to_keep):
                 logging.info("Skipping " + dicom_file_in + ", no dicom file")
 
 if __name__ == '__main__':
-    anonymize_directory('/Users/abrys/Downloads/cbct_01',
-                        '/Users/abrys/Downloads/cbct_01')
+    anonymize_directory('/Users/abrys/Downloads/dicom_download',
+                        '/Users/abrys/Downloads/dicom_download_2')
