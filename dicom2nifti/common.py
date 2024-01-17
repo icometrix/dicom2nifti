@@ -4,6 +4,7 @@ dicom2nifti
 
 @author: abrys
 """
+import copy
 import logging
 import os
 import struct
@@ -303,27 +304,31 @@ def get_volume_pixeldata(sorted_slices):
     :type sorted_slices: list of slices
     :param sorted_slices: sliced sored in the correct order to create volume
     """
-    slices = []
     combined_dtype = None
-    for slice_ in sorted_slices:
-        slice_data = _get_slice_pixeldata(slice_)
-        slice_data = slice_data[numpy.newaxis, :, :]
-        slices.append(slice_data)
+    volume = None
+    for i, slice_ in enumerate(sorted_slices):
+        # create copy so we don't load all pixel data on the original slice that is kept in memory
+        slice_copy = copy.deepcopy(slice_)
+        slice_data = _get_slice_pixeldata(slice_copy)
+        del slice_copy
         if combined_dtype is None:
             combined_dtype = slice_data.dtype
         else:
             combined_dtype = numpy.promote_types(combined_dtype, slice_data.dtype)
-
-    # create the new volume with with the correct data
-    vol = numpy.concatenate(slices, axis=0)
+        if volume is None:
+            volume = numpy.zeros((len(sorted_slices), ) + slice_data.shape,
+                                 combined_dtype)
+        if volume.dtype != combined_dtype:
+            volume = volume.astype(combined_dtype)
+        volume[i] = slice_data
 
     # Done
     # if rgb data do separate transpose
-    if len(vol.shape) == 4 and vol.shape[3] == 3:
-        vol = numpy.transpose(vol, (2, 1, 0, 3))
+    if len(volume.shape) == 4 and volume.shape[3] == 3:
+        volume = numpy.transpose(volume, (2, 1, 0, 3))
     else:
-        vol = numpy.transpose(vol, (2, 1, 0))
-    return vol
+        volume = numpy.transpose(volume, (2, 1, 0))
+    return volume
 
 
 def _get_slice_pixeldata(dicom_slice):

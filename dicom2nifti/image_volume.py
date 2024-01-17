@@ -54,9 +54,9 @@ class ImageVolume(object):
     """
 
     def __init__(self, nifti_image):
-        self.nifti = nifti_image
+        self.affine = nifti_image.affine
         # assert that it is a 3D image
-        self.nifti_data = get_nifti_data(self.nifti).squeeze()
+        self.nifti_data = get_nifti_data(nifti_image).squeeze()
         if self.nifti_data.ndim == 2:
             self.nifti_data = numpy.expand_dims(self.nifti_data, 2)
         if self.nifti_data.ndim != 3:
@@ -73,7 +73,7 @@ class ImageVolume(object):
         # Not all image data has the same orientation
         # We use the affine matrix and multiplying it with one component
         # of the slice we can find the correct orientation
-        affine_inverse = numpy.linalg.inv(self.nifti.affine)
+        affine_inverse = numpy.linalg.inv(self.affine)
         transformed_x = numpy.transpose(numpy.dot(affine_inverse, [[1], [0], [0], [0]]))[0]
         transformed_y = numpy.transpose(numpy.dot(affine_inverse, [[0], [1], [0], [0]]))[0]
         transformed_z = numpy.transpose(numpy.dot(affine_inverse, [[0], [0], [1], [0]]))[0]

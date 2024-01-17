@@ -4,6 +4,7 @@ dicom2nifti
 
 @author: abrys
 """
+import gc
 import logging
 import os
 import shutil
@@ -128,6 +129,7 @@ def dicom_array_to_nifti(dicom_list, output_file, reorient_nifti=True):
 
     # do image reorientation if needed
     if reorient_nifti or settings.resample:
+        gc.collect()
         results['NII'] = image_reorientation.reorient_image(results['NII'], results['NII_FILE'])
 
     # resampling needs to be after reorientation

@@ -33,14 +33,14 @@ def reorient_image(input_image, output_image):
     # 4d have a different conversion to 3d
     # print 'Reorganizing data'
     if image.nifti_data.squeeze().ndim == 4:
-        new_image = _reorient_4d(image)
+        new_image = _reorient(image)
     elif image.nifti_data.squeeze().ndim == 3 or image.nifti_data.ndim == 3 or image.nifti_data.squeeze().ndim == 2:
-        new_image = _reorient_3d(image)
+        new_image = _reorient(image)
     else:
         raise Exception('Only 3d and 4d images are supported')
 
     # print 'Recreating affine'
-    affine = image.nifti.affine
+    affine = image.affine
     # Based on VolumeImage.py where slice orientation 1 represents the axial plane
     # Flipping on the data may be needed based on x_inverted, y_inverted, ZInverted
 
@@ -85,55 +85,22 @@ def reorient_image(input_image, output_image):
     output.to_filename(output_image)
     return output
 
-
-def _reorient_4d(image):
-    """
-    Reorganize the data for a 4d nifti
-    """
-    # print 'converting 4d image'
-    # Create empty array where x,y,z correspond to LR (sagittal), PA (coronal), IS (axial) directions and the size
-    # of the array in each direction is the same with the corresponding direction of the input image.
-    new_image = numpy.zeros([image.dimensions[image.sagittal_orientation.normal_component],
-                             image.dimensions[image.coronal_orientation.normal_component],
-                             image.dimensions[image.axial_orientation.normal_component],
-                             image.dimensions[3]],
-                            dtype=image.nifti_data.dtype)
-
-    # loop over all timepoints
-    for timepoint in range(0, image.dimensions[3]):
-        # Fill the new image with the values of the input image but with mathicng the orientation with x,y,z
-        if image.coronal_orientation.y_inverted:
-            for i in range(new_image.shape[2]):
-                new_image[:, :, i, timepoint] = numpy.fliplr(numpy.squeeze(image.get_slice(SliceType.AXIAL,
-                                                                                           new_image.shape[2] - 1 - i,
-                                                                                           timepoint).original_data))
-        else:
-            for i in range(new_image.shape[2]):
-                new_image[:, :, i, timepoint] = numpy.fliplr(numpy.squeeze(image.get_slice(SliceType.AXIAL,
-                                                                                           i, timepoint).original_data))
-
-    return new_image
-
-
-def _reorient_3d(image):
+def _reorient(image):
     """
     Reorganize the data for a 3d nifti
     """
-    # Create empty array where x,y,z correspond to LR (sagittal), PA (coronal), IS (axial) directions and the size
+    # Create new array where x,y,z correspond to LR (sagittal), PA (coronal), IS (axial) directions and the size
     # of the array in each direction is the same with the corresponding direction of the input image.
-    new_image = numpy.zeros([image.dimensions[image.sagittal_orientation.normal_component],
-                             image.dimensions[image.coronal_orientation.normal_component],
-                             image.dimensions[image.axial_orientation.normal_component]],
-                            dtype=image.nifti_data.dtype)
-
-    # Fill the new image with the values of the input image but with matching the orientation with x,y,z
-    if image.coronal_orientation.y_inverted:
-        for i in range(new_image.shape[2]):
-            new_image[:, :, i] = numpy.fliplr(image.get_slice(SliceType.AXIAL,
-                                                              new_image.shape[2] - 1 - i).original_data)
-    else:
-        for i in range(new_image.shape[2]):
-            new_image[:, :, i] = numpy.fliplr(image.get_slice(SliceType.AXIAL,
-                                                              i).original_data)
+    new_image = numpy.moveaxis(image.nifti_data,
+                               [image.sagittal_orientation.normal_component,
+                                image.coronal_orientation.normal_component,
+                                image.axial_orientation.normal_component],
+                               [0, 1, 2])
+    if not image.axial_orientation.x_inverted:
+        new_image = numpy.flip(new_image, axis=0)
+    if image.axial_orientation.y_inverted:
+        new_image = numpy.flip(new_image, axis=1)
+    if image.sagittal_orientation.y_inverted:
+        new_image = numpy.flip(new_image, axis=2)
 
     return new_image

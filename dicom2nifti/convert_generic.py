@@ -244,8 +244,11 @@ def dicom_to_nifti(dicom_input, output_file):
     grouped_dicoms = get_grouped_dicoms(dicom_input)
 
     if is_4d(grouped_dicoms):
+        del dicom_input
         logger.info('Found sequence type: 4D')
         return four_d_to_nifti(grouped_dicoms, output_file)
+
+    del grouped_dicoms
 
     # sort the dicoms
     dicom_input = common.sort_dicoms(dicom_input)
