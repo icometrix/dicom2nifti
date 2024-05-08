@@ -544,7 +544,7 @@ def do_scaling(data, rescale_slope, rescale_intercept, private_scale_slope=1.0, 
         # Determine required datatype from that
         if minimum_required < 0:
             # Signed integer type
-            maximum_required = max([-minimum_required, maximum_required])
+            maximum_required = max([-(minimum_required + 1), maximum_required])
             if maximum_required < 2 ** 7:
                 dtype = numpy.int8
             elif maximum_required < 2 ** 15:
