@@ -10,7 +10,7 @@ import os
 import shutil
 import tempfile
 
-from nibabel.pydicom_compat import pydicom
+import pydicom
 from pydicom.tag import Tag
 
 import dicom2nifti.common as common
