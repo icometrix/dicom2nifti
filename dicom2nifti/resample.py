@@ -50,9 +50,10 @@ def resample_nifti_images(nifti_images, voxel_size=None):
 
     # get the smallest voxelsize and use that
     if voxel_size is None:
-        voxel_size = nifti_images[0].header.get_zooms()
-        for nifti_image in nifti_images[1:]:
-            voxel_size = numpy.minimum(voxel_size, nifti_image.header.get_zooms())
+        # Compute voxel size from float64 affine, because header.get_zooms() is rounded to float32
+        voxel_sizes = [numpy.linalg.norm(nifti_image.affine[:3, :3], axis=0)                       
+                       for nifti_image in nifti_images]
+        voxel_size = numpy.array(voxel_sizes).min(axis=0)
 
     x_axis_world = numpy.transpose(numpy.dot(nifti_images[0].affine, [[1], [0], [0], [0]]))[0, :3]
     y_axis_world = numpy.transpose(numpy.dot(nifti_images[0].affine, [[0], [1], [0], [0]]))[0, :3]
@@ -99,7 +100,10 @@ def resample_nifti_images(nifti_images, voxel_size=None):
              min_projected[2] * z_axis_world
 
     new_voxelsize = voxel_size
-    new_shape = numpy.ceil(new_size_mm / new_voxelsize).astype(numpy.int16) + 1
+    new_shape_float = new_size_mm / new_voxelsize + 1
+    new_shape = numpy.ceil(
+        numpy.round(new_shape_float, decimals=2)  # Floor values below 0.005
+    ).astype(numpy.int16)
 
     new_affine = _create_affine(x_axis_world, y_axis_world, z_axis_world, origin, voxel_size)
 
