@@ -99,7 +99,10 @@ def resample_nifti_images(nifti_images, voxel_size=None):
              min_projected[2] * z_axis_world
 
     new_voxelsize = voxel_size
-    new_shape = numpy.ceil(new_size_mm / new_voxelsize).astype(numpy.int16) + 1
+    new_shape_float = new_size_mm / new_voxelsize + 1
+    new_shape = numpy.ceil(
+        numpy.round(new_shape_float, decimals=2)  # Floor values below 0.005
+    ).astype(numpy.int16)
 
     new_affine = _create_affine(x_axis_world, y_axis_world, z_axis_world, origin, voxel_size)
 
