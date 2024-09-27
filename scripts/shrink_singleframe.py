@@ -9,6 +9,7 @@ import os
 
 import pydicom
 import pydicom.dataset
+from pydicom import dcmread
 
 
 def _shrink_file(dicom_file_in, subsample_factor):
@@ -24,7 +25,7 @@ def _shrink_file(dicom_file_in, subsample_factor):
     dicom_file_out = dicom_file_in
 
     # Load dicom_file_in
-    dicom_in = pydicom.read_file(dicom_file_in)
+    dicom_in = dcmread(dicom_file_in)
 
     # Create new dicom file
     # Set new file meta information

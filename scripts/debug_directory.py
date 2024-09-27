@@ -34,7 +34,7 @@ def run_convert_directory2():
     tmp_output_dir = tempfile.mkdtemp()
     try:
         import pydicom
-        # headers = pydicom.read_file("/Users/abrys/Downloads/failing_cases/test.dcm")
+        # headers = dcmread("/Users/abrys/Downloads/failing_cases/test.dcm")
         convert_directory.convert_directory("/Users/abrys/Downloads/dti",
                                             "/Users/abrys/Downloads/dti")
 

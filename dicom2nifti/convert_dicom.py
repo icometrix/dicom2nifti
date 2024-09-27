@@ -11,6 +11,7 @@ import shutil
 import tempfile
 
 import pydicom
+from pydicom import dcmread
 from pydicom.tag import Tag
 
 import dicom2nifti.common as common
@@ -199,7 +200,7 @@ def _get_first_header(dicom_directory):
             if not common.is_dicom_file(file_path):
                 continue
             # read the headers
-            return pydicom.read_file(file_path,
+            return dcmread(file_path,
                                      stop_before_pixels=True,
                                      force=dicom2nifti.settings.pydicom_read_force)
     # no dicom files found
