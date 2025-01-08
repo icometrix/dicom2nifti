@@ -435,8 +435,10 @@ def _convert_slice_incement_inconsistencies(dicom_input):
         if data.ndim > 3:  # do not squeeze single slice data
             data = data.squeeze()
         current_volume = nibabel.Nifti1Image(data, affine)
-        slice_increment = numpy.linalg.norm(current_volume.header.get_zooms())
-        voxel_sizes['%.5f' % slice_increment] = current_volume.header.get_zooms()
+        # Compute voxel size in float64, because header.get_zooms() is rounded to float32
+        slice_voxel_size = numpy.linalg.norm(affine[:3, :3], axis=0)
+        slice_increment = numpy.linalg.norm(slice_voxel_size)
+        voxel_sizes['%.5f' % slice_increment] = slice_voxel_size
         slice_increments.extend([slice_increment] * (len(dicom_slices) - 1))
         slice_incement_niftis.append(current_volume)
 
