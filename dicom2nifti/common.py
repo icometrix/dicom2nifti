@@ -535,6 +535,7 @@ def do_scaling(data, rescale_slope, rescale_intercept, private_scale_slope=1.0, 
     elif need_floats:
         data = data.astype(numpy.float32)
     else:
+        data = data.astype(numpy.int16)
         # Determine required range
         minimum_required, maximum_required = data.min(), data.max()
         minimum_required = min([minimum_required, minimum_required * rescale_slope + rescale_intercept,
