@@ -348,7 +348,7 @@ def remove_localizers_by_imagetype(dicoms):
         if 'ImageType' in dicom_ and 'LOCALIZER' in dicom_.ImageType:
             continue
         # 'Projection Image' are Localizers for CT only see MSMET-234
-        if 'CT' in dicom_.Modality and 'ImageType' in dicom_ and 'PROJECTION IMAGE' in dicom_.ImageType:
+        if 'Modality' in dicom_ and 'CT' in dicom_.Modality and 'ImageType' in dicom_ and 'PROJECTION IMAGE' in dicom_.ImageType:
             continue
         filtered_dicoms.append(dicom_)
     return filtered_dicoms
