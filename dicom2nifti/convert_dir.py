@@ -12,6 +12,7 @@ import traceback
 import unicodedata
 
 import pydicom
+from pydicom import dcmread
 from pydicom.tag import Tag
 
 import dicom2nifti.common as common
@@ -41,7 +42,7 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                     # read the dicom as fast as possible
                     # (max length for SeriesInstanceUID is 64 so defer_size 100 should be ok)
 
-                    dicom_headers = pydicom.read_file(file_path,
+                    dicom_headers = dcmread(file_path,
                                                       defer_size="1 KB",
                                                       stop_before_pixels=False,
                                                       force=dicom2nifti.settings.pydicom_read_force)

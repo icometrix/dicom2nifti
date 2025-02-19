@@ -12,6 +12,7 @@ import unittest
 import nibabel
 import numpy
 import pydicom
+from pydicom import dcmread
 
 import dicom2nifti.common as common
 import dicom2nifti.convert_siemens as convert_siemens
@@ -199,7 +200,7 @@ class TestConversionSiemens(unittest.TestCase):
         assert not common.is_siemens(read_dicom_directory(test_data.HITACHI_ANATOMICAL))
 
     def test_get_asconv_headers(self):
-        mosaic = pydicom.read_file(os.path.join(test_data.SIEMENS_FMRI, 'IM-0001-0001.dcm'))
+        mosaic = dcmread(os.path.join(test_data.SIEMENS_FMRI, 'IM-0001-0001.dcm'))
         asconv_headers = convert_siemens._get_asconv_headers(mosaic)
         assert len(asconv_headers) == 64022
 

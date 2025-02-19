@@ -11,6 +11,7 @@ import struct
 
 import numpy
 import pydicom
+from pydicom import dcmread
 from pydicom.tag import Tag
 
 import dicom2nifti.settings
@@ -36,7 +37,7 @@ def read_dicom_directory(dicom_directory, stop_before_pixels=False):
         for dicom_file in files:
             file_path = os.path.join(root, dicom_file)
             if is_dicom_file(file_path):
-                dicom_headers = pydicom.read_file(file_path,
+                dicom_headers = dcmread(file_path,
                                                   defer_size="1 KB",
                                                   stop_before_pixels=stop_before_pixels,
                                                   force=dicom2nifti.settings.pydicom_read_force)
@@ -1161,7 +1162,7 @@ def is_dicom_file(filename):
         return True
     if dicom2nifti.settings.pydicom_read_force:
         try:
-            dicom_headers = pydicom.read_file(filename, defer_size="1 KB", stop_before_pixels=True, force=True)
+            dicom_headers = dcmread(filename, defer_size="1 KB", stop_before_pixels=True, force=True)
             if dicom_headers is not None:
                 return True
         except:

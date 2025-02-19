@@ -210,7 +210,9 @@ def __calc_most_likely_direction__(transformed_x, transformed_y, transformed_z):
     z_max = numpy.max(z_dots)
 
     # as long as there are duplicate directions try to correct
+    break_counter = 0
     while x_component == y_component or x_component == z_component or y_component == z_component:
+        break_counter += 1
         if x_component == y_component:
             # keep the strongest one and change the other
             if x_max >= y_max:  # update the y component
@@ -243,5 +245,8 @@ def __calc_most_likely_direction__(transformed_x, transformed_y, transformed_z):
                 y_dots[y_component] = 0
                 y_component = numpy.argmax(y_dots)
                 y_max = numpy.max(y_dots)
+
+        if break_counter >= 10:
+            break  # this will only happen in very special scenarios like multiframe survey containing multiple stacks
 
     return x_component, y_component, z_component

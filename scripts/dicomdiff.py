@@ -7,6 +7,7 @@ import difflib
 import sys
 
 import pydicom
+from pydicom import dcmread
 
 
 def dicom_diff(file1, file2):
@@ -15,7 +16,7 @@ def dicom_diff(file1, file2):
     Inspired by https://code.google.com/p/pydicom/source/browse/source/dicom/examples/DicomDiff.py
     """
 
-    datasets = pydicom.read_file(file1), pydicom.read_file(file2)
+    datasets = dcmread(file1), dcmread(file2)
 
     rep = []
 

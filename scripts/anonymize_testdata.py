@@ -12,6 +12,7 @@ import numpy
 import pydicom
 import pydicom.dataset
 import pydicom.uid
+from pydicom import dcmread
 
 import common
 from dicom2nifti.common import read_dicom_directory, is_philips, is_siemens, is_ge
@@ -132,7 +133,7 @@ def _anonymize_file(dicom_file_in, dicom_file_out, fields_to_keep):
                    'ImplementationClassUID']
 
     # Load dicom_file_in
-    dicom_in = pydicom.read_file(dicom_file_in)
+    dicom_in = dcmread(dicom_file_in)
 
     # Create new dicom file
     # Set new file meta information
