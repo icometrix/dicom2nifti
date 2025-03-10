@@ -68,3 +68,11 @@ def assert_compare_bvec(bvec_file_1, bvec_file_2):
     equal = numpy.allclose(bvec_1, bvec_2)
     if not equal:
         raise Exception('bvecs not equal\n%s\n%s' %(numpy.array2string(bvec_1), numpy.array2string(bvec_2)))
+
+def assert_compare_length_of_nii_to_bval(nifti_file, bval_file):
+    nifti = nibabel.load(nifti_file)
+    nifti_num_of_directions = nifti.header.dimensions[4]
+    bval_1 = numpy.loadtxt(bval_file)
+    bval_num_of_directions = len(bval_1)
+    if not nifti_num_of_directions == bval_num_of_directions:
+        raise Exception('BVAL not equal length to the NIfTI\n%s\n%s' %(bval_num_of_directions, nifti_num_of_directions))
