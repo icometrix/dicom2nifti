@@ -108,6 +108,21 @@ class TestConversionPhilips(unittest.TestCase):
                               convert_philips.dicom_to_nifti,
                               read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI_IMPLICIT),
                               os.path.join(tmp_output_dir, 'test.nii.gz'))
+            
+            # check PHILIPS_ENHANCED_ADC
+            results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI_ADC),
+                                                     os.path.join(tmp_output_dir, 'test.nii.gz'))
+            assert_compare_nifti(results['NII_FILE'],
+                                 ground_thruth_filenames(test_data.PHILIPS_DTI_IMPLICIT_002)[0])
+            self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
+            assert_compare_bval(results['BVAL_FILE'],
+                                ground_thruth_filenames(test_data.PHILIPS_DTI_IMPLICIT_002)[2])
+            self.assertTrue(isinstance(results['BVAL'], numpy.ndarray))
+            assert_compare_bval(results['BVEC_FILE'],
+                                ground_thruth_filenames(test_data.PHILIPS_DTI_IMPLICIT_002)[3])
+            self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
+            # Also check the length of the BVAL & BVEC
+            
 
         finally:
             shutil.rmtree(tmp_output_dir)
