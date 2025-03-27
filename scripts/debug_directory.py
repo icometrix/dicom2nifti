@@ -47,16 +47,19 @@ def run_convert_directory3():
     try:
         import pydicom
         settings.disable_validate_slicecount()
-        convert_directory.convert_directory("/Users/abrys/Downloads/single_slice",
-                                            "/Users/abrys/Downloads/single_slice")
+        convert_directory.convert_directory("/Users/abrys/Downloads/CS-2390_TP1",
+                                            "/Users/abrys/Downloads/CS-2390_TP1")
 
     finally:
         shutil.rmtree(tmp_output_dir)
 
 
 if __name__ == '__main__':
-    dicom_series_to_nifti(os.path.expanduser("~/Downloads/dicom_download"),
-                          os.path.expanduser("~/Downloads/dicom_download.nii.gz"))
+    #dicom_series_to_nifti(os.path.expanduser("~/Downloads/CS-2390_t2"),
+    #                      os.path.expanduser("~/Downloads/CS-2390_t2/dicom_download.nii.gz"))
+
+    convert_directory.convert_directory("/Users/abrys/Downloads/CS-2390_TP1",
+                                        "/Users/abrys/Downloads/CS-2390_TP1")
 
 
 

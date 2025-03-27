@@ -2,4 +2,4 @@ nibabel
 numpy
 scipy
 python-gdcm
-pydicom >= 2.2.0
+pydicom >= 3.0.0
