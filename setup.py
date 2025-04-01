@@ -2,7 +2,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 
-version = "2.6.0"
+version = "2.6.0.nonefix"
 print('Starting pypi release version %s' % version)
 long_description = """
 With this package you can convert dicom images to nifti files.
