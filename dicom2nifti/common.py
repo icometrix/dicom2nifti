@@ -1095,10 +1095,14 @@ def set_tr_te(nifti_image, repetition_time, echo_time):
         """
         Helper to check if something is a float
         """
+        if number is None:
+            return False
         try:
             float(number)
             return True
         except ValueError:
+            return False
+        except TypeError:
             return False
 
     # only set if it is an actual float, can also be empty/none
