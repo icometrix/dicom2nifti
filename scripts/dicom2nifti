@@ -68,6 +68,8 @@ def main(args):
     else:
         if args.allow_gantry_tilting:
             settings.disable_validate_orthogonal()
+        if args.allow_inconsistent_slice_increment:
+            settings.disable_validate_slice_increment()
         if args.allow_multiframe_implicit:
             settings.disable_validate_multiframe_implicit()
         if args.allow_single_slice:
