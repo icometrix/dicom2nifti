@@ -49,7 +49,7 @@ def dicom_to_nifti(dicom_input, output_file=None):
         raise ConversionValidationError('TOO_FEW_SLICES/LOCALIZER')
 
     if common.is_multiframe_dicom(dicom_input):
-        _assert_explicit_vr(dicom_input)
+        #_assert_explicit_vr(dicom_input)
         logger.info('Found multiframe dicom')
         if _is_multiframe_4d(dicom_input):
             logger.info('Found sequence type: MULTIFRAME 4D')
