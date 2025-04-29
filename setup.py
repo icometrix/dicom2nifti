@@ -2,7 +2,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 
-version = "2.6.0"
+version = "2.6.1"
 print('Starting pypi release version %s' % version)
 long_description = """
 With this package you can convert dicom images to nifti files.
@@ -32,10 +32,11 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX :: Linux'],
-    install_requires=['nibabel', 'numpy', 'scipy', 'pydicom>=2.2.0', 'python-gdcm'],
+    install_requires=['nibabel', 'numpy', 'scipy', 'pydicom>=3.0.0', 'python-gdcm'],
     setup_requires=['nose', 'coverage']
 )
