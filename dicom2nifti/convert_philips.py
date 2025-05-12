@@ -442,7 +442,7 @@ def _fix_diffusion_images(bvals, bvecs, nifti, nifti_file):
     This function will remove the last timepoint from the nifti, bvals and bvecs if the last vector is 0,0,0
     This is sometimes added at the end by philips
     """
-    # if all zero continue of if the last bvec is not all zero continue
+    # if all zero continue or if the last bvec is not all zero continue
     if numpy.count_nonzero(bvecs) == 0 or not numpy.count_nonzero(bvals[-1]) == 0:
         # nothing needs to be done here
         return nifti, bvals, bvecs
