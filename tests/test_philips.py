@@ -108,7 +108,7 @@ class TestConversionPhilips(unittest.TestCase):
                               convert_philips.dicom_to_nifti,
                               read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI_IMPLICIT),
                               os.path.join(tmp_output_dir, 'test.nii.gz'))
-            
+
             # check PHILIPS_ENHANCED_ADC
             results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI_ADC),
                                                      os.path.join(tmp_output_dir, 'test.nii.gz'))
