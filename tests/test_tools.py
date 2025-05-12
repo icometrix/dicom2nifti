@@ -71,7 +71,7 @@ def assert_compare_bvec(bvec_file_1, bvec_file_2):
 
 def assert_compare_length_of_nii_to_bval(nifti_file, bval_file):
     nifti = nibabel.load(nifti_file)
-    nifti_num_of_directions = nifti.header.dimensions[4]
+    nifti_num_of_directions = nifti.header['dim'][4]
     bval_1 = numpy.loadtxt(bval_file)
     bval_num_of_directions = len(bval_1)
     if not nifti_num_of_directions == bval_num_of_directions:
