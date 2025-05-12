@@ -4,7 +4,7 @@ import pydicom
 
 # %%
 # Read in a template Philips Multiframe DTI
-ds = pydicom.dcmread("/Users/matt/Downloads/Apollo/MR000000.dcm")
+ds = pydicom.dcmread("/Users/matthew/Downloads/Apollo/MR000000.dcm")
 # %%
 # Copy the template
 adc_ds = ds.copy()
