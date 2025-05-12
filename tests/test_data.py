@@ -96,7 +96,7 @@ PHILIPS_ENHANCED_DTI_IMPLICIT = os.path.join(os.path.dirname(os.path.abspath(__f
                                              'data', 'philips_enhanced', 'dti', '001_implicit')
 
 PHILIPS_ENHANCED_DTI_ADC = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                             'data', 'philips_enhanced', 'dti', 'adc')
+                                            'data', 'philips_enhanced', 'dti', 'adc')
 
 PHILIPS_ENHANCED_FMRI = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      'data', 'philips_enhanced', 'fmri', '001')
