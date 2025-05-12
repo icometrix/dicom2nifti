@@ -259,8 +259,9 @@ def _multiframe_to_nifti(dicom_input, output_file):
             logger.info('Creating bval en bvec files')
             bval_file = '%s/%s.bval' % (base_path, base_name)
             bvec_file = '%s/%s.bvec' % (base_path, base_name)
-        nii_image, bval, bvec, bval_file, bvec_file = _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nii_image,
-                                                               output_file)
+        nii_image, bval, bvec, bval_file, bvec_file = _create_bvals_bvecs(
+            multiframe_dicom, bval_file, bvec_file, nii_image, output_file
+        )
 
         return {'NII_FILE': output_file,
                 'BVAL_FILE': bval_file,
