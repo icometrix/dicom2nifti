@@ -259,8 +259,9 @@ def _multiframe_to_nifti(dicom_input, output_file):
             logger.info('Creating bval en bvec files')
             bval_file = '%s/%s.bval' % (base_path, base_name)
             bvec_file = '%s/%s.bvec' % (base_path, base_name)
-        bval, bvec, bval_file, bvec_file = _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nii_image,
-                                                               output_file)
+        nii_image, bval, bvec, bval_file, bvec_file = _create_bvals_bvecs(
+            multiframe_dicom, bval_file, bvec_file, nii_image, output_file
+        )
 
         return {'NII_FILE': output_file,
                 'BVAL_FILE': bval_file,
@@ -433,7 +434,7 @@ def _create_bvals_bvecs(multiframe_dicom, bval_file, bvec_file, nifti, nifti_fil
         bvals = None
         bvecs = None
 
-    return bvals, bvecs, bval_file, bvec_file
+    return nifti, bvals, bvecs, bval_file, bvec_file
 
 
 def _fix_diffusion_images(bvals, bvecs, nifti, nifti_file):
@@ -441,7 +442,7 @@ def _fix_diffusion_images(bvals, bvecs, nifti, nifti_file):
     This function will remove the last timepoint from the nifti, bvals and bvecs if the last vector is 0,0,0
     This is sometimes added at the end by philips
     """
-    # if all zero continue of if the last bvec is not all zero continue
+    # if all zero continue or if the last bvec is not all zero continue
     if numpy.count_nonzero(bvecs) == 0 or not numpy.count_nonzero(bvals[-1]) == 0:
         # nothing needs to be done here
         return nifti, bvals, bvecs
