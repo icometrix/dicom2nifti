@@ -211,6 +211,9 @@ def dicom_to_nifti(dicom_input, output_file):
     if len(dicom_input) <= 0:
         raise ConversionError('NO_DICOM_FILES_FOUND')
 
+    # remove non imaging slices based on missing pixel data
+    dicom_input = remove_non_imaging_slices(dicom_input)
+
     # remove duplicate slices based on position and data
     dicom_input = remove_duplicate_slices(dicom_input)
 
@@ -310,6 +313,26 @@ def create_rgba_nifti(rgb_data, affine):
     rgba_data = rgba_data.copy().view(dtype=rgba_dtype).reshape(shape_3d)
     return nibabel.Nifti1Image(rgba_data, affine)
 
+
+def remove_non_imaging_slices(dicoms):
+    """
+    Search dicoms for localizers and delete them
+    """
+    # Loop overall files and build dict
+
+    filtered_dicoms = []
+    # in case of multiframe this check cannot be done
+    if 'ImageOrientationPatient' not in dicoms[0]:
+        return dicoms
+    if 'ImagePositionPatient' not in dicoms[0]:
+        return dicoms
+
+    for dicom_ in dicoms:
+        if "PixelData" not in dicom_:
+            logger.warning('Removing non imaging slice from series')
+        else:
+            filtered_dicoms.append(dicom_)
+    return filtered_dicoms
 
 def remove_duplicate_slices(dicoms):
     """

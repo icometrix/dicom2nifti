@@ -35,6 +35,9 @@ def dicom_to_nifti(dicom_input, output_file=None):
 
     assert common.is_philips(dicom_input)
 
+    # remove non imaging slices based on missing pixel data
+    dicom_input = convert_generic.remove_non_imaging_slices(dicom_input)
+
     # remove duplicate slices based on position and data
     dicom_input = convert_generic.remove_duplicate_slices(dicom_input)
 

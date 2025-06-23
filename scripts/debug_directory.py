@@ -58,8 +58,8 @@ if __name__ == '__main__':
     #dicom_series_to_nifti(os.path.expanduser("~/Downloads/CS-2390_t2"),
     #                      os.path.expanduser("~/Downloads/CS-2390_t2/dicom_download.nii.gz"))
 
-    convert_directory.convert_directory("/Users/abrys/Downloads/CS-2390_TP1",
-                                        "/Users/abrys/Downloads/CS-2390_TP1")
+    convert_directory.convert_directory("/Users/abrys/Downloads/MSMET-7827_2",
+                                        "/Users/abrys/Downloads/MSMET-7827_2")
 
 
 
