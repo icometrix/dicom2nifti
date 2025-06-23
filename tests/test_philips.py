@@ -20,7 +20,7 @@ import dicom2nifti.convert_philips as convert_philips
 import dicom2nifti.settings as settings
 from dicom2nifti.common import read_dicom_directory
 from dicom2nifti.exceptions import ConversionError
-from tests.test_tools import assert_compare_nifti, assert_compare_bval, assert_compare_bvec, ground_thruth_filenames
+from tests.test_tools import assert_compare_nifti, assert_compare_bval, assert_compare_bvec, ground_thruth_filenames, assert_compare_length_of_nii_to_bval
 
 
 class TestConversionPhilips(unittest.TestCase):
@@ -117,6 +117,22 @@ class TestConversionPhilips(unittest.TestCase):
             assert_compare_bval(results['BVEC_FILE'],
                                 ground_thruth_filenames(test_data.PHILIPS_ENHANCED_DTI_IMPLICIT)[3])
             self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
+
+            # check PHILIPS_ENHANCED_ADC
+            results = convert_philips.dicom_to_nifti(read_dicom_directory(test_data.PHILIPS_ENHANCED_DTI_ADC),
+                                                    os.path.join(tmp_output_dir, 'test.nii.gz'))
+            assert_compare_nifti(results['NII_FILE'],
+                                ground_thruth_filenames(test_data.PHILIPS_ENHANCED_DTI_ADC)[0])
+            self.assertTrue(isinstance(results['NII'], nibabel.nifti1.Nifti1Image))
+            assert_compare_bval(results['BVAL_FILE'],
+                                ground_thruth_filenames(test_data.PHILIPS_ENHANCED_DTI_ADC)[2])
+            self.assertTrue(isinstance(results['BVAL'], numpy.ndarray))
+            assert_compare_bval(results['BVEC_FILE'],
+                                ground_thruth_filenames(test_data.PHILIPS_ENHANCED_DTI_ADC)[3])
+            self.assertTrue(isinstance(results['BVEC'], numpy.ndarray))
+            # Also check the length of the BVAL & BVEC
+            assert_compare_length_of_nii_to_bval(results['NII_FILE'],results['BVAL_FILE'])
+
 
         finally:
             shutil.rmtree(tmp_output_dir)
