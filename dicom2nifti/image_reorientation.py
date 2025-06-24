@@ -12,7 +12,7 @@ import numpy
 from dicom2nifti.image_volume import load, SliceType, ImageVolume
 
 
-def reorient_image(input_image, output_image):
+def reorient_image(input_image, output_image=None):
     """
     Change the orientation of the Image data in order to be in LAS space
     x will represent the coronal plane, y the sagittal and z the axial plane.
@@ -82,7 +82,8 @@ def reorient_image(input_image, output_image):
     output = nibabel.nifti1.Nifti1Image(new_image, new_affine)
     output.header.set_slope_inter(1, 0)
     output.header.set_xyzt_units(2)  # set units for xyz (leave t as unknown)
-    output.to_filename(output_image)
+    if output_image is not None:
+        output.to_filename(output_image)
     return output
 
 def _reorient(image):
