@@ -1100,6 +1100,9 @@ def set_tr_te(nifti_image, repetition_time, echo_time):
             return True
         except ValueError:
             return False
+        except TypeError:
+            # Some types cannot be taken by `float`, such as None.
+            return False
 
     # only set if it is an actual float, can also be empty/none
     if not is_float(repetition_time) or not is_float(echo_time):
