@@ -15,7 +15,7 @@ from dicom2nifti.image_volume import load, SliceType, ImageVolume
 def reorient_image(input_image, output_image):
     """
     Change the orientation of the Image data in order to be in LAS space
-    x will represent the coronal plane, y the sagittal and z the axial plane.
+    x will represent the sagittal plane, y the coronal and z the axial plane.
     x increases from Right (R) to Left (L), y from Posterior (P) to Anterior (A) and z from Inferior (I) to Superior (S)
 
     :returns: The output image in nibabel form
