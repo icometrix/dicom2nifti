@@ -33,6 +33,7 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
     """
     # sort dicom files by series uid
     dicom_series = {}
+    nii_vols = []
     for root, _, files in os.walk(dicom_directory):
         for dicom_file in files:
             file_path = os.path.join(root, dicom_file)
@@ -79,15 +80,30 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                 base_filename = _remove_accents(dicom_input[0].SeriesInstanceUID)
             logger.info('--------------------------------------------')
             logger.info('Start converting %s' % base_filename)
-            if compression:
-                nifti_file = os.path.join(output_folder, base_filename + '.nii.gz')
+            if output_folder is not None:
+                if compression:
+                    nifti_file = os.path.join(output_folder, base_filename + '.nii.gz')
+                else:
+                    nifti_file = os.path.join(output_folder, base_filename + '.nii')
+                convert_dicom.dicom_array_to_nifti(dicom_input, nifti_file, reorient)
             else:
-                nifti_file = os.path.join(output_folder, base_filename + '.nii')
-            convert_dicom.dicom_array_to_nifti(dicom_input, nifti_file, reorient)
-            gc.collect()
+                nifti_file = None
+                vol_nii = convert_dicom.dicom_array_to_nifti(dicom_input, nifti_file, reorient)
+                if 'NII_FILE' in vol_nii.keys():
+                    vol_nii['NII_FILE'] = base_filename + '.nii'
+                if 'BVAL_FILE' in vol_nii.keys():
+                    vol_nii['BVAL_FILE'] = base_filename + '.bval'
+                if 'BVEC_FILE' in vol_nii.keys():
+                    vol_nii['BVEC_FILE'] = base_filename + '.bvec'
+                vol_nii['shape'] = vol_nii['NII'].get_fdata().shape
+                nii_vols.append(vol_nii)
         except:  # Explicitly capturing app exceptions here to be able to continue processing
             logger.info("Unable to convert: %s" % base_filename)
             traceback.print_exc()
+        finally:
+            gc.collect()
+    if output_folder is None:
+        return nii_vols
 
 
 def _is_valid_imaging_dicom(dicom_header):
