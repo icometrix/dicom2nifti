@@ -8,7 +8,6 @@ import gc
 import logging
 import os
 import re
-import traceback
 import unicodedata
 
 import pydicom
@@ -30,7 +29,7 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
     :param reorient: reorient the dicoms according to LAS orientation
     :param output_folder: folder to write the nifti files to
     :param dicom_directory: directory with dicom files
-    :param throw_exceptions: Enable that errors are raised instead of logged.
+    :param throw_exceptions: Enable that errors are raised (error logging is always enabled).
     """
     # sort dicom files by series uid
     dicom_series = {}
