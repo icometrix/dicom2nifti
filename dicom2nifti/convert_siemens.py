@@ -6,7 +6,6 @@ dicom2nifti
 """
 import os
 import re
-import traceback
 
 import logging
 from math import ceil, sqrt
@@ -455,8 +454,8 @@ def _get_mosaic_type(mosaic):
                 return MosaicType.DESCENDING
             else:
                 return MosaicType.ASCENDING
-    except:
-        traceback.print_exc()
+    except Exception as exc:
+        logger.warning(exc, exc_info=True)
         raise ConversionError("MOSAIC_TYPE_NOT_SUPPORTED")
 
 
