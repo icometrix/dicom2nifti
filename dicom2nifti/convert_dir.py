@@ -8,7 +8,6 @@ import gc
 import logging
 import os
 import re
-import traceback
 import unicodedata
 
 import pydicom
@@ -22,7 +21,7 @@ import dicom2nifti.settings
 logger = logging.getLogger(__name__)
 
 
-def convert_directory(dicom_directory, output_folder, compression=True, reorient=True):
+def convert_directory(dicom_directory, output_folder, compression=True, reorient=True, throw_exceptions=False):
     """
     This function will order all dicom files by series and order them one by one
 
@@ -30,6 +29,7 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
     :param reorient: reorient the dicoms according to LAS orientation
     :param output_folder: folder to write the nifti files to
     :param dicom_directory: directory with dicom files
+    :param throw_exceptions: Enable that errors are raised (error logging is always enabled).
     """
     # sort dicom files by series uid
     dicom_series = {}
@@ -53,9 +53,11 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                     if dicom_headers.SeriesInstanceUID not in dicom_series:
                         dicom_series[dicom_headers.SeriesInstanceUID] = []
                     dicom_series[dicom_headers.SeriesInstanceUID].append(dicom_headers)
-            except:  # Explicitly capturing all errors here to be able to continue processing all the rest
+            except Exception as exc:  # Explicitly capturing all errors here to be able to continue processing all the rest
                 logger.warning("Unable to read: %s" % file_path)
-                traceback.print_exc()
+                logger.warning(exc, exc_info=True)
+                if throw_exceptions:
+                    raise exc
 
     # start converting one by one
     for series_id, dicom_input in dicom_series.items():
@@ -85,9 +87,11 @@ def convert_directory(dicom_directory, output_folder, compression=True, reorient
                 nifti_file = os.path.join(output_folder, base_filename + '.nii')
             convert_dicom.dicom_array_to_nifti(dicom_input, nifti_file, reorient)
             gc.collect()
-        except:  # Explicitly capturing app exceptions here to be able to continue processing
+        except Exception as exc:  # Explicitly capturing app exceptions here to be able to continue processing
             logger.info("Unable to convert: %s" % base_filename)
-            traceback.print_exc()
+            logger.warning(exc, exc_info=True)
+            if throw_exceptions:
+                raise exc
 
 
 def _is_valid_imaging_dicom(dicom_header):
@@ -134,8 +138,8 @@ def _remove_accents(unicode_filename):
         cleaned_filename = re.sub(r'[-\s]+', '-', cleaned_filename)
 
         return cleaned_filename
-    except:
-        traceback.print_exc()
+    except Exception as exc:
+        logger.warning(exc, exc_info=True)
         return unicode_filename
 
 

@@ -5,7 +5,6 @@ dicom2nifti
 @author: abrys
 """
 import os
-import traceback
 
 import logging
 import nibabel
@@ -349,8 +348,8 @@ def _singleframe_to_block(grouped_dicoms):
 
     try:
         full_block = numpy.concatenate(data_blocks, axis=3)
-    except:
-        traceback.print_exc()
+    except Exception as exc:
+        logger.warning(exc, exc_info=True)
         raise ConversionError("MISSING_DICOM_FILES")
 
     # Apply the rescaling if needed
