@@ -26,6 +26,14 @@ class TestConversionDirectory(unittest.TestCase):
         finally:
             shutil.rmtree(tmp_output_dir)
 
+    def test_convert_directory_throw_exceptions(self):
+        # this should not RAISE an Exeption, but log it(default of throw_exceptions is False)
+        convert_directory.convert_directory(test_data.GENERIC_ANATOMICAL, "invalid/output/path")
+
+        # this should raise an Exeption
+        with self.assertRaises(Exception):
+            convert_directory.convert_directory(test_data.GENERIC_ANATOMICAL, "invalid/output/path", throw_exceptions=True)
+
     def test_remove_accents(self):
 
         assert convert_directory._remove_accents(u'êén_ölîfānt@') == 'een_olifant'
