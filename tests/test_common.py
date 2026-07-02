@@ -56,6 +56,20 @@ class TestConversionCommon(unittest.TestCase):
         self.assertTrue(
             is_slice_increment_inconsistent(sort_dicoms(read_dicom_directory(test_data.FAILING_SLICEINCREMENT))))
 
+    def test_multiframe_validate_missing_per_frame(self):
+        # A dicom that reaches the multiframe validators without a
+        # PerFrameFunctionalGroupsSequence must raise a descriptive
+        # ConversionValidationError instead of an opaque AttributeError (issue #139).
+        from pydicom.dataset import Dataset
+        from dicom2nifti.common import multiframe_validate_orientation, \
+            multiframe_validate_slicecount, \
+            multiframe_validate_orthogonal
+        dataset = Dataset()  # no PerFrameFunctionalGroupsSequence
+        for validator in (multiframe_validate_orientation,
+                          multiframe_validate_slicecount,
+                          multiframe_validate_orthogonal):
+            self.assertRaises(ConversionValidationError, validator, [dataset])
+
     def test_validate_slicecount(self):
         validate_slicecount(read_dicom_directory(test_data.GE_ANATOMICAL))
 

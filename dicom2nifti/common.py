@@ -696,6 +696,8 @@ def multiframe_validate_orthogonal(dicoms):
 
     :param dicoms: check that we have a volume without skewing
     """
+    if "PerFrameFunctionalGroupsSequence" not in dicoms[0]:
+        raise ConversionValidationError('MISSING_PER_FRAME_INFORMATION')
     # if only one slice we do not need this check
     if not multiframe_is_orthogonal(dicoms, log_details=True):
         raise ConversionValidationError('NON_CUBICAL_IMAGE/GANTRY_TILT')
@@ -952,6 +954,8 @@ def multiframe_validate_slicecount(dicoms):
 
     :param dicoms: list of dicoms
     """
+    if "PerFrameFunctionalGroupsSequence" not in dicoms[0]:
+        raise ConversionValidationError('MISSING_PER_FRAME_INFORMATION')
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
     if len(frame_info) <= 3:
         logger.warning('At least 3 slices are needed for correct conversion')
@@ -1043,7 +1047,8 @@ def multiframe_validate_orientation(dicoms):
 
     :param dicoms: list of dicoms
     """
-
+    if "PerFrameFunctionalGroupsSequence" not in dicoms[0]:
+        raise ConversionValidationError('MISSING_PER_FRAME_INFORMATION')
     frame_info = dicoms[0].PerFrameFunctionalGroupsSequence
     first_image_orient1, first_image_orient2 = _multiframe_get_image_orientations(dicoms[0], 0)
 
