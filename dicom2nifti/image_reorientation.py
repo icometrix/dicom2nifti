@@ -9,7 +9,7 @@ Created on Thu Aug  1 16:10:56 2013
 import nibabel
 import numpy
 
-from dicom2nifti.image_volume import load, SliceType, ImageVolume
+from dicom2nifti.image_volume import ImageVolume
 
 
 def reorient_image(input_image, output_image):
@@ -25,10 +25,9 @@ def reorient_image(input_image, output_image):
     # Use the imageVolume module to find which coordinate corresponds to each plane
     # and get the image data in RAS orientation
     # print 'Reading nifti'
-    if isinstance(input_image, nibabel.Nifti1Image):
-        image = ImageVolume(input_image)
-    else:
-        image = load(input_image)
+    if not isinstance(input_image, nibabel.Nifti1Image):
+        input_image = nibabel.load(input_image)
+    image = ImageVolume(input_image)
 
     # 4d have a different conversion to 3d
     # print 'Reorganizing data'
@@ -81,7 +80,12 @@ def reorient_image(input_image, output_image):
         new_image = new_image.squeeze()
     output = nibabel.nifti1.Nifti1Image(new_image, new_affine)
     output.header.set_slope_inter(1, 0)
-    output.header.set_xyzt_units(2)  # set units for xyz (leave t as unknown)
+    output.header.set_xyzt_units(2)
+    if new_image.ndim == 4 and isinstance(input_image.header, nibabel.Nifti1Header):
+        # Keep timing metadata while using the new affine's spatial zooms.
+        output.header.set_zooms(output.header.get_zooms()[:3] +
+                                input_image.header.get_zooms()[3:4])
+        output.header.set_xyzt_units(2, input_image.header.get_xyzt_units()[1])
     output.to_filename(output_image)
     return output
 
